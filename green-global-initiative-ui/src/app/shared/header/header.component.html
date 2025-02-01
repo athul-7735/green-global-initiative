@@ -1,0 +1,20 @@
+<div class="header">
+    <div class="title-container">
+        <img src="assets/images/logo.png" alt="logo" width="80" height="50">
+        <h1>{{title}}</h1>
+    </div>
+    <div class="nav-container">
+        <nav class="nav">
+            <a routerLink="/home">Home</a>
+            <a routerLink="/about-us">About</a>
+            <a routerLink="/grants">Grants</a>
+            <a *ngIf="isAuth" routerLink="/profile">My Profile</a>
+            <button (click)="logout()" *ngIf="isAuth">
+                <a routerLink="/">Log Out</a>
+            </button>
+            <button (click)="logout()" *ngIf="!isAuth">
+                <a routerLink="/login">SignIn/SignUp</a>
+            </button>
+        </nav>
+    </div>
+</div>
