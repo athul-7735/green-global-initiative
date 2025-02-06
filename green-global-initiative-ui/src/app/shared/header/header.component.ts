@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../authentication/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,7 @@ export class HeaderComponent {
   menuIcons = ['Home', 'About', 'Grants', 'My Profile', 'SignIn/SignUp'];
   isAuth =  false;
 
-  constructor(private authService: AuthService){
+  constructor(private authService: AuthService, private toastr: ToastrService){
     this.authService.authStatus$.subscribe((status:boolean)=>{
       if(status){
         this.isAuth = true;
@@ -33,7 +34,12 @@ export class HeaderComponent {
   }
 
   logout(){
-    this.authService.logout();
+    if(this.isAuth){
+      this.authService.logout();
+      this.toastr.success('Logout Successfull', 'Success',  {
+        progressBar: true, closeButton: true 
+      });
+    }    
   }
 
 }

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup,FormsModule, ReactiveFormsModule, Validators } f
 import { AuthService } from '../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../services/api.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private authenticationService: AuthService, private router: Router, private apiService: ApiService) {
+  constructor(private fb: FormBuilder, private authenticationService: AuthService, private router: Router, 
+    private apiService: ApiService, private toastr: ToastrService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]], // Validators for email
       password: ['', [Validators.required, Validators.minLength(6)]], // Validators for password
@@ -33,10 +35,13 @@ export class LoginComponent {
         );
         this.authenticationService.login();
         this.router.navigate(['/home']);
+        this.toastr.success('Login Successfull', 'Success',  {
+          progressBar: true, closeButton: true 
+        });
       },
       error => {
         if (error.status === 401) { // HTTP status code for Unauthorized
-          this.errorMessage = 'Wrong password, please try again!';
+          this.errorMessage = 'Wrong password/email, please try again!';
         } else if (error.status === 400) {
           this.errorMessage = 'Invalid input, please check your credentials!';
         } else {
@@ -44,6 +49,9 @@ export class LoginComponent {
         }
       });
     } else {
+      this.toastr.error('Invalid Form!', 'Error',  {
+        progressBar: true, closeButton: true 
+      });
       console.log('Form Invalid!');
     }
   }

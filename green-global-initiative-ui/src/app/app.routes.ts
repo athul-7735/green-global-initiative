@@ -10,10 +10,10 @@ export const routes: Routes = [
         loadChildren: () =>
         import('./authentication/authentication.module').then((m) => m.AuthenticationModule),
     },
-    // { path: 'grants', 
-    //     loadChildren: () =>
-    //     import('./grants/grants.module').then((m) => m.GrantsModule),
-    // },
+    { path: 'grants', 
+        loadChildren: () =>
+        import('./grants/grants.module').then((m) => m.GrantsModule),
+    },
     // { path: 'about-us', component: AboutusComponent },
     // { path: 'contact-us', component: ContactUsComponent },
 ];

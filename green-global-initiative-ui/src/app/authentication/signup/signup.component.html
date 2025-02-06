@@ -10,6 +10,7 @@
                     <input id="firstName" type="text" formControlName="firstName" class="form-control" />
                     <div *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched" class="text-danger">
                        <small *ngIf="signupForm.get('firstName')?.errors?.['required']">First Name is required.</small>
+                       <small *ngIf="signupForm.get('firstName')?.errors?.['minlength']">First Name must be at least 3 characters long.</small>
                   </div>
                 </div>
                 <div class="form-group">
@@ -17,6 +18,7 @@
                     <input id="lastName" type="text" formControlName="lastName" class="form-control" />
                     <div *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched" class="text-danger">
                         <small *ngIf="signupForm.get('lastName')?.errors?.['required']">Last Name is required.</small>
+                        <small *ngIf="signupForm.get('firstName')?.errors?.['minlength']">Last Name cannot be blank.</small>
                     </div>
                 </div>
             </div>
@@ -48,6 +50,9 @@
                         Password must be at least 6 characters long.
                     </small>
                     </div>
+                    <div *ngIf="signupForm.get('confirmPassword')?.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched">
+                        <small>Passwords do not match.</small>
+                      </div>
                 </div>
             </div>
             
