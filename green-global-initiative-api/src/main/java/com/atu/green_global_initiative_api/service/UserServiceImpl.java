@@ -1,11 +1,14 @@
 package com.atu.green_global_initiative_api.service;
 
+import com.atu.green_global_initiative_api.NausicaaGreenInitiativeApplication;
 import com.atu.green_global_initiative_api.dto.UserDetailsDto;
 import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
 import com.atu.green_global_initiative_api.model.dao.Grants;
 import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.repository.UserDetailsRepo;
 import org.apache.catalina.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +23,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDetailsRepo userDetailsRepo;
 
+    static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDetailsDto> getAllUserDetails() {
+        logger.info("getAllUserDetails Method Started");
         List<UserDetails> userDetailsList = userDetailsRepo.findAll();
         List<UserDetailsDto> userDetailsDtoList = new ArrayList<>();
         for (UserDetails userDetails : userDetailsList) {
@@ -35,12 +41,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsDto userSignUp(UserDetails userDetails) {
+        logger.info("userSignUp Method Started");
         UserDetails res = userDetailsRepo.save(userDetails);
         UserDetailsDto userDetailsDto = mapToUserDto(res);
         return userDetailsDto;
     }
     @Override
     public UserDetailsDto authenticateUser(String username, String password) {
+        logger.info("authenticateUser Method Started");
         UserDetailsDto userDetails = null;
         List<UserDetails> users = userDetailsRepo.findAllByEmail(username);
         if(!users.isEmpty()){
@@ -58,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDetailsDto mapToUserDto(UserDetails userDetails){
+        logger.info("mapToUserDto Method Started");
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         userDetailsDto.setUserId(userDetails.getUserId());
         userDetailsDto.setFirstName(userDetails.getFirstName());
