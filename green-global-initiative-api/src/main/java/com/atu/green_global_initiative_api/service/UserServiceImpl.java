@@ -1,10 +1,10 @@
-package com.atu.devops.service;
+package com.atu.green_global_initiative_api.service;
 
-import com.atu.devops.dto.UserDetailsDto;
-import com.atu.devops.model.dao.ApplicationDetails;
-import com.atu.devops.model.dao.Grants;
-import com.atu.devops.model.dao.UserDetails;
-import com.atu.devops.repository.UserDetailsRepo;
+import com.atu.green_global_initiative_api.dto.UserDetailsDto;
+import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
+import com.atu.green_global_initiative_api.model.dao.Grants;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.repository.UserDetailsRepo;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

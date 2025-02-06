@@ -1,4 +1,4 @@
-package com.atu.devops.model.dao.request;
+package com.atu.green_global_initiative_api.model.dao.request;
 
 import jakarta.persistence.Column;
 

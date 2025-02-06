@@ -1,10 +1,10 @@
-package com.atu.devops.controller;
+package com.atu.green_global_initiative_api.controller;
 
-import com.atu.devops.dto.ApplicationDetailsDto;
-import com.atu.devops.model.dao.ApplicationDetails;
-import com.atu.devops.model.dao.UserDetails;
-import com.atu.devops.service.GrantsApplicationServiceImpl;
-import com.atu.devops.service.UserServiceImpl;
+import com.atu.green_global_initiative_api.dto.ApplicationDetailsDto;
+import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.service.GrantsApplicationServiceImpl;
+import com.atu.green_global_initiative_api.service.UserServiceImpl;
 import io.micrometer.core.ipc.http.HttpSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

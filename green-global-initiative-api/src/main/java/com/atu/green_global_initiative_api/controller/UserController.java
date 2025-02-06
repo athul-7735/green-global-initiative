@@ -1,9 +1,9 @@
-package com.atu.devops.controller;
+package com.atu.green_global_initiative_api.controller;
 
-import com.atu.devops.dto.UserDetailsDto;
-import com.atu.devops.model.dao.UserDetails;
-import com.atu.devops.model.dao.request.LoginRequest;
-import com.atu.devops.service.UserServiceImpl;
+import com.atu.green_global_initiative_api.dto.UserDetailsDto;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.model.dao.request.LoginRequest;
+import com.atu.green_global_initiative_api.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.atu.devops.config;
+package com.atu.green_global_initiative_api.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;

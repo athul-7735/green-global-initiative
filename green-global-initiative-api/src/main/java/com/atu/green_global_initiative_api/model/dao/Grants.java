@@ -1,4 +1,4 @@
-package com.atu.devops.model.dao;
+package com.atu.green_global_initiative_api.model.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;

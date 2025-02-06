@@ -1,6 +1,6 @@
-package com.atu.devops.repository;
+package com.atu.green_global_initiative_api.repository;
 
-import com.atu.devops.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

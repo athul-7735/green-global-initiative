@@ -1,7 +1,7 @@
-package com.atu.devops.service;
+package com.atu.green_global_initiative_api.service;
 
-import com.atu.devops.dto.UserDetailsDto;
-import com.atu.devops.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.dto.UserDetailsDto;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
 
 import java.util.List;
 

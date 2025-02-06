@@ -1,11 +1,11 @@
-package com.atu.devops.service;
+package com.atu.green_global_initiative_api.service;
 
-import com.atu.devops.dto.ApplicationDetailsDto;
-import com.atu.devops.model.dao.ApplicationDetails;
-import com.atu.devops.model.dao.Grants;
-import com.atu.devops.model.dao.UserDetails;
-import com.atu.devops.model.dao.request.ApplicationUpdateRequest;
-import com.atu.devops.repository.ApplicationDetailsRepo;
+import com.atu.green_global_initiative_api.dto.ApplicationDetailsDto;
+import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
+import com.atu.green_global_initiative_api.model.dao.Grants;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.model.dao.request.ApplicationUpdateRequest;
+import com.atu.green_global_initiative_api.repository.ApplicationDetailsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

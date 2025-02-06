@@ -1,7 +1,7 @@
-package com.atu.devops.dto;
+package com.atu.green_global_initiative_api.dto;
 
-import com.atu.devops.model.dao.Grants;
-import com.atu.devops.model.dao.UserDetails;
+import com.atu.green_global_initiative_api.model.dao.Grants;
+import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

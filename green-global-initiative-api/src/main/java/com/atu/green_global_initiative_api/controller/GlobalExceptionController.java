@@ -1,6 +1,6 @@
-package com.atu.devops.controller;
+package com.atu.green_global_initiative_api.controller;
 
-import com.atu.devops.exception.ResourceNotFoundException;
+import com.atu.green_global_initiative_api.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

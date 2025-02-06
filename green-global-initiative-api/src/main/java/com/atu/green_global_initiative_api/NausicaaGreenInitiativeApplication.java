@@ -1,4 +1,4 @@
-package com.atu.devops;
+package com.atu.green_global_initiative_api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
