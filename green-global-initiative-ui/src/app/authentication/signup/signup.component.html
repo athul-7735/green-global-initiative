@@ -1,0 +1,65 @@
+<div class="signup-container">
+    <diV class="signup signup-leftpane">
+        <img src="assets/images/logo.png" alt="logo" width="130" height="90">
+        <h2>Create an account</h2>
+        <p>Already have an account? <a routerLink="/login/signin">Log in</a></p>
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+            <div class="name-group">
+                <div class="form-group">
+                    <label for="firstName">First name</label>
+                    <input id="firstName" type="text" formControlName="firstName" class="form-control" />
+                    <div *ngIf="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched" class="text-danger">
+                       <small *ngIf="signupForm.get('firstName')?.errors?.['required']">First Name is required.</small>
+                       <small *ngIf="signupForm.get('firstName')?.errors?.['minlength']">First Name must be at least 3 characters long.</small>
+                  </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last name</label>
+                    <input id="lastName" type="text" formControlName="lastName" class="form-control" />
+                    <div *ngIf="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched" class="text-danger">
+                        <small *ngIf="signupForm.get('lastName')?.errors?.['required']">Last Name is required.</small>
+                        <small *ngIf="signupForm.get('firstName')?.errors?.['minlength']">Last Name cannot be blank.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input id="email" type="email" formControlName="email" class="form-control" />
+                <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger">
+                    <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
+                    <small *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email format.</small>
+                </div>
+            </div>        
+            <div class="password-group">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" formControlName="password" class="form-control" />
+                    <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">
+                      <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+                      <small *ngIf="signupForm.get('password')?.errors?.['minlength']">
+                        Password must be at least 6 characters long.
+                      </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm your password</label>
+                    <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-control" />
+                    <div *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched" class="text-danger">
+                    <small *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">confirm Password is required.</small>
+                    <small *ngIf="signupForm.get('confirmPassword')?.errors?.['minlength']">
+                        Password must be at least 6 characters long.
+                    </small>
+                    </div>
+                    <div *ngIf="signupForm.get('confirmPassword')?.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched">
+                        <small>Passwords do not match.</small>
+                      </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary submit-button" [disabled]="signupForm.invalid">Create an Account</button>
+          </form>
+    </diV>
+    <div class="signup-rightpane">
+        <img src="assets/images/sapling.jpg" alt="" >
+    </div>
+</div>
