@@ -11,5 +11,5 @@ COPY ${JAR_FILE} app.jar
 # Expose the application port
 EXPOSE 9090
 
-# Command to run the application
+# Command to run the application ver01
 ENTRYPOINT ["java", "-jar", "app.jar"]
