@@ -3,7 +3,7 @@ name: Angular CI
 on:
   push:
     branches:
-      - 'angular'  
+      - 'NGGI-45-create-git-hub-actions-yaml-file-for-ci-cd-pipeline_test'  
   pull_request:
     branches:
       - 'main' 
