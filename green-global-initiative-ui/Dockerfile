@@ -16,6 +16,6 @@ COPY . .
 # Expose port 4200 for the Angular development server
 EXPOSE 4200
 
-# Start the Angular development server with `ng serve`
+# Start the Angular development server with `ng serve` and yaml file action
 CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--port", "4200"]
 
