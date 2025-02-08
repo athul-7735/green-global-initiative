@@ -1,17 +1,16 @@
-name: Docker Build and Run
+name: 🚀 Docker Build and Run
 
 on:
   push:
     branches:
-      - client-ui-dockerfile  # Change this to your branch name if needed
-
+      - client-ui-dockerfile  
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚀 Checkout Code
+      - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
       - name: 🐳 Set up Docker Buildx
@@ -19,16 +18,17 @@ jobs:
 
       - name: 🔨 Build Docker Image
         run: |
-          docker build -t ui_interface .
+          docker build -t ui_interface ./green-global-initiative-ui
 
       - name: 🚢 Run the Container
         run: |
           docker run -d -p 4200:4200 --name ui_interface-container ui_interface
-          sleep 10  # Wait for the container to start
+          echo "🕒 Waiting for the container to start..."
+          sleep 10
 
       - name: ✅ Check if Container is Running
         run: |
-          if docker ps | grep -q "angular-container"; then
+          if docker ps --format '{{.Names}}' | grep -q "ui_interface-container"; then
             echo "✅ Container is running!"
           else
             echo "❌ Container failed to start."
@@ -37,9 +37,18 @@ jobs:
 
       - name: 🔍 Check Application Health
         run: |
-          curl --fail http://localhost:4200 || (echo "❌ App is not reachable!" && exit 1)
+          echo "🌍 Checking application health..."
+          for i in {1..5}; do
+            curl --fail http://localhost:4200 && echo "✅ App is reachable!" && exit 0
+            echo "⏳ App not ready yet... retrying in 5 seconds"
+            sleep 5
+          done
+          echo "❌ App is not reachable after multiple attempts!"
+          exit 1
 
       - name: 🧹 Cleanup
+        if: always()
         run: |
-          docker stop ui_interface-container
-          docker rm ui_interface-container
+          echo "🛑 Stopping and removing the container..."
+          docker stop ui_interface-container || true
+          docker rm ui_interface-container || true
