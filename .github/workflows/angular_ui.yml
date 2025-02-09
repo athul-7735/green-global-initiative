@@ -1,54 +1,56 @@
-name: 🚀 Docker Build and Run
+name: Docker Build and Run
 
 on:
   push:
     branches:
-      - '*'  
+      - 'client-ui-dockerfile' 
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          ref: client-ui-dockerfile
 
-      - name: 🐳 Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: 🔨 Build Docker Image
+      - name: Build Docker Image
         run: |
           docker build -t ui_interface ./green-global-initiative-ui
 
-      - name: 🚢 Run the Container
+      - name: Run the Container
         run: |
           docker run -d -p 4200:4200 --name ui_interface-container ui_interface
-          echo "🕒 Waiting for the container to start..."
+          echo "Waiting for the container to start..."
           sleep 10
 
-      - name: ✅ Check if Container is Running
+      - name: Check if Container is Running
         run: |
           if docker ps --format '{{.Names}}' | grep -q "ui_interface-container"; then
-            echo "✅ Container is running!"
+            echo "Container is running!"
           else
-            echo "❌ Container failed to start."
+            echo "Container failed to start."
             exit 1
           fi
 
-      - name: 🔍 Check Application Health
+      - name: Check Application Health
         run: |
-          echo "🌍 Checking application health..."
+          echo "Checking application health..."
           for i in {1..5}; do
-            curl --fail http://localhost:4200 && echo "✅ App is reachable!" && exit 0
-            echo "⏳ App not ready yet... retrying in 5 seconds"
+            curl --fail http://localhost:4200 && echo "App is reachable!" && exit 0
+            echo "App not ready yet... retrying in 5 seconds"
             sleep 5
           done
-          echo "❌ App is not reachable after multiple attempts!"
+          echo "App is not reachable after multiple attempts!"
           exit 1
 
-      - name: 🧹 Cleanup
+      - name: Cleanup
         if: always()
         run: |
-          echo "🛑 Stopping and removing the container..."
+          echo "Stopping and removing the container..."
           docker stop ui_interface-container || true
           docker rm ui_interface-container || true
