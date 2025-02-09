@@ -3,7 +3,7 @@ name: Docker Build and Run
 on:
   push:
     branches:
-      - 'client-ui-dockerfile' 
+      - '*' 
 
 jobs:
   build-and-test:
