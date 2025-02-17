@@ -19,4 +19,12 @@ export class GrantsService {
   getGrantApplications(resource: string, body: any|null, options?: any): Observable<any> {
     return this.httpClient.get('http://localhost:8080/api/applications');
   }
+ 
+  postGrantApplications(resource: string, body: any|null, options?: any): Observable<any> {
+    return this.httpClient.post('http://localhost:8080/api/applications',body,options);
+  }
+ 
+  getGrants(resource?: string, options?: any): Observable<any> {
+    return this.httpClient.get('http://localhost:8080/api/grants');
+  }
 }

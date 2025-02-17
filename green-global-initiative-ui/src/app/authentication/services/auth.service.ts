@@ -32,4 +32,9 @@ export class AuthService {
   setUser(user: any) {
     sessionStorage.setItem('user', JSON.stringify(user));
   }
+  
+  getUser(): string|null{
+    return sessionStorage.getItem('user');
+  }
+
 }

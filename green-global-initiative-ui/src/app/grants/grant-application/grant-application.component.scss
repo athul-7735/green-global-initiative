@@ -1,0 +1,61 @@
+.page-wrapper{
+    margin: 5vw 5vh;
+}
+.heading{
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5vh;
+}
+
+.application-form {
+    padding-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.form-elements{
+    display: flex;
+    flex-direction: column;
+}
+
+  
+label {
+    font-weight: bold;
+    display: block;
+    margin: 15px 0px;
+}
+
+input, select, textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+
+button {
+    width: 96.5%;
+    padding: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+button:disabled {
+    background: #ccc;
+}
+  
