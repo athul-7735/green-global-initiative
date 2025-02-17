@@ -16,4 +16,9 @@ export const routes: Routes = [
     },
     // { path: 'about-us', component: AboutusComponent },
     // { path: 'contact-us', component: ContactUsComponent },
+
+    { path: 'admin', 
+        loadChildren: () =>
+        import('./admin/admin.module').then((m) => m.AdminModule),
+    },
 ];

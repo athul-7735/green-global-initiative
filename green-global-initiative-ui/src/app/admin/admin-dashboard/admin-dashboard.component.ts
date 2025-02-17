@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GrantsService } from '../services/grants.service';
+import { GrantsService } from '../../grants/services/grants.service';
 import { CommonModule } from '@angular/common';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
