@@ -30,8 +30,11 @@ export class LoginComponent {
       let requestObject = {email: this.loginForm.value.email, password: this.authenticationService.hashPassword(this.loginForm.value.password, 'atu')};
       this.apiService.post('users/login', requestObject).subscribe((response) => {
         console.log('Login Successful!', response);
+        this.authenticationService.setItem(response.token);
+        let userObject = this.authenticationService.getDecodedAccessToken(response.token);
+        console.log(userObject);
         this.authenticationService.setUser(
-          {id: response.userId, lastName: response.lastName, firstName: response.firstName, isAdmin: response.admin}
+          {id: userObject.id, lastName: userObject.lastName, email:userObject.email, firstName: userObject.firstName, isAdmin: userObject.admin}
         );
         this.authenticationService.login();
         this.router.navigate(['/home']);
