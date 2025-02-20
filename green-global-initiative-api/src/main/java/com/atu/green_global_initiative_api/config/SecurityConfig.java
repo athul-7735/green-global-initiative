@@ -1,5 +1,6 @@
 package com.atu.green_global_initiative_api.config;
 
+import com.atu.green_global_initiative_api.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
@@ -57,6 +59,12 @@ public class SecurityConfig {
                             .formLogin(formLogin -> formLogin.disable()) // Disable the default login page
 //                .httpBasic(httpBasic -> httpBasic.disable()); // Disable HTTP Basic authentication
                 .httpBasic(httpBasic -> Customizer.withDefaults()); // Disable HTTP Basic authentication
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public JwtFilter jwtAuthenticationFilter() {
+        return new JwtFilter();
     }
 }

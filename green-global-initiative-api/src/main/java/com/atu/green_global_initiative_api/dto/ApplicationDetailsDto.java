@@ -1,18 +1,16 @@
 package com.atu.green_global_initiative_api.dto;
 
 import com.atu.green_global_initiative_api.model.dao.Grants;
-import com.atu.green_global_initiative_api.model.dao.UserDetails;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 public class ApplicationDetailsDto {
     private int applicationId;
     private String organizationName;
     private String applicationStatus;
-    private UserDetails userDetails;
+    private UserDetailsDto userDetailsDto;
     private Grants grants;
-    private String ApprovalDate;
+    private String approvalDate;
+    private String requestedAmount;
+    private String projectDescription;
 
     public int getApplicationId() {
         return applicationId;
@@ -38,12 +36,12 @@ public class ApplicationDetailsDto {
         this.applicationStatus = applicationStatus;
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public UserDetailsDto getUserDetailsDto() {
+        return userDetailsDto;
     }
 
-    public void setUserDetails(UserDetails userDetails) {
-        this.userDetails = userDetails;
+    public void setUserDetailsDto(UserDetailsDto userDetailsDto) {
+        this.userDetailsDto = userDetailsDto;
     }
 
     public Grants getGrants() {
@@ -55,10 +53,26 @@ public class ApplicationDetailsDto {
     }
 
     public String getApprovalDate() {
-        return ApprovalDate;
+        return approvalDate;
     }
 
     public void setApprovalDate(String approvalDate) {
-        ApprovalDate = approvalDate;
+        this.approvalDate = approvalDate;
+    }
+
+    public String getRequestedAmount() {
+        return requestedAmount;
+    }
+
+    public void setRequestedAmount(String requestedAmount) {
+        this.requestedAmount = requestedAmount;
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
     }
 }

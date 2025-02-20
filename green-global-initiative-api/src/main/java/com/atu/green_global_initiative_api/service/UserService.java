@@ -9,4 +9,6 @@ public interface UserService {
     List<UserDetailsDto> getAllUserDetails();
     UserDetailsDto userSignUp(UserDetails userDetails);
     UserDetailsDto authenticateUser(String username, String password);
+    UserDetailsDto getAllUserDetailsById(Integer id);
+    UserDetailsDto getAllUserDetailsByEmail(String email);
 }

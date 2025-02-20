@@ -6,12 +6,9 @@ import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
 import com.atu.green_global_initiative_api.model.dao.Grants;
 import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.repository.UserDetailsRepo;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,6 +37,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetailsDto getAllUserDetailsById(Integer userId) {
+        logger.info("getAllUserDetailsById Method Started");
+        List<UserDetails> userDetailsList = userDetailsRepo.findAllById(userId);
+        List<UserDetailsDto> userDetailsDtoList = new ArrayList<>();
+        for (UserDetails userDetails : userDetailsList) {
+            userDetailsDtoList.add(mapToUserDto(userDetails));
+        }
+        return userDetailsDtoList.getFirst();
+    }
+
+    @Override
+    public UserDetailsDto getAllUserDetailsByEmail(String email) {
+        logger.info("getAllUserDetailsByEmail Method Started");
+        List<UserDetails> userDetailsList = userDetailsRepo.findAllByEmail(email);
+        List<UserDetailsDto> userDetailsDtoList = new ArrayList<>();
+        for (UserDetails userDetails : userDetailsList) {
+            userDetailsDtoList.add(mapToUserDto(userDetails));
+        }
+        return userDetailsDtoList.getFirst();
+    }
+
+    @Override
     public UserDetailsDto userSignUp(UserDetails userDetails) {
         logger.info("userSignUp Method Started");
         UserDetails res = userDetailsRepo.save(userDetails);
@@ -65,7 +84,7 @@ public class UserServiceImpl implements UserService {
         return userDetails;
     }
 
-    private UserDetailsDto mapToUserDto(UserDetails userDetails){
+    static UserDetailsDto mapToUserDto(UserDetails userDetails){
         logger.info("mapToUserDto Method Started");
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         userDetailsDto.setUserId(userDetails.getUserId());
@@ -80,6 +99,8 @@ public class UserServiceImpl implements UserService {
                 applicationDetail.setApplicationId(applicationDetails.getApplicationId());
                 applicationDetail.setApplicationStatus(applicationDetails.getApplicationStatus());
                 applicationDetail.setOrganizationName(applicationDetails.getOrganizationName());
+                applicationDetail.setRequestedAmount(applicationDetails.getRequestedAmount());
+                applicationDetail.setProjectDescription(applicationDetails.getProjectDescription());
                 Grants grant = new Grants();
                 grant.setGrantId(applicationDetails.getGrants().getGrantId());
                 grant.setGrantName(applicationDetails.getGrants().getGrantName());
