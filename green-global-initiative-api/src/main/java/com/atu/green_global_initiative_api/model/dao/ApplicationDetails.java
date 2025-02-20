@@ -19,8 +19,20 @@ public class ApplicationDetails {
     private String organizationName;
     @Column(name="application_status", nullable = false)
     private String applicationStatus;
-    @Column(name="approval_date", nullable = false)
-    private String ApprovalDate;
+    @Column(name="approval_date")
+    private String approvalDate;
+    @Column(name="requested_amount", nullable = false)
+    private String requestedAmount;
+    @Column(name="project_description", nullable = false)
+    private String projectDescription;
+
+    public String getRequestedAmount() {
+        return requestedAmount;
+    }
+
+    public void setRequestedAmount(String requestedAmount) {
+        this.requestedAmount = requestedAmount;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
@@ -71,10 +83,18 @@ public class ApplicationDetails {
     }
 
     public String getApprovalDate() {
-        return ApprovalDate;
+        return approvalDate;
     }
 
     public void setApprovalDate(String approvalDate) {
-        ApprovalDate = approvalDate;
+        this.approvalDate = approvalDate;
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
     }
 }
