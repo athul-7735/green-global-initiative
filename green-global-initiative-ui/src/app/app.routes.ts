@@ -7,7 +7,6 @@ import { AboutusComponent } from './about-us/about-us.component';
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent, providers: [provideHttpClient()] },
-  //{ path: '**', redirectTo: 'home' },
     { path: 'login', 
         loadChildren: () =>
         import('./authentication/authentication.module').then((m) => m.AuthenticationModule),
@@ -23,4 +22,5 @@ export const routes: Routes = [
         loadChildren: () =>
         import('./admin/admin.module').then((m) => m.AdminModule),
     },
+    { path: '**', redirectTo: 'home' },
 ];
