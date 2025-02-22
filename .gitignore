@@ -23,4 +23,7 @@
 hs_err_pid*
 replay_pid*
 
-
+green-global-initiative-api/.idea/
+.idea
+*/.angular
+*/node_modules
