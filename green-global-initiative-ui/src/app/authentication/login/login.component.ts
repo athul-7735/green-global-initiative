@@ -27,6 +27,7 @@ export class LoginComponent {
   onSubmit() {
     this.errorMessage = '';
     if (this.loginForm.valid) {
+      this.authenticationService.removeItem();
       let requestObject = {email: this.loginForm.value.email, password: this.authenticationService.hashPassword(this.loginForm.value.password, 'atu')};
       this.apiService.post('users/login', requestObject).subscribe((response) => {
         console.log('Login Successful!', response);
