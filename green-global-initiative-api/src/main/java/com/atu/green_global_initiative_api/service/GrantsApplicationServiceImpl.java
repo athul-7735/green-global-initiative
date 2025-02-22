@@ -67,18 +67,6 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     }
 
     @Override
-    public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
-        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationId);
-        List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
-        return applicationDetailsDtoList;
-    }
-
-    @Override
-    public ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
-        return null;
-    }
-
-    @Override
     public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
         ApplicationDetails applicationDetails = new ApplicationDetails();
         applicationDetails.setApplicationId(applicationCreateRequest.getApplicationId());
@@ -97,9 +85,23 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         }
         List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
         applicationDetailsList.add(applicationDetails);
-       ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
-       List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
-       applicationDetailsResponseList.add(applicationDetailsResponse);
-       return mapToApplicationDetailsDto(applicationDetailsResponseList);
+        ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
+        List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
+        applicationDetailsResponseList.add(applicationDetailsResponse);
+        return mapToApplicationDetailsDto(applicationDetailsResponseList);
     }
+
+    @Override
+    public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
+        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationId);
+        List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
+        return applicationDetailsDtoList;
+    }
+
+    @Override
+    public ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
+        return null;
+    }
+
+
 }
