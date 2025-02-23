@@ -29,6 +29,16 @@ public class GrantsApplicationController {
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
 
+    // Get all users
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<ApplicationDetailsDto>> getAllApplications() {
+        List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetails();
+        return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
+    }
+
+
+
     @PostMapping
     @CrossOrigin(origins = "*")
     public ApplicationDetailsDto createApplication(@RequestBody ApplicationCreateRequest applicationCreateRequest) {
@@ -42,13 +52,6 @@ public class GrantsApplicationController {
         return res.getFirst();
     }
 
-    // Get all users
-    @GetMapping
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<List<ApplicationDetailsDto>> getAllApplications() {
-        List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetails();
-        return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
-    }
 
 
 
