@@ -8,7 +8,7 @@
             <a routerLink="/home">Home</a>
             <a routerLink="/about-us">About</a>
             <a routerLink="/grants">Grants</a>
-            <a *ngIf="isAuth" routerLink="/profile">Grant Form</a>
+            <a *ngIf="isAuth" routerLink="/grants/grant-application">Grant Form</a>
             <a *ngIf="isAuth" routerLink="/profile">My Profile</a>
             <button (click)="logout()" *ngIf="isAuth">
                 <a routerLink="/">Log Out</a>
