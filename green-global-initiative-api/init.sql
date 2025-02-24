@@ -52,30 +52,20 @@ CREATE TABLE `user_details` (
 -- nausicaa_global_green_db.application_details definition
 
 CREATE TABLE `application_details` (
-
   `application_id` int NOT NULL AUTO_INCREMENT,
-
   `user_id` int NOT NULL,
-
   `organization_name` varchar(255) NOT NULL,
-
   `grant_id` int NOT NULL,
-
   `application_status` varchar(255) NOT NULL,
-
-  `approval_date` varchar(255) NOT NULL,
-
+  `approval_date` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `requested_amount` varchar(255) NOT NULL,
+  `project_description` varchar(255) NOT NULL,
   PRIMARY KEY (`application_id`),
-
   KEY `application_details_user_details_FK` (`user_id`),
-
   KEY `application_details_grants_FK` (`grant_id`),
-
   CONSTRAINT `application_details_grants_FK` FOREIGN KEY (`grant_id`) REFERENCES `grants` (`grant_id`),
-
   CONSTRAINT `application_details_user_details_FK` FOREIGN KEY (`user_id`) REFERENCES `user_details` (`user_id`)
-
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 INSERT INTO nausicaa_global_green_db.grants
@@ -95,5 +85,5 @@ INSERT INTO nausicaa_global_green_db.user_details
 VALUES('suku', 11, 's', 'suku@gmail.com', 'jmvqo3C1dnIzvF5+/FT1xmCAyDGd3S7al+KMRoOie/4=', 0, '2025-01-29T00:26:37.240Z', 0);
 
 INSERT INTO nausicaa_global_green_db.application_details
-(application_id, user_id, organization_name, grant_id, application_status, approval_date)
-VALUES(1, 1, 'ATU', 1, 'In Progress', '21/01/2024');
+(application_id, user_id, organization_name, grant_id, application_status, approval_date, requested_amount, project_description)
+VALUES(1, 1, 'ATU', 1, 'In Progress', '21/01/2024', '10000', '');

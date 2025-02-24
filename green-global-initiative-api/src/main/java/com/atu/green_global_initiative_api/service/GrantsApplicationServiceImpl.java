@@ -28,8 +28,43 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     @Autowired
     private GrantsRepo grantsRepo;
 
-    @Autowired
-    UserServiceImpl userServiceImpl;
+
+    @Override
+    public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
+        ApplicationDetails applicationDetails = new ApplicationDetails();
+        applicationDetails.setApplicationId(applicationCreateRequest.getApplicationId());
+        applicationDetails.setOrganizationName(applicationCreateRequest.getOrganizationName());
+        applicationDetails.setApplicationStatus(applicationCreateRequest.getApplicationStatus());
+        applicationDetails.setApprovalDate(applicationCreateRequest.getApprovalDate());
+        applicationDetails.setRequestedAmount(applicationCreateRequest.getRequestedAmount());
+        applicationDetails.setProjectDescription(applicationCreateRequest.getProjectDescription());
+        List<UserDetails> userDetailsList = userDetailsRepo.findAllById(applicationCreateRequest.getUserId());
+        if(!userDetailsList.isEmpty()){
+            applicationDetails.setUserDetails(userDetailsList.getFirst());
+        }
+        List<Grants> grants = grantsRepo.findAllById(applicationCreateRequest.getGrantId());
+        if(!grants.isEmpty()){
+            applicationDetails.setGrants(grants.get(0));
+        }
+        List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
+        applicationDetailsList.add(applicationDetails);
+        ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
+        List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
+        applicationDetailsResponseList.add(applicationDetailsResponse);
+        return mapToApplicationDetailsDto(applicationDetailsResponseList);
+    }
+
+    @Override
+    public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
+        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationId);
+        List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
+        return applicationDetailsDtoList;
+    }
+
+    @Override
+    public ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
+        return null;
+    }
 
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetails() {
@@ -66,40 +101,5 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         return applicationDetailsDtoList;
     }
 
-    @Override
-    public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
-        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationId);
-        List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
-        return applicationDetailsDtoList;
-    }
 
-    @Override
-    public ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
-        return null;
-    }
-
-    @Override
-    public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
-        ApplicationDetails applicationDetails = new ApplicationDetails();
-        applicationDetails.setApplicationId(applicationCreateRequest.getApplicationId());
-        applicationDetails.setOrganizationName(applicationCreateRequest.getOrganizationName());
-        applicationDetails.setApplicationStatus(applicationCreateRequest.getApplicationStatus());
-        applicationDetails.setApprovalDate(applicationCreateRequest.getApprovalDate());
-        applicationDetails.setRequestedAmount(applicationCreateRequest.getRequestedAmount());
-        applicationDetails.setProjectDescription(applicationCreateRequest.getProjectDescription());
-        List<UserDetails> userDetailsList = userDetailsRepo.findAllById(applicationCreateRequest.getUserId());
-        if(!userDetailsList.isEmpty()){
-            applicationDetails.setUserDetails(userDetailsList.getFirst());
-        }
-        List<Grants> grants = grantsRepo.findAllById(applicationCreateRequest.getGrantId());
-        if(!grants.isEmpty()){
-            applicationDetails.setGrants(grants.get(0));
-        }
-        List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
-        applicationDetailsList.add(applicationDetails);
-       ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
-       List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
-       applicationDetailsResponseList.add(applicationDetailsResponse);
-       return mapToApplicationDetailsDto(applicationDetailsResponseList);
-    }
 }

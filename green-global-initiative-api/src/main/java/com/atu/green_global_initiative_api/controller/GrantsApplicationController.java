@@ -37,6 +37,8 @@ public class GrantsApplicationController {
         return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
     }
 
+
+
     @PostMapping
     @CrossOrigin(origins = "*")
     public ApplicationDetailsDto createApplication(@RequestBody ApplicationCreateRequest applicationCreateRequest) {
@@ -49,5 +51,8 @@ public class GrantsApplicationController {
         }
         return res.getFirst();
     }
+
+
+
 
 }
