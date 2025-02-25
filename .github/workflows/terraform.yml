@@ -16,6 +16,9 @@ on:
         - destroy
         required: true
         default: 'apply'
+  push:  # Automatic trigger on push to branch
+    branches:
+      - '*'
 
 
 env:
