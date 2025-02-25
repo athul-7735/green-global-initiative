@@ -16,6 +16,9 @@ on:
         - destroy
         required: true
         default: 'apply'
+  push:  # Automatic trigger on push to main
+    branches:
+      - NGGI-84-automate-cluster-creation-using-git-hub-actions-yaml-file
 
 env:
       AWS_REGION: us-east-1
