@@ -50,7 +50,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: eks
+        working-directory: eks-terraform/eks
 
     env:
       AWS_REGION: us-east-1
@@ -94,7 +94,7 @@ jobs:
       
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform init
 
   Terraform-Formatting-Validating:
@@ -112,16 +112,16 @@ jobs:
         terraform_version: 1.10.5
         
     - name: Terraform Init
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform init
       
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform fmt
 
     - name: Terraform Validate
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform validate
 
   Terraform-Action:
@@ -139,13 +139,13 @@ jobs:
         terraform_version: 1.10.5
 
     - name: Terraform Init
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform init
 
       
     - name: Terraform Plan
       if: ${{ github.event.inputs.action  == 'plan' }}
-      working-directory: eks
+      working-directory: eks-terraform/eks
       # Generates an execution plan for Terraform
       run: |
         terraform plan -var-file=${{ github.event.inputs.tfvars_file }} -input=false
@@ -154,10 +154,10 @@ jobs:
       # Apply the Terraform Configuration according to the parameter
     - name: Terraform Action
       if: ${{ github.event.inputs.action  == 'apply' }}
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform ${{ github.event.inputs.action }} -auto-approve -var-file=${{ github.event.inputs.tfvars_file }} -input=false
 
     - name: Terraform Destroy
       if: ${{ github.event.inputs.action == 'destroy' }}
-      working-directory: eks
+      working-directory: eks-terraform/eks
       run: terraform ${{ github.event.inputs.action }} -auto-approve -var-file=${{ github.event.inputs.tfvars_file }} -input=false
