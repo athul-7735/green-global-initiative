@@ -18,7 +18,7 @@ on:
         default: 'apply'
   push:  # Automatic trigger on push to branch
     branches:
-      - '*'
+      - NGGI-84-automate-cluster-creation-using-git-hub-actions-yaml-file
 
 
 env:
