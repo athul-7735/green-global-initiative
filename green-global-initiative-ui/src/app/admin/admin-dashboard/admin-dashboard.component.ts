@@ -126,6 +126,6 @@ export class AdminDashboardComponent implements OnInit {
 
   onApplicationSelection(row:any) {
     console.log('Selected Application:', row);
-    this.router.navigate(['/home'])
+    this.router.navigate(['/application-approval',row.id],)
   }
 }
