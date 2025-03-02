@@ -4,10 +4,12 @@ on:
   workflow_dispatch: # Allows manual triggering from the Actions tab
   pull_request: # Still runs on pull request events
     branches:
-      - main
+      # - main
+      - NGGI-97-sonar-cube-sonar-lint-integration
   push: # Also runs on pushes to the main branch
     branches:
-      - main
+      # - main
+      - NGGI-97-sonar-cube-sonar-lint-integration
 
 jobs:
   sonarqube:
