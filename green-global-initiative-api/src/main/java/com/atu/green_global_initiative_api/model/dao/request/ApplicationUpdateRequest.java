@@ -4,6 +4,15 @@ public class ApplicationUpdateRequest {
     private int applicationId;
     private String organizationName;
     private String applicationStatus;
+    private String adminComments;
+
+    public String getAdminComments() {
+        return adminComments;
+    }
+
+    public void setAdminComments(String adminComments) {
+        this.adminComments = adminComments;
+    }
 
     public int getApplicationId() {
         return applicationId;

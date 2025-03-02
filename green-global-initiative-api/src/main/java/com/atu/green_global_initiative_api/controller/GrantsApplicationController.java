@@ -6,6 +6,7 @@ import com.atu.green_global_initiative_api.dto.UserDetailsDto;
 import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
 import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.model.dao.request.ApplicationCreateRequest;
+import com.atu.green_global_initiative_api.model.dao.request.ApplicationUpdateRequest;
 import com.atu.green_global_initiative_api.service.GrantsApplicationServiceImpl;
 import com.atu.green_global_initiative_api.service.UserServiceImpl;
 import io.micrometer.core.ipc.http.HttpSender;
@@ -51,7 +52,18 @@ public class GrantsApplicationController {
         }
         return res.getFirst();
     }
-
+    @PatchMapping
+    @CrossOrigin(origins = "*")
+    public ApplicationDetailsDto updateApplication(@RequestBody ApplicationUpdateRequest applicationUpdateRequest) {
+        logger.info("updateApplication method Started");
+        List<ApplicationDetailsDto> res = new ArrayList<>();
+        try {
+            res = grantsApplicationService.updateApplicationDetails(applicationUpdateRequest);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res.getFirst();
+    }
 
 
 

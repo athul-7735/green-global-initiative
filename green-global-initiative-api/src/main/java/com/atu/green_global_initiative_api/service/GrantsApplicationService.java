@@ -11,6 +11,6 @@ public interface GrantsApplicationService {
     List<ApplicationDetailsDto> getAllApplicationDetails();
     List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest);
     List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId);
-    ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest);
+    List<ApplicationDetailsDto> updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest);
 
 }

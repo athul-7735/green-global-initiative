@@ -56,15 +56,11 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
 
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
-        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationId);
+        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(Integer.parseInt(applicationId));
         List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
         return applicationDetailsDtoList;
     }
 
-    @Override
-    public ApplicationDetailsDto updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
-        return null;
-    }
 
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetails() {
@@ -99,6 +95,23 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             applicationDetailsDtoList.add(applicationDetailsDto);
         }
         return applicationDetailsDtoList;
+    }
+    @Override
+    public List<ApplicationDetailsDto> updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
+        List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
+
+        applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationUpdateRequest.getApplicationId());
+        if (applicationDetailsList.isEmpty()) {
+            return null;
+        } else {
+            ApplicationDetails applicationDetails = applicationDetailsList.get(0);
+            applicationDetails.setApplicationStatus(applicationUpdateRequest.getApplicationStatus());
+            applicationDetails.setAdminComments(applicationUpdateRequest.getAdminComments());
+            ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
+            List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
+            applicationDetailsResponseList.add(applicationDetailsResponse);
+            return mapToApplicationDetailsDto(applicationDetailsResponseList);
+        }
     }
 
 
