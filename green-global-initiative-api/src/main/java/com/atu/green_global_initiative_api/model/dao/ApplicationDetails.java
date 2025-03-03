@@ -25,6 +25,16 @@ public class ApplicationDetails {
     private String requestedAmount;
     @Column(name="project_description", nullable = false)
     private String projectDescription;
+    @Column(name="admin_comments", nullable = true)
+    private String adminComments;
+
+    public String getAdminComments() {
+        return adminComments;
+    }
+
+    public void setAdminComments(String adminComments) {
+        this.adminComments = adminComments;
+    }
 
     public String getRequestedAmount() {
         return requestedAmount;
