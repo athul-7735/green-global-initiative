@@ -16,6 +16,14 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        #uses: SonarSource/sonarqube-scan-action@v5 #Comment this line if we are going to use Run command
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.sources=. \
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number || '0' }} \
+            -Dsonar.pullrequest.branch=${{ github.head_ref || github.ref_name }} \
+            -Dsonar.pullrequest.base=${{ github.base_ref || 'main' }} \
+            -Dsonar.pullrequest.provider=github \
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
