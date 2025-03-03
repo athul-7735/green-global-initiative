@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -52,19 +53,32 @@ public class GrantsApplicationController {
         }
         return res.getFirst();
     }
+
+
+
     @PatchMapping
     @CrossOrigin(origins = "*")
-    public ApplicationDetailsDto updateApplication(@RequestBody ApplicationUpdateRequest applicationUpdateRequest) {
-        logger.info("updateApplication method Started");
+    public ResponseEntity<ApplicationDetailsDto> updateApplication(@RequestBody ApplicationUpdateRequest applicationUpdateRequest) {
+        logger.info("patchApplication method Started");
         List<ApplicationDetailsDto> res = new ArrayList<>();
         try {
-            res = grantsApplicationService.updateApplicationDetails(applicationUpdateRequest);
+            if(Objects.equals(applicationUpdateRequest.getApplicationStatus(), "Approved") || Objects.equals(applicationUpdateRequest.getApplicationStatus(), "Rejected") || Objects.equals(applicationUpdateRequest.getApplicationStatus(), "In Progress")){
+                res = grantsApplicationService.updateApplicationDetails(applicationUpdateRequest);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+            if(res == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return res.getFirst();
+        if(!res.isEmpty()){
+            return ResponseEntity.ok(res.getFirst());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
-
 
 
 }
