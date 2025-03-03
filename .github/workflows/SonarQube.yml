@@ -27,8 +27,11 @@ jobs:
         #uses: SonarSource/sonarqube-scan-action@v5 #Comment this line if we are going to use Run command
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} # Comment this line if we ar enot using run command
         run: |
           sonar-scanner \
+            -Dsonar.projectKey=JohnKirubaharan_green-global-initiative \
+            -Dsonar.organization=johnkirubaharan \
             -Dsonar.sources=. \
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number || '0' }} \
             -Dsonar.pullrequest.branch=${{ github.head_ref || github.ref_name }} \
