@@ -15,6 +15,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          
+      # Install SonarScanner - Comment line 19 to 24 if we are not using run command
+      - name: Install SonarScanner
+        run: |
+          curl -sL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip -o sonar-scanner.zip
+          unzip sonar-scanner.zip -d $HOME
+          echo "$HOME/sonar-scanner-4.7.0.2747-linux/bin" >> $GITHUB_PATH
+      
       - name: SonarQube Scan
         #uses: SonarSource/sonarqube-scan-action@v5 #Comment this line if we are going to use Run command
         env:
