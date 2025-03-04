@@ -13,9 +13,9 @@ const httpsOptions = {
 export class GrantsService {
 
   constructor(private httpClient: HttpClient) { }
-
+ 
   private apiUrl = 'http://localhost:8080/api/';
-
+ 
   getGrantApplications(resource: string, options: any = httpsOptions): Observable<any> {
     return this.httpClient.get('http://localhost:8080/api/applications');
   }
