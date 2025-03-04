@@ -19,7 +19,7 @@ export class GrantsService {
   getGrantApplications(resource: string, options: any = httpsOptions): Observable<any> {
     return this.httpClient.get('http://localhost:8080/api/applications');
   }
- 
+
   getGrantApplicationsById(resource: string, options: any = httpsOptions): Observable<any> {
     const url = `http://localhost:8080/api/applications/${resource}`;
     return this.httpClient.get(url);
@@ -28,7 +28,7 @@ export class GrantsService {
   postGrantApplications(resource: string, body: any|null, options: any = httpsOptions): Observable<any> {
     return this.httpClient.post('http://localhost:8080/api/applications',body,options);
   }
- 
+
   updateGrantApplications(resource: string, body: any|null, options: any=httpsOptions): Observable<any> {
     return this.httpClient.post('http://localhost:8080/api/applications',body,options);
   }

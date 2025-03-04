@@ -15,19 +15,6 @@ export class GrantApplicationComponent implements OnInit{
   activeUser !: { firstName: string, id: number, isAdmin: boolean, lastName: string, email: string };
   grantForm: FormGroup;
   grantOptions:any[] = [];
-  // grantOptions = [
-  //   {
-  //     name:'Teto Grant', 
-  //     id: 1
-  //   }, 
-  //   { name:'Pejite Innovation Grant',
-  //     id: 2
-  //   }, 
-  //   {
-  //     name: 'Ohmu Biodiversity Grant',
-  //     id: 3
-  //   }
-  // ];
 
   constructor(private fb: FormBuilder, private grantsService: GrantsService, private authService: AuthService) {
     this.grantForm = this.fb.group({
@@ -49,7 +36,7 @@ export class GrantApplicationComponent implements OnInit{
 
   ngOnInit(){
     const userData: string|null = this.authService.getUser();
-    this.activeUser = JSON.parse(userData?userData:'');
+    this.activeUser = JSON.parse(userData?userData: JSON.stringify ({ firstName: '', id: null , isAdmin: false, lastName: '', email: '' }));
     this.grantForm.controls['applicantName'].setValue(this.activeUser?.firstName + ' ' + this.activeUser?.lastName)
     this.grantForm.controls['email'].setValue(this.activeUser.email);
   }

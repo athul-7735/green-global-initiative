@@ -8,7 +8,6 @@ const routes: Routes = [
   { path: 'admin-dashboard', component: AdminDashboardComponent },
   { path: 'application-approval/:id', component: AdminApprovalComponent, data: {id: 'some value'}},
   { path: '**',  redirectTo: 'admin-dashboard', pathMatch: 'full' },
-
 ];
 
 @NgModule({

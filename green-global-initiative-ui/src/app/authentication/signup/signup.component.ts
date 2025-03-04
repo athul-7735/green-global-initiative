@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SignupComponent {
   signupForm: FormGroup;
+  isPasswordVisible = false;
 
   constructor(private fb: FormBuilder, private router: Router, private authenticationService: AuthService, 
     private apiService: ApiService, private toastr: ToastrService) {
@@ -36,6 +37,10 @@ export class SignupComponent {
       confirmPassword?.setErrors(null);
     }
   }
+
+  togglePasswordVisibility(){
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
   
   onSubmit() {
     if (this.signupForm.valid) {
@@ -54,7 +59,11 @@ export class SignupComponent {
           });
           this.router.navigate(['/login']);
         }    
-      });
+      }, (err)=>
+        this.toastr.error('User Registration Failed', 'Error',  {
+          progressBar: true, closeButton: true 
+        })
+      );
     }
   }
 
