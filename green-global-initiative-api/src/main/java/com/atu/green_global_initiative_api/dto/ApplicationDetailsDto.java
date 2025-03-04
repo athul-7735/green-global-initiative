@@ -11,6 +11,7 @@ public class ApplicationDetailsDto {
     private String approvalDate;
     private String requestedAmount;
     private String projectDescription;
+    private String adminComments;
 
     public int getApplicationId() {
         return applicationId;
@@ -74,5 +75,13 @@ public class ApplicationDetailsDto {
 
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
+    }
+
+    public String getAdminComments() {
+        return adminComments;
+    }
+
+    public void setAdminComments(String adminComments) {
+        this.adminComments = adminComments;
     }
 }

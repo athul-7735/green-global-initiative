@@ -6,14 +6,6 @@ public class ApplicationUpdateRequest {
     private String applicationStatus;
     private String adminComments;
 
-    public String getAdminComments() {
-        return adminComments;
-    }
-
-    public void setAdminComments(String adminComments) {
-        this.adminComments = adminComments;
-    }
-
     public int getApplicationId() {
         return applicationId;
     }
@@ -36,5 +28,13 @@ public class ApplicationUpdateRequest {
 
     public void setApplicationStatus(String applicationStatus) {
         this.applicationStatus = applicationStatus;
+    }
+
+    public String getAdminComments() {
+        return adminComments;
+    }
+
+    public void setAdminComments(String adminComments) {
+        this.adminComments = adminComments;
     }
 }

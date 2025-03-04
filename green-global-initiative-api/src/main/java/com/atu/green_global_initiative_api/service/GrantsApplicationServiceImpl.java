@@ -12,7 +12,6 @@ import com.atu.green_global_initiative_api.repository.GrantsRepo;
 import com.atu.green_global_initiative_api.repository.UserDetailsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +27,12 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     @Autowired
     private GrantsRepo grantsRepo;
 
-
     @Override
     public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
+       List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationCreateRequest.getApplicationId());
+       if(!applicationDetailsList.isEmpty()){ // if exists, do not create the application
+           return null;
+       }
         ApplicationDetails applicationDetails = new ApplicationDetails();
         applicationDetails.setApplicationId(applicationCreateRequest.getApplicationId());
         applicationDetails.setOrganizationName(applicationCreateRequest.getOrganizationName());
@@ -46,8 +48,6 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         if(!grants.isEmpty()){
             applicationDetails.setGrants(grants.get(0));
         }
-        List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
-        applicationDetailsList.add(applicationDetails);
         ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
         List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
         applicationDetailsResponseList.add(applicationDetailsResponse);
@@ -77,6 +77,8 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             applicationDetailsDto.setApplicationStatus(applicationDetails.getApplicationStatus());
             applicationDetailsDto.setApprovalDate(applicationDetails.getApprovalDate());
             applicationDetailsDto.setProjectDescription(applicationDetails.getProjectDescription());
+            applicationDetailsDto.setAdminComments(applicationDetails.getAdminComments());
+            applicationDetailsDto.setRequestedAmount(applicationDetails.getRequestedAmount());
             Grants grants = new Grants();
             grants.setGrantId(applicationDetails.getGrants().getGrantId());
             grants.setGrantName(applicationDetails.getGrants().getGrantName());

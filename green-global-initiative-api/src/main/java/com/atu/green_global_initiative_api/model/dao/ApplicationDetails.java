@@ -28,14 +28,6 @@ public class ApplicationDetails {
     @Column(name="admin_comments", nullable = true)
     private String adminComments;
 
-    public String getAdminComments() {
-        return adminComments;
-    }
-
-    public void setAdminComments(String adminComments) {
-        this.adminComments = adminComments;
-    }
-
     public String getRequestedAmount() {
         return requestedAmount;
     }
@@ -106,5 +98,13 @@ public class ApplicationDetails {
 
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
+    }
+
+    public String getAdminComments() {
+        return adminComments;
+    }
+
+    public void setAdminComments(String adminComments) {
+        this.adminComments = adminComments;
     }
 }
