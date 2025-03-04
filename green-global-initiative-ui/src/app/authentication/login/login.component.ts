@@ -38,7 +38,11 @@ export class LoginComponent {
           {id: userObject.id, lastName: userObject.lastName, email:userObject.email, firstName: userObject.firstName, isAdmin: userObject.admin}
         );
         this.authenticationService.login();
-        this.router.navigate(['/home']);
+        if(userObject.admin) {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/home']);
+        }
         this.toastr.success('Login Successfull', 'Success',  {
           progressBar: true, closeButton: true 
         });

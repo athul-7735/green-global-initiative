@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminApprovalComponent } from './admin-approval.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('AdminApprovalComponent', () => {
   let component: AdminApprovalComponent;
@@ -8,7 +11,16 @@ describe('AdminApprovalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminApprovalComponent]
+      imports: [AdminApprovalComponent, HttpClientModule],
+      providers:[
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({ id: '123' }), // ✅ Mock route parameters
+            snapshot: { queryParams: {}, data: {} }
+          }
+        }
+      ]
     })
     .compileComponents();
 

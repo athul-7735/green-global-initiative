@@ -30,7 +30,7 @@ export class GrantsService {
   }
 
   updateGrantApplications(resource: string, body: any|null, options: any=httpsOptions): Observable<any> {
-    return this.httpClient.post('http://localhost:8080/api/applications',body,options);
+    return this.httpClient.patch('http://localhost:8080/api/applications',body,options);
   }
  
   getGrants(resource?: string, options: any = httpsOptions): Observable<any> {
