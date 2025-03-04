@@ -12,5 +12,5 @@ import java.util.List;
 public interface ApplicationDetailsRepo extends JpaRepository<ApplicationDetails, Integer> {
 
     @Query("SELECT a FROM ApplicationDetails a WHERE a.applicationId = :applicationId")
-    List<ApplicationDetails> findAllByApplicationId(@Param("applicationId") String applicationId);
+    List<ApplicationDetails> findAllByApplicationId(@Param("applicationId") Integer applicationId);
 }
