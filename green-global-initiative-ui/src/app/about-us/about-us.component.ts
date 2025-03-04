@@ -29,7 +29,7 @@ export class AboutusComponent {
       ]
     },
     {
-      heading: 'ACHEIVEMENTS',
+      heading: 'ACHIEVEMENTS',
       content: [
         'Implemented impactful green initiatives, advanced eco-technologies, and fostered global partnerships for a sustainable future.'
       ]

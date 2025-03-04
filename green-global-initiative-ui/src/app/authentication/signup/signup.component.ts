@@ -44,6 +44,7 @@ export class SignupComponent {
   
   onSubmit() {
     if (this.signupForm.valid) {
+      this.authenticationService.removeItem();
       let apiRequestBody = this.mapToSignUpRequest(this.signupForm.value);
       this.apiService.post('users/signup', apiRequestBody).subscribe((response) => {
         if(response.error) {

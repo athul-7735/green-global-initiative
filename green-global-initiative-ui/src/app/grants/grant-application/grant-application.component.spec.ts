@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GrantApplicationComponent } from './grant-application.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('GrantApplicationComponent', () => {
   let component: GrantApplicationComponent;
@@ -8,7 +9,7 @@ describe('GrantApplicationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GrantApplicationComponent]
+      imports: [GrantApplicationComponent, HttpClientModule]
     })
     .compileComponents();
 

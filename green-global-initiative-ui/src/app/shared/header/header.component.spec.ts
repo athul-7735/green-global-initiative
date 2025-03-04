@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,7 +11,16 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent]
+      imports: [HeaderComponent, ToastrModule.forRoot()],
+      providers: [ ToastrService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({ id: '123' }),
+            snapshot: { queryParams: {} }
+          }
+        }
+      ]
     })
     .compileComponents();
 

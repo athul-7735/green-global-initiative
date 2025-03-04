@@ -90,8 +90,8 @@ export class AdminDashboardComponent implements OnInit {
         }
         applicationList.push({
           id: response[i].applicationId,
-          name: response[i].userDetails.first_name + ' ' + response[i].userDetails.last_name,
-          email: response[i].userDetails.email,
+          name: response[i].userDetailsDto.firstName + ' ' + response[i].userDetailsDto.lastName,
+          email: response[i].userDetailsDto.email,
           grant: response[i].grants.grantName,
           date: response[i].approvalDate,
         });
@@ -126,6 +126,6 @@ export class AdminDashboardComponent implements OnInit {
 
   onApplicationSelection(row:any) {
     console.log('Selected Application:', row);
-    this.router.navigate(['/application-approval',row.id],)
+    this.router.navigate(['/admin/application-approval',row.id],)
   }
 }

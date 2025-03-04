@@ -1,0 +1,40 @@
+<div class="admin-approval-section">
+    <div class="page-title">
+        <h1>Grant Application Review</h1>
+    </div>
+    <div class="form-details">
+        <div class="form-title">
+            <img src="assets/images/logo.png" alt="logo" width="50" height="30" />
+            <h2>Application Summary</h2>
+        </div>
+        <div class="details-section">
+            <div class="text-row">
+                <p>Full Name: {{name}}</p>
+            </div>
+            <div class="text-row">
+                <p>Email Address: {{email}}</p>
+            </div>
+            <div class="text-row">
+                <p>Organization Name: {{organization_Name}}</p>
+            </div>
+            <div class="text-row">
+                <p>Selected Grant: {{selected_Grant}}</p>
+            </div>
+            <div class="text-row">
+                <p>Requested Amount: {{requested_Amount}}</p>
+            </div>
+            <div class="text-row">
+                <p>Application Status: {{applicationStatus}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="notes">
+        <p class="notes-title">Admin Notes</p>
+        <textarea [disabled]="!enableEditing" placeholder="Add feedback Notes">{{adminComments}}</textarea>
+        <p class="notes-message" *ngIf="nullComments">Comments should not be empty</p>
+    </div>
+    <div class="button-row">
+        <button class="approve" (click)="onSubmit('approve')" [disabled]="!enableEditing">Approve</button>
+        <button class="reject" (click)="onSubmit('reject')" [disabled]="!enableEditing">Reject</button>
+    </div> 
+</div>

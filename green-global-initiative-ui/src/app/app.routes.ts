@@ -3,6 +3,8 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ContactUsComponent } from './contact-us/contactus.component';
 import { AboutusComponent } from './about-us/about-us.component';
+import { authGuard } from './shared/guards/auth.guard';
+import { roleGuard } from './shared/guards/role.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,6 +23,8 @@ export const routes: Routes = [
     { path: 'admin', 
         loadChildren: () =>
         import('./admin/admin.module').then((m) => m.AdminModule),
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['Admin'] } 
     },
     { path: '**', redirectTo: 'home' },
 ];
