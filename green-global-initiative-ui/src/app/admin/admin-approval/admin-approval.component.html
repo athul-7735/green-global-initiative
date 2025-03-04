@@ -23,14 +23,18 @@
             <div class="text-row">
                 <p>Requested Amount: {{requested_Amount}}</p>
             </div>
+            <div class="text-row">
+                <p>Application Status: {{applicationStatus}}</p>
+            </div>
         </div>
     </div>
     <div class="notes">
-        <p>Admin Notes</p>
-        <textarea placeholder="Add feedback Notes"></textarea>
+        <p class="notes-title">Admin Notes</p>
+        <textarea [disabled]="!enableEditing" placeholder="Add feedback Notes">{{adminComments}}</textarea>
+        <p class="notes-message" *ngIf="nullComments">Comments should not be empty</p>
     </div>
     <div class="button-row">
-        <button class="approve">Approve</button>
-        <button class="reject">Reject</button>
-    </div>
+        <button class="approve" (click)="onSubmit('approve')" [disabled]="!enableEditing">Approve</button>
+        <button class="reject" (click)="onSubmit('reject')" [disabled]="!enableEditing">Reject</button>
+    </div> 
 </div>
