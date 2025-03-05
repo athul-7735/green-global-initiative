@@ -39,7 +39,12 @@ public class GrantsApplicationController {
         return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
     }
 
-
+    @GetMapping("/{id}")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<List<ApplicationDetailsDto>> getApplicationById(@PathVariable String id) throws IllegalArgumentException{
+        List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetailsByApplicationId(id);
+        return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
+    }
 
     @PostMapping
     @CrossOrigin(origins = "*")
@@ -53,8 +58,6 @@ public class GrantsApplicationController {
         }
         return res.getFirst();
     }
-
-
 
     @PatchMapping
     @CrossOrigin(origins = "*")
@@ -79,6 +82,4 @@ public class GrantsApplicationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
-
 }
