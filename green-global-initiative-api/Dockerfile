@@ -1,26 +1,27 @@
-FROM openjdk:21-jdk-slim
-
-# Install Maven
-RUN apt-get update \
-    && apt-get install -y maven \
-    && rm -rf /var/lib/apt/lists/*
+# Stage 1: Build stage
+FROM maven:3.9.6-eclipse-temurin-21 as build
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the Maven project files into the container
+# Copy Maven project files
 COPY pom.xml .
 COPY src ./src
 
-# Clean and build the Maven project
-RUN mvn clean install -DskipTests
+# Build the project (use --no-transfer-progress to speed up)
+RUN mvn clean package -DskipTests --no-transfer-progress
 
-# Copy the built JAR file into the container
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+# Stage 2: Runtime stage with a minimal JDK
+FROM eclipse-temurin:21-jre-alpine
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy only the built JAR from the previous stage
+COPY --from=build /app/target/*.jar app.jar
 
 # Expose the application port
-EXPOSE 9090
+EXPOSE 8080
 
-# Command to run the application
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
