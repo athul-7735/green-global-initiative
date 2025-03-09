@@ -46,5 +46,21 @@ describe('ContactUsComponent', () => {
     const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
     expect(submitButton).toBeTruthy();
   });
+  it('should render "Get In Touch" section', () => {
+    const getInTouchElement = fixture.debugElement.query(By.css('.contact-info h1'));
+    expect(getInTouchElement.nativeElement.textContent).toContain('Get In Touch');
+  });
+  it('should display phone number correctly', () => {
+    const phoneElement = fixture.debugElement.query(By.css('.contact-row p'));
+    expect(phoneElement.nativeElement.textContent).toContain('+353-998877665');
+  });
+  it('should display social media links', () => {
+    const socialLinks = fixture.debugElement.queryAll(By.css('.contact-row img'));
+    expect(socialLinks.length).toBe(3); // Facebook, Instagram, YouTube icons
+  });
+  it('should contain an inquiry form', () => {
+    const formElement = fixture.debugElement.query(By.css('.contact-form form'));
+    expect(formElement).toBeTruthy();
+  });
   
 });
