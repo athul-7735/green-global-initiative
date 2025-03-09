@@ -19,10 +19,10 @@
                     <p>Here is the list of all the applications</p>
                 </div>
                 <div class="application-table">
-                    <mat-form-field>
+                      <!-- <mat-form-field>
                         <mat-label>Filter</mat-label>
                         <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Teto" #input>
-                      </mat-form-field>
+                      </mat-form-field> -->
                       
                       <div class="mat-elevation-z8">
                         <table mat-table [dataSource]="dataSource" matSort>
@@ -67,12 +67,12 @@
                           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                       
                           <!-- Row shown when there is no matching data. -->
-                          <tr class="mat-row" *matNoDataRow>
+                          <!-- <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-                          </tr>
+                          </tr> -->
                         </table>
                       
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                        <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator> -->
                       </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { AdminApprovalComponent } from './admin-approval.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('AdminApprovalComponent', () => {
   let component: AdminApprovalComponent;
@@ -11,7 +12,7 @@ describe('AdminApprovalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminApprovalComponent, HttpClientModule],
+      imports: [AdminApprovalComponent, HttpClientModule, ToastrModule.forRoot()],
       providers:[
         {
           provide: ActivatedRoute,
@@ -19,7 +20,8 @@ describe('AdminApprovalComponent', () => {
             params: of({ id: '123' }), // ✅ Mock route parameters
             snapshot: { queryParams: {}, data: {} }
           }
-        }
+        },
+        ToastrService
       ]
     })
     .compileComponents();
