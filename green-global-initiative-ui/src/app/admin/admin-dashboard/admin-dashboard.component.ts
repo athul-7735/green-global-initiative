@@ -22,13 +22,6 @@ export interface GrantData {
   date: string;
 }
 
-export interface UserData {
-  id: string;
-  name: string;
-  progress: string;
-  fruit: string;
-}
-
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
@@ -73,7 +66,7 @@ export class AdminDashboardComponent implements OnInit {
     this.grantsService.getGrantApplications('grants','').subscribe((response) => {
       console.log('Grants:', response);
       let applicationList: any[] = [];
-      this.totalApps = response.length + 1;
+      this.totalApps = response.length;
       for (let i = 0; i < response.length; i++) {
         
         if(response[i].applicationStatus == 'In Progress'){
