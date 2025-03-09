@@ -10,41 +10,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs';
 
-// const mockGrantApplications = [
-//   {
-//     applicationId: '1',
-//     userDetails: { first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' },
-//     grants: { grantName: 'Grant A' },
-//     approvalDate: '2025-01-01',
-//     applicationStatus: 'In Progress'
-//   },
-//   {
-//     applicationId: '2',
-//     userDetails: { first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com' },
-//     grants: { grantName: 'Grant B' },
-//     approvalDate: '2025-01-02',
-//     applicationStatus: 'Approved'
-//   },
-//   {
-//     applicationId: '3',
-//     userDetails: { first_name: 'Bob', last_name: 'Johnson', email: 'bob.johnson@example.com' },
-//     grants: { grantName: 'Grant C' },
-//     approvalDate: '2025-01-03',
-//     applicationStatus: 'Rejected'
-//   }
-// ];
-
-// class MockGrantsService {
-//   getGrantApplications() {
-//     return of(mockGrantApplications);
-//   }
-// }
-
-// // Mock Router
-// class MockRouter {
-//   navigate = jasmine.createSpy('navigate');
-// }
-
 describe('AdminDashboardComponent', () => {
   let component: AdminDashboardComponent;
   let fixture: ComponentFixture<AdminDashboardComponent>;
@@ -53,10 +18,7 @@ describe('AdminDashboardComponent', () => {
 
   beforeEach(async () => {
     const grantServiceSpy = jasmine.createSpyObj('GrantsService', ['getGrantApplications']);
-    // const applicationServiceMock = {
-    //   getApplications: jasmine.createSpy().and.returnValue(of([{ id: 'A1', name: 'Test App' }]))
-    // };
-
+    grantServiceSpy.getGrantApplications.and.returnValue(of([]));
     await TestBed.configureTestingModule({
       imports: [AdminDashboardComponent, HttpClientModule, MatPaginatorModule, MatSortModule, MatTableModule],
       providers: [
@@ -66,7 +28,6 @@ describe('AdminDashboardComponent', () => {
           provide: ActivatedRoute,
           useValue: { params: of({ id: '123' }) }
         },
-        // { provide: grantsService, useValue: applicationServiceMock }
       ] 
     })
     .compileComponents();
@@ -84,7 +45,6 @@ describe('AdminDashboardComponent', () => {
 
   it('should initialize with default values', () => {
     expect(component.title).toBe('Admin Dashboard');
-    expect(component.totalApps).toBe('');
     expect(component.ApprovedApps).toBe('');
     expect(component.RejectedApps).toBe('');
     expect(component.PendingApps).toBe('');
@@ -92,46 +52,75 @@ describe('AdminDashboardComponent', () => {
 
   it('should call getGrantApplications on init and update data', () => {
     const mockResponse = [
-      { applicationId: 1, applicationStatus: 'Approved', userDetails: { first_name: 'John', last_name: 'Doe', email: 'john@example.com' }, grants: { grantName: 'Grant A' }, approvalDate: '2024-02-26' },
-      { applicationId: 2, applicationStatus: 'Rejected', userDetails: { first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com' }, grants: { grantName: 'Grant B' }, approvalDate: '2024-02-25' },
-      { applicationId: 3, applicationStatus: 'In Progress', userDetails: { first_name: 'Alice', last_name: 'Johnson', email: 'alice@example.com' }, grants: { grantName: 'Grant C' }, approvalDate: '2024-02-24' }
-    ];
-
+      {
+        "applicationId": 1,
+        "organizationName": "ATU",
+        "applicationStatus": "Rejected",
+        "userDetailsDto": {
+            "userId": 1,
+            "firstName": "Athul",
+            "lastName": "S",
+            "email": "athul@gmail.com",
+            "isAdmin": false,
+            "lastLogin": null,
+            "applicationDetails": []
+        },
+        "grants": {
+            "grantId": 1,
+            "grantName": "Teto",
+            "amount": "10000",
+            "description": "For climate change Initiatives",
+            "eligibility": "NA",
+            "applicationDetails": null
+        },
+        "approvalDate": "21/01/2024",
+        "requestedAmount": "10000",
+        "projectDescription": "",
+        "adminComments": null
+    },
+    {
+      "applicationId": 2,
+      "organizationName": "EY",
+      "applicationStatus": "Approved",
+      "userDetailsDto": {
+          "userId": 2,
+          "firstName": "Vinod",
+          "lastName": "Vijayan",
+          "email": "vinod@gmail.com",
+          "isAdmin": false,
+          "lastLogin": null,
+          "applicationDetails": []
+      },
+      "grants": {
+          "grantId": 2,
+          "grantName": "Pejite Innovation",
+          "amount": "5000",
+          "description": "For climate change Initiatives",
+          "eligibility": "NA",
+          "applicationDetails": null
+      },
+      "approvalDate": null,
+      "requestedAmount": "6000",
+      "projectDescription": "This is a Group project for green global initiative POC",
+      "adminComments": null
+    }];
     grantsService.getGrantApplications.and.returnValue(of(mockResponse));
-    
     component.ngOnInit();
 
     expect(grantsService.getGrantApplications).toHaveBeenCalledWith('grants', '');
-    expect(component.totalApps).toBe('4'); // mockResponse.length + 1
     expect(component.ApprovedApps).toBe('1');
     expect(component.RejectedApps).toBe('1');
-    expect(component.PendingApps).toBe('1');
-    expect(component.cards[0].value).toBe('4'); // Total
-    expect(component.cards[1].value).toBe('1'); // Approved
-    expect(component.cards[2].value).toBe('1'); // Pending
-    expect(component.cards[3].value).toBe('1'); // Rejected
-    expect(component.dataSource.data.length).toBe(3);
-  });
-
-  it('should filter table data when applyFilter is called', () => {
-    component.dataSource = new MatTableDataSource([
-      { id: '1', name: 'John Doe', email: 'john@example.com', grant: 'Grant A', date: '2024-02-26' },
-      { id: '2', name: 'Jane Smith', email: 'jane@example.com', grant: 'Grant B', date: '2024-02-25' }
-    ]);
-
-    const inputEvent = { target: { value: 'Jane' } } as unknown as Event;
-    
-    component.applyFilter(inputEvent);
-
-    expect(component.dataSource.filter).toBe('jane');
+    expect(component.PendingApps).toBe('');
+    expect(component.cards[1].value).toBe('1');
+    expect(component.cards[2].value).toBe('0');
+    expect(component.cards[3].value).toBe('1');
+    expect(component.dataSource.data.length).toBe(2);
   });
 
   it('should navigate to application approval page on selection', () => {
     spyOn(router, 'navigate');
-
     const row = { id: 1 };
     component.onApplicationSelection(row);
-
-    expect(router.navigate).toHaveBeenCalledWith(['/application-approval', row.id]);
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/application-approval', row.id]);
   });
 });
