@@ -26,23 +26,22 @@ export class ContactUsComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-    }
+  }
 
-    onSubmit() {
-      this.authenticationService.removeItem();
-      let requestObject = this.contactUsForm.value;
-      this.contact.postQuery('contact-us', requestObject).subscribe((response) => {
-        console.log('Query Submitted!', response);
-        this.toastr.success('Query Submitted Successfully', 'Success',  {
-          progressBar: true, closeButton: true 
-        });
-      },(err)=>{
-        console.log(err);
-        this.toastr.error('Invalid Query!', 'Error',  {
-          progressBar: true, closeButton: true 
-        });
+  onSubmit() {
+    this.authenticationService.removeItem();
+    let requestObject = this.contactUsForm.value;
+    this.contact.postQuery('contact-us', requestObject).subscribe((response) => {
+      console.log('Query Submitted!', response);
+      this.toastr.success('Query submitted successfully', 'Success',  {
+        progressBar: true, closeButton: true , timeOut: 500000
       });
-      this.contactUsForm.reset();
-    }
+    },(err)=>{
+      console.log(err);
+      this.toastr.error('Invalid Query!', 'Error',  {
+        progressBar: true, closeButton: true 
+      });
+    });
+    this.contactUsForm.reset();
+  }
 }
