@@ -16,6 +16,10 @@ on:
           - destroy
         required: true
         default: "apply"
+  push:  # Automatic trigger on push to branch
+    branches:
+      - NGGI-105-bug-fixing-and-unit-testing
+      - NGGI-113-domain-name-integration-ingress-controller-in-manifest-file
 
 env:
   AWS_REGION: us-east-1
