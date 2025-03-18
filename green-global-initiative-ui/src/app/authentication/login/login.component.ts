@@ -43,8 +43,8 @@ export class LoginComponent {
         } else {
           this.router.navigate(['/home']);
         }
-        this.toastr.success('Login Successfull', 'Success',  {
-          progressBar: true, closeButton: true 
+        this.toastr.success('Login successfull', 'Success',  {
+          progressBar: true, closeButton: true , timeOut: 500000
         });
       },
       error => {
