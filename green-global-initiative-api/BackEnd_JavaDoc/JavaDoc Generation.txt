@@ -1,0 +1,6 @@
+Generate Javadoc Documentation:
+
+To generate the Javadoc HTML documentation:
+Navigate to Tools > Generate JavaDoc... in the menu.
+Configure the output directory and other options as needed.
+Click OK to generate the documentation.
