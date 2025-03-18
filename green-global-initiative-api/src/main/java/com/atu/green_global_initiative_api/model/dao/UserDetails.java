@@ -31,7 +31,7 @@ public class UserDetails {
     @JsonProperty("password")
     @Column(name="password",nullable = false)
     private String password;
-    @JsonProperty("isAdmin")
+    @JsonProperty("is_admin")
     @Column(name="isAdmin",nullable = false)
     private boolean isAdmin;
     @JsonProperty("last_login")
