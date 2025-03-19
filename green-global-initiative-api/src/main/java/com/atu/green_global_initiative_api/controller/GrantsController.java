@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
+/**
+ * REST controller for managing grants in the Nausicaä Green Global Initiative.
+ * Provides an endpoint for retrieving information about all grants.
+ */
 @RestController
 @RequestMapping("/api/grants")
 @CrossOrigin(origins = "*")
@@ -27,7 +30,11 @@ public class GrantsController {
     private GrantsServiceImpl grantsService;
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
-
+    /**
+     * Retrieves all grants available in the system.
+     *
+     * @return A list of {@link GrantsDto} objects containing details of all grants.
+     */
     // Get all users
     @GetMapping
     @CrossOrigin(origins = "*")
