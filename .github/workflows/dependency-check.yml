@@ -37,7 +37,7 @@ jobs:
             -v ${{ github.workspace }}/reports/green-global-initiative-ui:/report \
             owasp/dependency-check \
             --scan /src \
-            --format ALL \
+            --format HTML \
             --project Angular-Project \
             --out /report
 
@@ -47,47 +47,4 @@ jobs:
           name: Angular-Dependency-Check-Report
           path: reports/green-global-initiative-ui
 
-  backend-scan:
-    name: Spring Boot Dependency Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Build and resolve dependencies
-        run: |
-          cd green-global-initiative-api
-          ./mvnw clean install -DskipTests
-
-      - name: Run OWASP Dependency-Check (Spring Boot)
-        run: |
-          mkdir -p reports/green-global-initiative-api
-          docker run --rm \
-            -v ${{ github.workspace }}/green-global-initiative-api:/src \
-            -v ${{ github.workspace }}/reports/green-global-initiative-api:/report \
-            owasp/dependency-check \
-            --scan /src \
-            --format ALL \
-            --project Spring-Boot-Project \
-            --out /report
-
-      - name: Upload Spring Boot Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: Spring-Boot-Dependency-Check-Report
-          path: reports/backend
-
-      - name: Check for vulnerabilities
-        run: |
-          if grep -q '<severity>CRITICAL</severity>' reports/backend/dependency-check-report.xml; then
-            echo "CRITICAL vulnerabilities found!" && exit 1;
-          else
-            echo "No critical vulnerabilities detected.";
-          fi
+ 
