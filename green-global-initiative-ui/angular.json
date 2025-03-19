@@ -98,6 +98,9 @@
             },
             "development": {
               "buildTarget": "green-global-initiative-ui:build:development"
+            },
+            "local": {
+            "buildTarget": "green-global-initiative-ui:build:local"
             }
           },
           "defaultConfiguration": "development"
