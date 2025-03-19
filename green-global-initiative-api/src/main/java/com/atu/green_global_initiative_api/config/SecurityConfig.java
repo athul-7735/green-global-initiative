@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for simplicity (not recommended for production APIs without additional security)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/**").permitAll() // Public APIs
-                        .requestMatchers("/actuator/**").permitAll()) // Public APIs
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()) // Public APIs
                         .formLogin(formLogin -> formLogin.disable()) // Disable the default login page
                 .httpBasic(httpBasic -> httpBasic.disable()); // Disable HTTP Basic authentication
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
