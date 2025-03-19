@@ -6,7 +6,7 @@ services:
     container_name: mysql_container
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: Siddy@db0123
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: nausicaa_global_green_db
     ports:
       - "3307:3306"
@@ -21,7 +21,11 @@ services:
       start_period: 30s
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        PROFILE: development  # Set the profile during build time
+    image: athuls1195/nggi-springboot:latest
     container_name: springboot_app
     restart: always
     depends_on:
@@ -30,7 +34,8 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/nausicaa_global_green_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: Siddy@db0123
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_PROFILE: development  # Set the profile at runtime
     ports:
       - "8080:8080"
     networks:
