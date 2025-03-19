@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GrantsService } from '../services/grants.service';
 import { AuthService } from '../../authentication/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-grant-application',
@@ -16,7 +17,7 @@ export class GrantApplicationComponent implements OnInit{
   grantForm: FormGroup;
   grantOptions:any[] = [];
 
-  constructor(private fb: FormBuilder, private grantsService: GrantsService, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private grantsService: GrantsService, private authService: AuthService, private toastr: ToastrService) {
     this.grantForm = this.fb.group({
       applicantName: [{value:'', disabled: true}, [Validators.required, Validators.minLength(3)]],
       email: [{value:'', disabled: true}, [Validators.required, Validators.email]],
@@ -42,13 +43,25 @@ export class GrantApplicationComponent implements OnInit{
   }
 
   onSubmit() {
+    if(this.authService.isLoggedAsAdmin()){
+      this.toastr.info(`Admins are not allowed to apply for grants`, 'Info',  {
+        progressBar: true, closeButton: true 
+      });
+      return;
+    }
     if (this.grantForm.valid) {
       console.log('Grant Application Submitted:', this.grantForm.value);
       let requestBody = this.getRequestBody(this.grantForm.value);
       this.grantsService.postGrantApplications('',requestBody).subscribe((res)=>{
         console.log(res);
+        this.toastr.success(`The application is succesfully submitted`, 'Success',  {
+          progressBar: true, closeButton: true 
+        });
       }, (err)=>{
         console.log(err);
+        this.toastr.error(`The application is submission failed`, 'Error',  {
+          progressBar: true, closeButton: true 
+        });
       });
       this.grantForm.reset();
     } else {

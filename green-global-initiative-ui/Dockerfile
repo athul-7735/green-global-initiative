@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
  
 # Build the Angular app for production (for later use in the production stage)
-RUN npm run build -- --configuration=production
+RUN npm run build -- --configuration=development
  
 # Stage 2: Development Stage with Node.js (only for development mode)
 FROM node:18-alpine AS development
