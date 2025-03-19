@@ -26,15 +26,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd frontend
+          cd green-global-initiative-ui
           npm install
 
       - name: Run OWASP Dependency-Check (Angular)
         run: |
-          mkdir -p reports/frontend
+          mkdir -p reports/green-global-initiative-ui
           docker run --rm \
-            -v ${{ github.workspace }}/frontend:/src \
-            -v ${{ github.workspace }}/reports/frontend:/report \
+            -v ${{ github.workspace }}/green-global-initiative-ui:/src \
+            -v ${{ github.workspace }}/reports/green-global-initiative-ui:/report \
             owasp/dependency-check \
             --scan /src \
             --format ALL \
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Angular-Dependency-Check-Report
-          path: reports/frontend
+          path: reports/green-global-initiative-ui
 
   backend-scan:
     name: Spring Boot Dependency Check
