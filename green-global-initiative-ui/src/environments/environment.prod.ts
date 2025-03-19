@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    apiurl: 'http://nausicaaglobalgreen.live/api/',
+    apiurl: 'https://api.nausicaaglobalgreen.live/api/',
     label: 'NGGI-Production',
     logging: false
 }
