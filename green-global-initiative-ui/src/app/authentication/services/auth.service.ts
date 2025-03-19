@@ -35,6 +35,15 @@ export class AuthService {
     localStorage.setItem('JWT_Token', token);
   }
 
+  getToken(): string{
+    let token = localStorage.getItem('JWT_Token');
+    if(token){
+      return token;
+    } else {
+      return '';
+    }
+  }
+
   removeItem(){
     localStorage.removeItem('JWT_Token');
   }
@@ -53,6 +62,27 @@ export class AuthService {
     } catch(Error) {
       return null;
     }
+  }
+
+  isTokenExpired(token: string): boolean {
+    if (!token) return true;
+    try {
+      const decodedToken: any = this.getDecodedAccessToken(token);
+      const expiryTime = decodedToken.exp * 1000; // Convert to milliseconds
+      return Date.now() >= expiryTime;
+    } catch (error) {
+      return true; // Treat any errors as an expired token
+    }
+  }
+
+  isLoggedAsAdmin(): boolean {
+    let isAdmin= false;
+    let userDetails = this.getUser();
+    let parsedValue = JSON.parse(userDetails?userDetails:'');
+    if(parsedValue.isAdmin){
+      isAdmin = true;
+    }
+    return isAdmin;
   }
 
 }
