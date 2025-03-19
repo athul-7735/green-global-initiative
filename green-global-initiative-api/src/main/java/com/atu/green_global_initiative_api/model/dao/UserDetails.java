@@ -56,11 +56,15 @@ public class UserDetails {
     @Column(name="password",nullable = false)
     private String password;
 
+
     /**
      * Indicates whether the user has admin privileges.
      * True if the user is an admin, otherwise false.
      */
     @JsonProperty("isAdmin")
+
+    @JsonProperty("is_admin")
+
     @Column(name="isAdmin",nullable = false)
     private boolean isAdmin;
 

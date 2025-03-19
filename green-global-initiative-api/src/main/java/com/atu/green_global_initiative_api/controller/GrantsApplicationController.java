@@ -2,14 +2,9 @@ package com.atu.green_global_initiative_api.controller;
 
 import com.atu.green_global_initiative_api.NausicaaGreenInitiativeApplication;
 import com.atu.green_global_initiative_api.dto.ApplicationDetailsDto;
-import com.atu.green_global_initiative_api.dto.UserDetailsDto;
-import com.atu.green_global_initiative_api.model.dao.ApplicationDetails;
-import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.model.dao.request.ApplicationCreateRequest;
 import com.atu.green_global_initiative_api.model.dao.request.ApplicationUpdateRequest;
 import com.atu.green_global_initiative_api.service.GrantsApplicationServiceImpl;
-import com.atu.green_global_initiative_api.service.UserServiceImpl;
-import io.micrometer.core.ipc.http.HttpSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +43,7 @@ public class GrantsApplicationController {
      */
     // Get all users
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<ApplicationDetailsDto>> getAllApplications() {
         List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetails();
         return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);

@@ -25,7 +25,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/grants")
-//@CrossOrigin(origins = "http://localhost:4200")
 @CrossOrigin(origins = "*")
 public class GrantsController {
 
@@ -49,7 +48,7 @@ public class GrantsController {
      */
     // Get all users
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<GrantsDto>> getAllApplications() {
         List<GrantsDto> grantsDtoList = grantsService.getAllGrants();
         return new ResponseEntity<>(grantsDtoList, HttpStatus.OK);

@@ -45,13 +45,9 @@ public class DevCorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/api/**")
-//                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
-////                .allowedOrigins("http://localhost:8080");
 
         // Apply the CORS policy for all endpoints, allowing requests from all origins.
         registry.addMapping("/**")
-//                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
                 .allowedOrigins("*");
     }
 }
