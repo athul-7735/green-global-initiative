@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../authentication/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -15,8 +15,9 @@ export class HeaderComponent {
   title = 'Nausicaä Global Green Initiative';
   menuIcons = ['Home', 'About', 'Grants', 'My Profile', 'SignIn/SignUp'];
   isAuth =  false;
+  isAdmin = false;
 
-  constructor(private authService: AuthService, private toastr: ToastrService){
+  constructor(private authService: AuthService, private toastr: ToastrService, private route: Router){
     this.authService.authStatus$.subscribe((status:boolean)=>{
       if(status){
         this.isAuth = true;
@@ -27,10 +28,19 @@ export class HeaderComponent {
         console.log('Auth Status changed to false');
       }
     })
+    this.authService.getUser() !== null ? this.isAdmin = this.authService.isLoggedAsAdmin() : this.isAdmin = false;
+    this.onHomeNavigate();
   }
 
   login(){
+  }
 
+  onHomeNavigate(){
+    if(this.isAdmin){
+      this.route.navigate(['/admin']);
+      return;
+    }
+    this.route.navigate(['/home']);
   }
 
   logout(){

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactUsComponent } from './contactus.component';
 import { By } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('ContactUsComponent', () => {
   let component: ContactUsComponent;
@@ -11,7 +11,8 @@ describe('ContactUsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactUsComponent, HttpClientModule, ToastrModule.forRoot()]
+      imports: [ContactUsComponent, HttpClientModule, ToastrModule.forRoot()],
+      providers: [ToastrService]
     })
     .compileComponents();
 

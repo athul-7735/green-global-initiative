@@ -1,6 +1,6 @@
 <div class="signup-container">
     <diV class="signup signup-leftpane">
-        <img src="assets/images/logo.png" alt="logo" width="130" height="90">
+        <img src="assets/images/logo.png" alt="logo" width="130" height="90" loading="lazy">
         <h2>Create an account</h2>
         <p>Already have an account? <a routerLink="/login/signin">Log in</a></p>
         <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
@@ -69,6 +69,6 @@
           </form>
     </diV>
     <div class="signup-rightpane">
-        <img src="assets/images/sapling.jpg" alt="" >
+        <img src="assets/images/sapling.jpg" alt="" loading="lazy">
     </div>
 </div>

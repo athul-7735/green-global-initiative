@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GrantApplicationComponent } from './grant-application.component';
 import { HttpClientModule } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('GrantApplicationComponent', () => {
   let component: GrantApplicationComponent;
@@ -10,7 +11,8 @@ describe('GrantApplicationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GrantApplicationComponent, HttpClientModule]
+      imports: [GrantApplicationComponent, HttpClientModule, ToastrModule.forRoot()],
+      providers: [ToastrService]
     })
     .compileComponents();
 

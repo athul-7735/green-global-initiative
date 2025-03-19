@@ -6,6 +6,7 @@ import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.model.dao.request.LoginRequest;
 import com.atu.green_global_initiative_api.security.JwtUtil;
 import com.atu.green_global_initiative_api.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
