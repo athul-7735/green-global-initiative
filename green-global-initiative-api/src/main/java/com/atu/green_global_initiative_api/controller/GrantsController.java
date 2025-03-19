@@ -18,17 +18,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * REST controller for managing grants in the Nausicaä Global Green Initiative API.
+ * Provides endpoints to retrieve grant-related information.
+ */
+
 @RestController
 @RequestMapping("/api/grants")
 //@CrossOrigin(origins = "http://localhost:4200")
 @CrossOrigin(origins = "*")
 public class GrantsController {
 
+    /**
+     * Service layer for managing grants.
+     */
+
     @Autowired
     private GrantsServiceImpl grantsService;
 
-    static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+    /**
+     * Logger for tracking and debugging the application's flow.
+     */
 
+    static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+    /**
+     * Retrieves a list of all grants.
+     *
+     * @return a {@link ResponseEntity} containing a list of {@link GrantsDto} objects
+     * representing the grants, along with an HTTP status code of 200 (OK).
+     */
     // Get all users
     @GetMapping
     @CrossOrigin(origins = "http://localhost:4200")

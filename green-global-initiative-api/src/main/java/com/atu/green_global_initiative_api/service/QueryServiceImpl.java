@@ -9,17 +9,32 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service implementation for handling operations related to user queries.
+ */
 @Service
 public class QueryServiceImpl implements QueryService{
 
     @Autowired
     ContactUsRepo contactUsRepo;
 
+
+    /**
+     * Retrieves all user queries from the system.
+     *
+     * @return an empty list of {@link ContactUs}, as the implementation is currently incomplete.
+     */
     @Override
     public List<ContactUs> getAllQueries() {
         return List.of();
     }
 
+    /**
+     * Creates a new query in the system.
+     *
+     * @param contactUs the {@link ContactUs} object containing the details of the query to be created.
+     * @return the created {@link ContactUs} object after saving it to the database.
+     */
     @Override
     public ContactUs createQuery(ContactUs contactUs) {
         List<ContactUs> contactUsList = new ArrayList<>();
@@ -32,7 +47,12 @@ public class QueryServiceImpl implements QueryService{
         contactUsList.add(contactUs);
         return contactUsRepo.save(contactUs);
     }
-
+    /**
+     * Retrieves a specific query by its unique identifier.
+     *
+     * @param queryId the unique identifier of the query.
+     * @return an empty list of {@link ContactUs}, as the implementation is currently incomplete.
+     */
     @Override
     public List<ContactUs> getQueryById(String queryId) {
         return List.of();

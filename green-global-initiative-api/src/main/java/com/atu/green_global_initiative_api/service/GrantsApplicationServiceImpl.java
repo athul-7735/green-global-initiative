@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service implementation for handling operations related to grant applications.
+ */
 @Service
 public class GrantsApplicationServiceImpl implements GrantsApplicationService {
 
@@ -27,6 +30,12 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     @Autowired
     private GrantsRepo grantsRepo;
 
+    /**
+     * Creates new application details based on the provided request.
+     *
+     * @param applicationCreateRequest the request containing details of the new application.
+     * @return a list of created application details DTOs or null if an application with the same ID already exists.
+     */
     @Override
     public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationCreateRequest.getApplicationId());
@@ -53,21 +62,34 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         applicationDetailsResponseList.add(applicationDetailsResponse);
         return mapToApplicationDetailsDto(applicationDetailsResponseList);
     }
-
+    /**
+     * Retrieves all application details by the provided application ID.
+     *
+     * @param applicationId the ID of the application to retrieve details for.
+     * @return a list of application details DTOs for the specified application ID.
+     */
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
         List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(Integer.parseInt(applicationId));
         List<ApplicationDetailsDto> applicationDetailsDtoList = mapToApplicationDetailsDto(applicationDetailsList);
         return applicationDetailsDtoList;
     }
-
-
+    /**
+     * Retrieves all application details.
+     *
+     * @return a list of all application details DTOs.
+     */
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetails() {
         List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAll();
         return mapToApplicationDetailsDto(applicationDetailsList);
     }
-
+    /**
+     * Maps a list of ApplicationDetails objects to a list of ApplicationDetailsDto objects.
+     *
+     * @param applicationDetailsList the list of ApplicationDetails objects to map.
+     * @return a list of ApplicationDetailsDto objects.
+     */
     private static List<ApplicationDetailsDto> mapToApplicationDetailsDto(List<ApplicationDetails> applicationDetailsList) {
         List<ApplicationDetailsDto> applicationDetailsDtoList = new ArrayList<ApplicationDetailsDto>();
         for (ApplicationDetails applicationDetails : applicationDetailsList) {
@@ -79,6 +101,7 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             applicationDetailsDto.setProjectDescription(applicationDetails.getProjectDescription());
             applicationDetailsDto.setAdminComments(applicationDetails.getAdminComments());
             applicationDetailsDto.setRequestedAmount(applicationDetails.getRequestedAmount());
+            // Mapping grants data to DTO
             Grants grants = new Grants();
             grants.setGrantId(applicationDetails.getGrants().getGrantId());
             grants.setGrantName(applicationDetails.getGrants().getGrantName());
@@ -86,7 +109,7 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             grants.setAmount(applicationDetails.getGrants().getAmount());
             grants.setEligibility(applicationDetails.getGrants().getEligibility());
             applicationDetailsDto.setGrants(grants);
-
+            // Mapping user details to DTO
             UserDetails userDetails = new UserDetails();
             userDetails.setUserId(applicationDetails.getUserDetails().getUserId());
             userDetails.setEmail(applicationDetails.getUserDetails().getEmail());
@@ -98,6 +121,12 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         }
         return applicationDetailsDtoList;
     }
+    /**
+     * Updates the details of an existing application.
+     *
+     * @param applicationUpdateRequest the request containing the updated application details.
+     * @return a list of updated application details DTOs or null if no application with the specified ID is found.
+     */
     @Override
     public List<ApplicationDetailsDto> updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
         List<ApplicationDetails> applicationDetailsList = new ArrayList<>();

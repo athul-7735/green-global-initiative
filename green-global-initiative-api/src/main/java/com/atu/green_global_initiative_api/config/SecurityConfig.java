@@ -18,10 +18,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
+/**
+ * Security configuration class for the application.
+ * <p>
+ * This class customizes Spring Security settings to manage authentication,
+ * authorization, and request filtering. It is tailored for a development
+ * environment, focusing on simplicity and flexibility while using JWT-based
+ * authentication.
+ * </p>
+ *
+ * <p><b>Key Features:</b></p>
+ * <ul>
+ *     <li>Disables CSRF and CORS for easier API testing and development.</li>
+ *     <li>Allows all incoming requests without authentication.</li>
+ *     <li>Integrates a custom JWT filter for token-based authentication.</li>
+ *     <li>Disables default form login and HTTP Basic authentication.</li>
+ * </ul>
+ *
+ * <p><b>Note:</b> This configuration is intended for development purposes
+ * and should be adjusted for production environments with stricter security policies.</p>
+ */
+
 //@Configurable
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * <p>This method sets up various security rules, including disabling CSRF
+     * and CORS, permitting all requests, and adding a JWT filter for
+     * token-based authentication.</p>
+     *
+     * @param http the {@link HttpSecurity} object to customize security configurations
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if there is an issue configuring the security filter chain
+     */
 
 //    @Autowired
 //    protected void configure(AuthenticationManagerBuilder auth) {
@@ -59,12 +92,24 @@ public class SecurityConfig {
                             .formLogin(formLogin -> formLogin.disable()) // Disable the default login page
 //                .httpBasic(httpBasic -> httpBasic.disable()); // Disable HTTP Basic authentication
                 .httpBasic(httpBasic -> Customizer.withDefaults()); // Disable HTTP Basic authentication
+        // Add a custom JWT filter before the UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
+    /**
+     * Creates a bean for the custom JWT authentication filter.
+     *
+     * <p>The JWT filter intercepts requests, extracts tokens, and validates them
+     * to authenticate users based on their JWTs.</p>
+     *
+     * @return an instance of {@link JwtFilter}
+     */
     @Bean
     public JwtFilter jwtAuthenticationFilter() {
         return new JwtFilter();
     }
+    // Commented-out code examples for additional features:
+    // - Password encoding with BCryptPasswordEncoder
+    // - Custom authentication provider setup
+    // - CSRF configuration for enhanced security
 }

@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link UserService} interface for managing user-related operations.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,7 +23,11 @@ public class UserServiceImpl implements UserService {
     private UserDetailsRepo userDetailsRepo;
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
-
+    /**
+     * Retrieves all user details from the database.
+     *
+     * @return a list of {@link UserDetailsDto} objects representing all users.
+     */
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
@@ -36,6 +42,12 @@ public class UserServiceImpl implements UserService {
         return userDetailsDtoList;
     }
 
+    /**
+     * Retrieves user details by the unique user ID.
+     *
+     * @param userId the unique ID of the user.
+     * @return the {@link UserDetailsDto} object representing the user.
+     */
     @Override
     public UserDetailsDto getAllUserDetailsById(Integer userId) {
         logger.info("getAllUserDetailsById Method Started");
@@ -47,6 +59,12 @@ public class UserServiceImpl implements UserService {
         return userDetailsDtoList.getFirst();
     }
 
+    /**
+     * Retrieves user details by email.
+     *
+     * @param email the email address of the user.
+     * @return the {@link UserDetailsDto} object representing the user.
+     */
     @Override
     public UserDetailsDto getAllUserDetailsByEmail(String email) {
         logger.info("getAllUserDetailsByEmail Method Started");
@@ -58,6 +76,12 @@ public class UserServiceImpl implements UserService {
         return userDetailsDtoList.getFirst();
     }
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param userDetails the {@link UserDetails} object containing user information.
+     * @return the {@link UserDetailsDto} object representing the newly registered user.
+     */
     @Override
     public UserDetailsDto userSignUp(UserDetails userDetails) {
         logger.info("userSignUp Method Started");
@@ -65,6 +89,14 @@ public class UserServiceImpl implements UserService {
         UserDetailsDto userDetailsDto = mapToUserDto(res);
         return userDetailsDto;
     }
+
+    /**
+     * Authenticates a user using their username and password.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return the {@link UserDetailsDto} object if authentication is successful, or null otherwise.
+     */
     @Override
     public UserDetailsDto authenticateUser(String username, String password) {
         logger.info("authenticateUser Method Started");
@@ -83,7 +115,12 @@ public class UserServiceImpl implements UserService {
         }
         return userDetails;
     }
-
+    /**
+     * Maps a {@link UserDetails} object to a {@link UserDetailsDto}.
+     *
+     * @param userDetails the {@link UserDetails} object to be mapped.
+     * @return the corresponding {@link UserDetailsDto} object.
+     */
     static UserDetailsDto mapToUserDto(UserDetails userDetails){
         logger.info("mapToUserDto Method Started");
         UserDetailsDto userDetailsDto = new UserDetailsDto();
