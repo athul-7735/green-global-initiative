@@ -11,11 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * REST controller for managing grant applications for the Nausicaä Green Global Initiative.
+ * Provides endpoints for CRUD operations on grant applications.
+ */
 @RestController
 @RequestMapping("/api/applications")
 @CrossOrigin(origins = "*")
@@ -25,7 +28,11 @@ public class GrantsApplicationController {
     private GrantsApplicationServiceImpl grantsApplicationService;
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
-
+    /**
+     * Retrieves all grant applications.
+     *
+     * @return A list of all {@link ApplicationDetailsDto} objects.
+     */
     // Get all users
     @GetMapping
     @CrossOrigin(origins = "*")
@@ -33,14 +40,25 @@ public class GrantsApplicationController {
         List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetails();
         return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
     }
-
+    /**
+     * Retrieves a specific grant application by its ID.
+     *
+     * @param id The ID of the grant application to retrieve.
+     * @return A list of {@link ApplicationDetailsDto} objects for the specified ID.
+     * @throws IllegalArgumentException If the ID is invalid.
+     */
     @GetMapping("/{id}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<List<ApplicationDetailsDto>> getApplicationById(@PathVariable String id) throws IllegalArgumentException{
         List<ApplicationDetailsDto> applicationDetailsList = grantsApplicationService.getAllApplicationDetailsByApplicationId(id);
         return new ResponseEntity<>(applicationDetailsList, HttpStatus.OK);
     }
-
+    /**
+     * Creates a new grant application.
+     *
+     * @param applicationCreateRequest The details of the application to create.
+     * @return The created {@link ApplicationDetailsDto} object.
+     */
     @PostMapping
     @CrossOrigin(origins = "*")
     public ApplicationDetailsDto createApplication(@RequestBody ApplicationCreateRequest applicationCreateRequest) {
@@ -53,13 +71,19 @@ public class GrantsApplicationController {
         }
         return res.getFirst();
     }
-
+    /**
+     * Updates an existing grant application.
+     *
+     * @param applicationUpdateRequest The details of the application to update.
+     * @return The updated {@link ApplicationDetailsDto} object, or an error response if the update fails.
+     */
     @PatchMapping
     @CrossOrigin(origins = "*")
     public ResponseEntity<ApplicationDetailsDto> updateApplication(@RequestBody ApplicationUpdateRequest applicationUpdateRequest) {
         logger.info("patchApplication method Started");
         List<ApplicationDetailsDto> res = new ArrayList<>();
         try {
+            // Validate the application status
             if(Objects.equals(applicationUpdateRequest.getApplicationStatus(), "Approved") || Objects.equals(applicationUpdateRequest.getApplicationStatus(), "Rejected") || Objects.equals(applicationUpdateRequest.getApplicationStatus(), "In Progress")){
                 res = grantsApplicationService.updateApplicationDetails(applicationUpdateRequest);
             } else {

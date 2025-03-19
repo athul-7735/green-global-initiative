@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the GrantsApplicationService interface.
+ * This service provides methods for creating, updating, and retrieving application details
+ * for grants applications, interacting with the respective repositories.
+ */
 @Service
 public class GrantsApplicationServiceImpl implements GrantsApplicationService {
 
@@ -27,6 +32,15 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     @Autowired
     private GrantsRepo grantsRepo;
 
+    /**
+     * Creates a new application based on the provided request.
+     * The method checks if an application with the given ID already exists.
+     * If it exists, it does not create a new application.
+     *
+     * @param applicationCreateRequest the request containing data for creating a new application.
+     * @return a list of {@link ApplicationDetailsDto} containing the created application details,
+     *         or null if the application already exists.
+     */
     @Override
     public List<ApplicationDetailsDto> createApplicationDetails(ApplicationCreateRequest applicationCreateRequest) {
        List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationCreateRequest.getApplicationId());
@@ -42,11 +56,11 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         applicationDetails.setProjectDescription(applicationCreateRequest.getProjectDescription());
         List<UserDetails> userDetailsList = userDetailsRepo.findAllById(applicationCreateRequest.getUserId());
         if(!userDetailsList.isEmpty()){
-            applicationDetails.setUserDetails(userDetailsList.getFirst());
+            applicationDetails.setUserDetails(userDetailsList.getFirst()); // set the user details
         }
         List<Grants> grants = grantsRepo.findAllById(applicationCreateRequest.getGrantId());
         if(!grants.isEmpty()){
-            applicationDetails.setGrants(grants.get(0));
+            applicationDetails.setGrants(grants.get(0)); // set the grant details
         }
         ApplicationDetails applicationDetailsResponse = applicationDetailsRepo.save(applicationDetails);
         List<ApplicationDetails> applicationDetailsResponseList = new ArrayList<>();
@@ -54,6 +68,12 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         return mapToApplicationDetailsDto(applicationDetailsResponseList);
     }
 
+    /**
+     * Retrieves all application details associated with a given application ID.
+     *
+     * @param applicationId the ID of the application whose details are to be retrieved.
+     * @return a list of {@link ApplicationDetailsDto} containing the details of the specified application.
+     */
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetailsByApplicationId(String applicationId) {
         List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(Integer.parseInt(applicationId));
@@ -61,13 +81,24 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         return applicationDetailsDtoList;
     }
 
-
+    /**
+     * Retrieves all application details.
+     *
+     * @return a list of {@link ApplicationDetailsDto} containing details of all applications.
+     */
     @Override
     public List<ApplicationDetailsDto> getAllApplicationDetails() {
         List<ApplicationDetails> applicationDetailsList = applicationDetailsRepo.findAll();
         return mapToApplicationDetailsDto(applicationDetailsList);
     }
 
+    /**
+     * Maps a list of {@link ApplicationDetails} to a list of {@link ApplicationDetailsDto}.
+     * This method is used for converting application entity objects to DTOs.
+     *
+     * @param applicationDetailsList the list of application details to be mapped.
+     * @return a list of {@link ApplicationDetailsDto} containing the mapped data.
+     */
     private static List<ApplicationDetailsDto> mapToApplicationDetailsDto(List<ApplicationDetails> applicationDetailsList) {
         List<ApplicationDetailsDto> applicationDetailsDtoList = new ArrayList<ApplicationDetailsDto>();
         for (ApplicationDetails applicationDetails : applicationDetailsList) {
@@ -98,6 +129,15 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         }
         return applicationDetailsDtoList;
     }
+
+    /**
+     * Updates an existing application based on the provided update request.
+     * The method checks if the application exists before updating its status and admin comments.
+     *
+     * @param applicationUpdateRequest the request containing the updated details for the application.
+     * @return a list of {@link ApplicationDetailsDto} containing the updated application details,
+     *         or null if the application does not exist.
+     */
     @Override
     public List<ApplicationDetailsDto> updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
         List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
