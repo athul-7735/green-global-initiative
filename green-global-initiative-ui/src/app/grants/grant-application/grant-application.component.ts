@@ -69,7 +69,6 @@ export class GrantApplicationComponent implements OnInit{
     }
   }
   
-
   getRequestBody(grantApplicationForm: any): any{
     return {
       applicationId: 0,
