@@ -63,15 +63,15 @@ jobs:
 
       - name: Build and resolve dependencies
         run: |
-          cd backend
+          cd green-global-initiative-api
           ./mvnw clean install -DskipTests
 
       - name: Run OWASP Dependency-Check (Spring Boot)
         run: |
-          mkdir -p reports/backend
+          mkdir -p reports/green-global-initiative-api
           docker run --rm \
-            -v ${{ github.workspace }}/backend:/src \
-            -v ${{ github.workspace }}/reports/backend:/report \
+            -v ${{ github.workspace }}/green-global-initiative-api:/src \
+            -v ${{ github.workspace }}/reports/green-global-initiative-api:/report \
             owasp/dependency-check \
             --scan /src \
             --format ALL \
