@@ -32,6 +32,7 @@ jobs:
       - name: Run OWASP Dependency-Check (Angular)
         run: |
           mkdir -p reports/green-global-initiative-ui
+          ls -ld reports/green-global-initiative-ui
           docker run --rm \
             -v ${{ github.workspace }}/green-global-initiative-ui:/src \
             -v ${{ github.workspace }}/reports/green-global-initiative-ui:/report \
@@ -46,5 +47,3 @@ jobs:
         with:
           name: Angular-Dependency-Check-Report
           path: reports/green-global-initiative-ui
-
- 
