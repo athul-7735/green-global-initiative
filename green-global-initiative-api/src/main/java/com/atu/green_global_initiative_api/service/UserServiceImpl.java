@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    //    @Autowired
+    //    private PasswordEncoder passwordEncoder;
 
     /**
      * Retrieves all user details from the repository and maps them to UserDetailsDto objects.

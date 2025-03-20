@@ -6,17 +6,17 @@ import com.atu.green_global_initiative_api.model.dao.UserDetails;
 import com.atu.green_global_initiative_api.model.dao.request.LoginRequest;
 import com.atu.green_global_initiative_api.security.JwtUtil;
 import com.atu.green_global_initiative_api.service.UserServiceImpl;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * REST controller for managing user-related operations.
  * Provides endpoints for retrieving, creating, and authenticating users.
@@ -33,6 +33,7 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+
     /**
      * Retrieves all users in the system.
      *
@@ -54,6 +55,7 @@ public class UserController {
 //                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         return new ResponseEntity<>(users, HttpStatus.OK) ;
     }
+
     /**
      * Handles user signup by creating a new user in the system.
      *
@@ -71,6 +73,7 @@ public class UserController {
         }
         return res;
     }
+
     /**
      * Authenticates a user based on their login credentials.
      *
