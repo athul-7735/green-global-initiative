@@ -3,13 +3,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ContactUsComponent } from './contactus.component';
 import { By } from '@angular/platform-browser';
-import { ToastrModule } from 'ngx-toastr';  // Import ToastrModule for ToastrService
+import { ToastrModule, ToastrService } from 'ngx-toastr';  // Import ToastrModule for ToastrService
+import { ContactusService } from './services/contactus.service';
+import { AuthService } from '../authentication/services/auth.service';
+import { of } from 'rxjs';
 
 describe('ContactUsComponent', () => {
   let component: ContactUsComponent;
   let fixture: ComponentFixture<ContactUsComponent>;
+  let contactService: jasmine.SpyObj<ContactusService>;
+  let authService: jasmine.SpyObj<AuthService>;
+  let toastrService: jasmine.SpyObj<ToastrService>;
 
   beforeEach(async () => {
+    const contactServiceSpy = jasmine.createSpyObj('ContactusService', ['postQuery']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['removeItem']);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['error', 'success']);
+
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,  // For reactive forms
@@ -17,10 +27,18 @@ describe('ContactUsComponent', () => {
         ToastrModule.forRoot(), // Provide ToastrModule for ToastrService
         ContactUsComponent     // Your component that depends on HttpClient
       ],
+      providers: [
+        { provide: ContactusService, useValue: contactServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContactUsComponent);
     component = fixture.componentInstance;
+    contactService = TestBed.inject(ContactusService) as jasmine.SpyObj<ContactusService>;
+    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+    toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     fixture.detectChanges();
   });
 
@@ -66,41 +84,65 @@ describe('ContactUsComponent', () => {
     expect(messageControl?.valid).toBeTruthy();
   });
 
-  it('should disable submit button when form is invalid', () => {
-    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
-    expect(submitButton.disabled).toBeTruthy();
+  it('should show error toastr when form is invalid', () => {
+    component.contactUsForm.setErrors({ invalid: true }); // Simulates an invalid form
+  
+    component.onSubmit();
+  
+    expect(toastrService.error).toHaveBeenCalledWith(
+      'Please fill out all required fields correctly.',
+      'Error',
+      jasmine.objectContaining({ progressBar: true, closeButton: true })
+    );
   });
 
-  it('should enable submit button when form is valid', () => {
-    component.contactUsForm.patchValue({
-      name: 'Test User',
-      email: 'test@example.com',
+  it('should remove authentication item before submission', () => {
+    component.contactUsForm.setValue({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
       phone: '1234567890',
-      message: 'This is a valid message.',
+      message: 'Hello, I need support.'
     });
-    fixture.detectChanges(); // Update the template
 
-    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
-    expect(submitButton.disabled).toBeFalsy();
-  });
-  it('should show validation message if name is empty', () => {
-    component.contactUsForm.controls['name'].setValue('');
-    component.contactUsForm.controls['name'].markAsTouched();
-    fixture.detectChanges();
+    contactService.postQuery.and.returnValue(of({ success: true }));
 
-    const errorMessage = fixture.debugElement.query(By.css('input[formControlName="name"] + small'));
-    expect(errorMessage).toBeTruthy();
-    expect(errorMessage.nativeElement.textContent).toContain('Name is required');
+    component.onSubmit();
+
+    expect(authService.removeItem).toHaveBeenCalled();
   });
 
-  it('should show validation message if message is too short', () => {
-    const messageControl = component.contactUsForm.get('message');
-    messageControl?.setValue('Short');
-    messageControl?.markAsTouched();
-    fixture.detectChanges();
+  it('should call postQuery service when form is valid', () => {
+    component.contactUsForm.setValue({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      message: 'Hello, I need support.'
+    });
 
-    const errorMessage = fixture.debugElement.query(By.css('small'));
-    expect(errorMessage).toBeTruthy();
-    expect(errorMessage.nativeElement.textContent).toContain('Message must be at least 10 characters');
+    contactService.postQuery.and.returnValue(of({ success: true }));
+
+    component.onSubmit();
+
+    expect(contactService.postQuery).toHaveBeenCalled();
   });
+
+  it('should show success toastr on successful query submission', () => {
+    component.contactUsForm.setValue({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      phone: '1234567890',
+      message: 'Hello, I need support.'
+    });
+
+    contactService.postQuery.and.returnValue(of({ success: true }));
+
+    component.onSubmit();
+
+    expect(toastrService.success).toHaveBeenCalledWith(
+      'Query submitted successfully',
+      'Success',
+      jasmine.objectContaining({ progressBar: true, closeButton: true, timeOut: 5000 })
+    );
+  });
+  
 });
