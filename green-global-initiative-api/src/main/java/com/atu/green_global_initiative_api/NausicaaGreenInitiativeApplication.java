@@ -21,7 +21,15 @@ public class NausicaaGreenInitiativeApplication {
 	/**
 	 * Logger for logging application events.
 	 */
-	static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+	static Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
+
+	/**
+	 * Setter for logger (used in testing).
+	 */
+	public static void setLogger(Logger testLogger) {
+		logger = testLogger;
+	}
+
 	/**
 	 * Main method to launch the Spring Boot application.
 	 *
