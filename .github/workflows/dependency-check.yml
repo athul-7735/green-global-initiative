@@ -65,7 +65,8 @@ jobs:
             --format HTML \
             --project Angular-Project \
             --out /report \
-            --log /report/dependency-check.log
+            --log /report/dependency-check.log \
+            --nvdApiKey "30eb894e-9041-4918-a772-7952bee9f461"
  
       - name: Upload Angular Report
         uses: actions/upload-artifact@v4
