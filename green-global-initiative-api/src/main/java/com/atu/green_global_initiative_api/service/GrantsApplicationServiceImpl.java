@@ -95,7 +95,7 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     /**
      * Maps a list of {@link ApplicationDetails} to a list of {@link ApplicationDetailsDto}.
      * This method is used for converting application entity objects to DTOs.
-     *
+     *applicationStatus = "PENDING"
      * @param applicationDetailsList the list of application details to be mapped.
      * @return a list of {@link ApplicationDetailsDto} containing the mapped data.
      */
@@ -141,7 +141,6 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
     @Override
     public List<ApplicationDetailsDto> updateApplicationDetails(ApplicationUpdateRequest applicationUpdateRequest) {
         List<ApplicationDetails> applicationDetailsList = new ArrayList<>();
-
         applicationDetailsList = applicationDetailsRepo.findAllByApplicationId(applicationUpdateRequest.getApplicationId());
         if (applicationDetailsList.isEmpty()) {
             return null;
@@ -155,6 +154,4 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             return mapToApplicationDetailsDto(applicationDetailsResponseList);
         }
     }
-
-
 }

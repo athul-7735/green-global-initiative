@@ -51,7 +51,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -113,7 +112,6 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.10</version>  <!-- Ensure you're using the latest version -->
 				<executions>
 					<execution>
 						<id>prepare-agent</id>
@@ -123,15 +121,13 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>verify</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
-		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -145,10 +141,9 @@
 					</execution>
 				</executions>
 				<configuration>
-					<outputDirectory>green-global-initiative-api/BackEnd_JavaDoc</outputDirectory>
+					<outputDirectory>green-global-initiative-api/backend_javadoc</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

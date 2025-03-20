@@ -38,12 +38,6 @@ public class QueryServiceImpl implements QueryService{
     @Override
     public ContactUs createQuery(ContactUs contactUs) {
         List<ContactUs> contactUsList = new ArrayList<>();
-//        ContactUs contactUs = new ContactUs();
-//        contactUs.setQueryId(queryCreateRequest.getQueryId());
-//        contactUs.setName(queryCreateRequest.getName());
-//        contactUs.setEmail(queryCreateRequest.getEmail());
-//        contactUs.setPhone(queryCreateRequest.getPhone());
-//        contactUs.setMessage(queryCreateRequest.getMessage());
         contactUsList.add(contactUs); // Adds the query to a temporary list (not used further)
         return contactUsRepo.save(contactUs); // Saves the query to the database
     }
