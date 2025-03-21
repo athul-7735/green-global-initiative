@@ -1,0 +1,10 @@
+com.atu.green_global_initiative_api.config
+com.atu.green_global_initiative_api.controller
+com.atu.green_global_initiative_api.dto
+com.atu.green_global_initiative_api.exception
+com.atu.green_global_initiative_api.model.dao
+com.atu.green_global_initiative_api.model.dao.request
+com.atu.green_global_initiative_api
+com.atu.green_global_initiative_api.repository
+com.atu.green_global_initiative_api.security
+com.atu.green_global_initiative_api.service
