@@ -26,8 +26,8 @@ jobs:
         run: |
           wget https://github.com/dependency-check/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
           unzip dependency-check-12.1.0-release.zip -d dependency-check
-          chmod +x dependency-check/bin/dependency-check.sh # Ensure the script is executable
-
+          chmod +x dependency-check/dependency-check/bin/dependency-check.sh # Ensure the script is executable
+                   
       # Step 4: Debug: Verify Extracted Files
       - name: List Files
         run: ls -R dependency-check
