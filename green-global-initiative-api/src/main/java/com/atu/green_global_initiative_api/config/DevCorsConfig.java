@@ -14,18 +14,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * facilitate development and testing.
  * </p>
  *
- * <p>
+ * <p><b>Note:</b> This configuration is not intended for production use.</p>
+ *
  * Key Features:
  * <ul>
  *     <li>Applies CORS settings to all API endpoints.</li>
  *     <li>Allows requests from all origins.</li>
  *     <li>Provides flexibility for developers during the development phase.</li>
  * </ul>
- * </p>
- *
- * <p><b>Note:</b> This configuration is not intended for production use.</p>
  */
-
 @Configuration
 @Profile("development")
 @EnableWebMvc
@@ -39,7 +36,6 @@ public class DevCorsConfig implements WebMvcConfigurer {
      *
      * @param registry the {@link CorsRegistry} used to configure CORS mappings
      */
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // Apply the CORS policy for all endpoints, allowing requests from all origins.
