@@ -35,6 +35,7 @@ jobs:
       - name: Debug Report Directory
         run: |
           mkdir -p "$(pwd)/reports"
+          chmod -R 777 "$(pwd)/reports"
           ls -ld reports
  
       - name: Run OWASP Dependency-Check (Angular)
