@@ -34,7 +34,7 @@ jobs:
  
       - name: Debug Report Directory
         run: |
-          mkdir -p reports
+          mkdir -p "$(pwd)/reports"
           ls -ld reports
  
       - name: Run OWASP Dependency-Check (Angular)
@@ -51,6 +51,7 @@ jobs:
             --out /reports \
             --log /report/dependency-check.log \
             --nvdApiKey "30eb894e-9041-4918-a772-7952bee9f461"
+            --debug
  
       - name: Upload Angular Report
         uses: actions/upload-artifact@v4
