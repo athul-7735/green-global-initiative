@@ -18,7 +18,7 @@ import java.util.List;
  *
  * <p>Example usage:</p>
  * <pre>
- * List<Grants> grants = grantsRepo.findAllById(101);
+ * List&lt;Grants&gt; grants = grantsRepo.findAllById(101);
  * </pre>
  *
  * @author John Kirubaharan Ravichandran
