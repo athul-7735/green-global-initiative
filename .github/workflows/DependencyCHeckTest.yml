@@ -1,41 +1,24 @@
-name: OWASP Dependency-Check
+name: OWASP Dependency-Check Test
  
 on:
-
   push:
-
     branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
-
   pull_request:
-
     branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
  
 permissions:
-
   contents: read
-
   security-events: write
- 
 jobs:
-
   frontend-scan:
-
     name: Angular Dependency Check
-
     runs-on: ubuntu-latest
- 
     steps:
-
       - name: Checkout code
-
         uses: actions/checkout@v4
- 
       - name: Set up Node.js
-
         uses: actions/setup-node@v4
-
         with:
-
           node-version: 22
  
       - name: Install dependencies
