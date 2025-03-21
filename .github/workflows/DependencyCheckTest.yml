@@ -40,7 +40,7 @@ jobs:
       # Step 6: Run OWASP Dependency-Check
       - name: Run OWASP Dependency-Check
         run: |
-          dependency-check/bin/dependency-check.sh \
+          dependency-check/dependency-check/bin/dependency-check.sh \
           --project "Green Global Initiative UI" \
           --scan green-global-initiative-ui \
           --format "HTML" \
