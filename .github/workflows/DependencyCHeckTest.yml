@@ -1,0 +1,77 @@
+name: OWASP Dependency-Check
+ 
+on:
+
+  push:
+
+    branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
+
+  pull_request:
+
+    branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
+ 
+permissions:
+
+  contents: read
+
+  security-events: write
+ 
+jobs:
+
+  frontend-scan:
+
+    name: Angular Dependency Check
+
+    runs-on: ubuntu-latest
+ 
+    steps:
+
+      - name: Checkout code
+
+        uses: actions/checkout@v4
+ 
+      - name: Set up Node.js
+
+        uses: actions/setup-node@v4
+
+        with:
+
+          node-version: 22
+ 
+      - name: Install dependencies
+        run: |
+          cd green-global-initiative-ui
+          npm install
+ 
+      - name: Debug Installed Dependencies
+        run: |
+          cd green-global-initiative-ui
+          ls -la node_modules
+ 
+      - name: Debug Report Directory
+        run: |
+          mkdir -p reports/green-global-initiative-ui
+          ls -ld reports/green-global-initiative-ui
+ 
+      - name: Run OWASP Dependency-Check (Angular)
+        run: |
+          pwd
+          docker run --rm \
+            -e NVD_API_KEY="30eb894e-9041-4918-a772-7952bee9f461" \
+            -v "$(pwd)/green-global-initiative-ui:/src" \
+            -v "$(pwd)/reports/green-global-initiative-ui:/report" \
+            owasp/dependency-check:latest \
+            --scan /src \
+            --format HTML \
+            --project Angular-Project \
+            --out /report \
+            --log /report/dependency-check.log \
+            --nvdApiKey "30eb894e-9041-4918-a772-7952bee9f461"
+ 
+      - name: Upload Angular Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Angular-Dependency-Check-Report
+          path: reports/green-global-initiative-ui
+
+ 
