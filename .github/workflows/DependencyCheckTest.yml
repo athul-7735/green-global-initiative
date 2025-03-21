@@ -3,7 +3,7 @@ name: Dependency Check
 on:
   push:
     branches:
-      - main
+      - NGGI-110-java-doc-integration-in-the-backend-code
   pull_request:
 
 jobs:
