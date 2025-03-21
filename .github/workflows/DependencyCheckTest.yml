@@ -28,12 +28,16 @@ jobs:
           unzip dependency-check-12.1.0-release.zip -d dependency-check
           chmod +x dependency-check/bin/dependency-check.sh # Ensure the script is executable
 
-      # Step 4: Install project dependencies
+      # Step 4: Debug: Verify Extracted Files
+      - name: List Files
+        run: ls -R dependency-check
+
+      # Step 5: Install project dependencies
       - name: Install Dependencies
         run: npm install
         working-directory: green-global-initiative-ui
 
-      # Step 5: Run OWASP Dependency-Check
+      # Step 6: Run OWASP Dependency-Check
       - name: Run OWASP Dependency-Check
         run: |
           dependency-check/bin/dependency-check.sh \
@@ -42,7 +46,7 @@ jobs:
           --format "HTML" \
           --out dependency-check-report
 
-      # Step 6: Upload the dependency check report as an artifact
+      # Step 7: Upload the dependency check report as an artifact
       - name: Upload Dependency-Check Report
         uses: actions/upload-artifact@v4
         with:
