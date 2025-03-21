@@ -44,7 +44,7 @@ jobs:
           --project "Green Global Initiative UI" \
           --scan green-global-initiative-ui \
           --format "HTML" \
-          --out dependency-check-report
+          --out dependency-check-report \
           --nvdApiKey 30eb894e-9041-4918-a772-7952bee9f461
 
       # Step 7: Upload the dependency check report as an artifact
