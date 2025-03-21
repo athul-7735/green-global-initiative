@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: three-tier
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret # Pull secret for private registry
+      containers:
+        - name: backend
+          image: vinay2806/backend:1.0
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+            - name: SPRING_PROFILE
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: SPRING_PROFILE
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: JWT_SECRET
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health # Health check endpoint
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health # Health check endpoint
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/grants # Custom health check endpoint
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            failureThreshold: 30
