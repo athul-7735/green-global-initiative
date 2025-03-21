@@ -26,6 +26,7 @@ jobs:
         run: |
           wget https://github.com/dependency-check/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
           unzip dependency-check-12.1.0-release.zip -d dependency-check
+          chmod +x dependency-check/bin/dependency-check.sh # Ensure the script is executable
 
       # Step 4: Install project dependencies
       - name: Install Dependencies
@@ -35,7 +36,7 @@ jobs:
       # Step 5: Run OWASP Dependency-Check
       - name: Run OWASP Dependency-Check
         run: |
-          ./dependency-check/bin/dependency-check.sh \
+          dependency-check/bin/dependency-check.sh \
           --project "Green Global Initiative UI" \
           --scan green-global-initiative-ui \
           --format "HTML" \
