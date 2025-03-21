@@ -1,10 +1,11 @@
+
 name: OWASP Dependency-Check Test
  
 on:
   push:
-    branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
+    branches: [ NGGI-110-java-doc-integration-in-the-backend-code ]
   pull_request:
-    branches: [ NGGI-90-integrate-owasp-dependency-check-bot ]
+    branches: [ NGGI-110-java-doc-integration-in-the-backend-code ]
  
 permissions:
   contents: read
