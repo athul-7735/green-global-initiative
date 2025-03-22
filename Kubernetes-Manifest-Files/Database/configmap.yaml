@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: three-tier
+data:
+  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/nausicaa_global_green_db
+  MYSQL_DATABASE: nausicaa_global_green_db
+  SPRING_PROFILE: development
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver

@@ -17,7 +17,7 @@ import java.util.List;
  *
  * <p>Example usage:</p>
  * <pre>
- * List<ApplicationDetails> details = applicationDetailsRepo.findAllByApplicationId(123);
+ * List&lt;ApplicationDetails&gt; details = applicationDetailsRepo.findAllByApplicationId(123);
  * </pre>
  *
  * @author Name Here
