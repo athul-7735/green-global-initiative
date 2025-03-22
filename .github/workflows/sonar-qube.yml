@@ -3,8 +3,10 @@ on:
   workflow_dispatch:  # Allows manual triggering from the Actions tab
   push:
     branches:
-      - NGGI-97-sonar-cube-sonar-lint-integration
+      - main
   pull_request:
+    branches:
+      - main
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -33,7 +35,7 @@ jobs:
           SONAR_REPORT_URL="https://sonarcloud.io/dashboard?id=${{ github.repository }}"
 
           # Comment message with SonarQube report URL
-          COMMENT_BODY="SonarQube analysis is complete! 🎉 Here is the analysis report: ${SONAR_REPORT_URL}"
+          COMMENT_BODY="SonarQube analysis is complete! Here is the analysis report: ${SONAR_REPORT_URL}"
 
           # Create a GitHub API comment on the pull request
           curl -X POST \

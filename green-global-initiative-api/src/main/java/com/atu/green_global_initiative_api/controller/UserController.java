@@ -11,15 +11,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+/**
+ * REST controller for managing user-related operations.
+ * Provides endpoints for retrieving, creating, and authenticating users.
+ */
 @RestController
 @RequestMapping("/api/users")
-//@CrossOrigin(origins = "http://localhost:4200")
 @CrossOrigin(origins = "*")
 public class UserController {
 
@@ -31,6 +34,11 @@ public class UserController {
 
     static final Logger logger = LoggerFactory.getLogger(NausicaaGreenInitiativeApplication.class);
 
+    /**
+     * Retrieves all users in the system.
+     *
+     * @return A list of {@link UserDetailsDto} objects containing user details.
+     */
     // Get all users
     @GetMapping
     public ResponseEntity<List<UserDetailsDto>> getAllUsers() {
@@ -48,6 +56,12 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK) ;
     }
 
+    /**
+     * Handles user signup by creating a new user in the system.
+     *
+     * @param userDetails The details of the user to be created.
+     * @return A {@link UserDetailsDto} object containing the details of the created user.
+     */
     @PostMapping("/signup")
     public UserDetailsDto createUser(@RequestBody UserDetails userDetails) {
         logger.info("createUser method Started");
@@ -60,6 +74,12 @@ public class UserController {
         return res;
     }
 
+    /**
+     * Authenticates a user based on their login credentials.
+     *
+     * @param loginRequest The login credentials containing email and password.
+     * @return A {@link ResponseEntity} containing a JWT token if authentication is successful, or an error status otherwise.
+     */
     @PostMapping("/login")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String,String>> loginUser(@RequestBody LoginRequest loginRequest) {

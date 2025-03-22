@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { ContactUsComponent } from './contactus.component';
 import { By } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr';  // Import ToastrModule for ToastrService
 
 describe('ContactUsComponent', () => {
   let component: ContactUsComponent;
@@ -11,58 +11,96 @@ describe('ContactUsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactUsComponent, HttpClientModule, ToastrModule.forRoot()]
-    })
-    .compileComponents();
+      imports: [
+        ReactiveFormsModule,  // For reactive forms
+        HttpClientModule,     // Import HttpClientModule for HttpClient service
+        ToastrModule.forRoot(), // Provide ToastrModule for ToastrService
+        ContactUsComponent     // Your component that depends on HttpClient
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ContactUsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display correct heading text', () => {
-    const heading = fixture.debugElement.query(By.css('.heading h1')).nativeElement;
-    const subheading = fixture.debugElement.query(By.css('.heading h2')).nativeElement;
-
-    expect(heading.textContent).toContain('Contact Us');
-    expect(subheading.textContent).toContain('Send Your Enquiry');
+  it('should initialize the form with default values', () => {
+    expect(component.contactUsForm).toBeDefined();
+    expect(component.contactUsForm.controls['name']).toBeDefined();
+    expect(component.contactUsForm.controls['email']).toBeDefined();
+    expect(component.contactUsForm.controls['phone']).toBeDefined();
+    expect(component.contactUsForm.controls['message']).toBeDefined();
   });
 
-  it('should have form input fields', () => {
-    const nameInput = fixture.debugElement.query(By.css('input#name')).nativeElement;
-    const emailInput = fixture.debugElement.query(By.css('input#email')).nativeElement;
-    const phoneInput = fixture.debugElement.query(By.css('input#phone')).nativeElement;
-    const messageInput = fixture.debugElement.query(By.css('input#message')).nativeElement;
-
-    expect(nameInput).toBeTruthy();
-    expect(emailInput).toBeTruthy();
-    expect(phoneInput).toBeTruthy();
-    expect(messageInput).toBeTruthy();
+  it('should have name field required', () => {
+    const nameControl = component.contactUsForm.get('name');
+    nameControl?.setValue('');
+    expect(nameControl?.valid).toBeFalsy();
   });
 
-  it('should have a submit button', () => {
+  it('should require a valid email', () => {
+    const emailControl = component.contactUsForm.get('email');
+    emailControl?.setValue('invalid-email');
+    expect(emailControl?.valid).toBeFalsy();
+    emailControl?.setValue('test@example.com');
+    expect(emailControl?.valid).toBeTruthy();
+  });
+
+  it('should require a valid phone number', () => {
+    const phoneControl = component.contactUsForm.get('phone');
+    phoneControl?.setValue('abc123');
+    expect(phoneControl?.valid).toBeFalsy();
+    phoneControl?.setValue('1234567890');
+    expect(phoneControl?.valid).toBeTruthy();
+  });
+
+  it('should require message to be at least 10 characters', () => {
+    const messageControl = component.contactUsForm.get('message');
+    messageControl?.setValue('short');
+    expect(messageControl?.valid).toBeFalsy();
+    messageControl?.setValue('This is a valid message.');
+    expect(messageControl?.valid).toBeTruthy();
+  });
+
+  it('should disable submit button when form is invalid', () => {
     const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
-    expect(submitButton).toBeTruthy();
+    expect(submitButton.disabled).toBeTruthy();
   });
-  it('should render "Get In Touch" section', () => {
-    const getInTouchElement = fixture.debugElement.query(By.css('.contact-info h1'));
-    expect(getInTouchElement.nativeElement.textContent).toContain('Get In Touch');
+
+  it('should enable submit button when form is valid', () => {
+    component.contactUsForm.patchValue({
+      name: 'Test User',
+      email: 'test@example.com',
+      phone: '1234567890',
+      message: 'This is a valid message.',
+    });
+    fixture.detectChanges(); // Update the template
+
+    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+    expect(submitButton.disabled).toBeFalsy();
   });
-  it('should display phone number correctly', () => {
-    const phoneElement = fixture.debugElement.query(By.css('.contact-row p'));
-    expect(phoneElement.nativeElement.textContent).toContain('+353-998877665');
+  it('should show validation message if name is empty', () => {
+    component.contactUsForm.controls['name'].setValue('');
+    component.contactUsForm.controls['name'].markAsTouched();
+    fixture.detectChanges();
+
+    const errorMessage = fixture.debugElement.query(By.css('input[formControlName="name"] + small'));
+    expect(errorMessage).toBeTruthy();
+    expect(errorMessage.nativeElement.textContent).toContain('Name is required');
   });
-  it('should display social media links', () => {
-    const socialLinks = fixture.debugElement.queryAll(By.css('.contact-row img'));
-    expect(socialLinks.length).toBe(3); // Facebook, Instagram, YouTube icons
+
+  it('should show validation message if message is too short', () => {
+    const messageControl = component.contactUsForm.get('message');
+    messageControl?.setValue('Short');
+    messageControl?.markAsTouched();
+    fixture.detectChanges();
+
+    const errorMessage = fixture.debugElement.query(By.css('small'));
+    expect(errorMessage).toBeTruthy();
+    expect(errorMessage.nativeElement.textContent).toContain('Message must be at least 10 characters');
   });
-  it('should contain an inquiry form', () => {
-    const formElement = fixture.debugElement.query(By.css('.contact-form form'));
-    expect(formElement).toBeTruthy();
-  });
-  
 });

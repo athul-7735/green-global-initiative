@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ContactusService } from './contactus.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ContactusService', () => {
   let service: ContactusService;
@@ -10,7 +9,7 @@ describe('ContactusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      providers: [importProvidersFrom(HttpClientModule)]
+      providers: [ContactusService]
     });
     service = TestBed.inject(ContactusService);
   });
