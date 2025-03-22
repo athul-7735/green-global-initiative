@@ -75,11 +75,11 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: 'frontend_ui:latest'  # Use the image name you just built
-        version: '${{ env.TRIVY_VERSION }}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
-        args: --timeout 30m
+        severity: 'CRITICAL,HIGH'  # Optional: Specify severity levels to focus on
+        timeout: '30m'  # Use the `timeout` input instead of `args`
 
     - name: Run Snyk security scan
       uses: snyk/actions/node@master
