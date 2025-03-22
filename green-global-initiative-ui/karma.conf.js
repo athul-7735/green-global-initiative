@@ -1,7 +1,7 @@
 module.exports = function (config) {
   config.set({
     // Specify the browsers to use (ChromeHeadless for headless testing)
-    browsers: ['ChromeHeadless'], // ✅ Add this line
+    browsers: ['ChromeHeadless'], // ✅ Use ChromeHeadless
 
     // Configure custom launchers for ChromeHeadless
     customLaunchers: { // ✅ Add this block
