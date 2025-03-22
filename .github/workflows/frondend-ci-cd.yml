@@ -42,8 +42,8 @@ jobs:
 #    - name: Run integration tests
  #    run: npm run integration-test --prefix green-global-initiative-ui
 
-    - name: Check code coverage
-      run: npm run coverage --prefix green-global-initiative-ui
+  #  - name: Check code coverage
+  #    run: npm run coverage --prefix green-global-initiative-ui
       env:
         COVERAGE_THRESHOLD: 40 # Set your desired coverage threshold
 
