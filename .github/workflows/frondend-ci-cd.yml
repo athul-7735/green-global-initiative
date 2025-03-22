@@ -44,24 +44,37 @@ jobs:
 
   #  - name: Check code coverage
   #    run: npm run coverage --prefix green-global-initiative-ui
-      env:
-        COVERAGE_THRESHOLD: 40 # Set your desired coverage threshold
+ #     env:
+  #      COVERAGE_THRESHOLD: 40 # Set your desired coverage threshold
+#
+  #  - name: SonarQube Scan
+  #    uses: SonarSource/sonarcloud-github-action@master
+ #     env:
+ #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+ #     with:
+   #     args: >
+  #        -Dsonar.projectKey=your_project_key
+  #        -Dsonar.organization=your_organization
+  #        -Dsonar.host.url=https://sonarcloud.io
+  #        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-    - name: SonarQube Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
       with:
-        args: >
-          -Dsonar.projectKey=your_project_key
-          -Dsonar.organization=your_organization
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-docker-image:latest .  # Replace with your preferred image name and tag
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'your-docker-image'
+        image-ref: 'my-docker-image:latest'  # Use the image name you just built
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
@@ -76,7 +89,7 @@ jobs:
     - name: Run OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
       with:
-        project: 'your-project-name'
+        project: 'your-project-name'  # Replace with your actual project name
         format: 'ALL'
         fail_on_cvss: 7
 
