@@ -1,0 +1,91 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - NGGI-112-ci-yaml-file-integration-with-all-the-tools-frontend-ui
+  pull_request:
+    branches:
+      - NGGI-112-ci-yaml-file-integration-with-all-the-tools-frontend-ui
+
+jobs:
+  build:
+    runs-on: self-hosted # Use the self-hosted runner
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16' # Specify your Node.js version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npm run build
+
+    - name: Run unit tests
+      run: npm test
+
+    - name: Run integration tests
+      run: npm run integration-test
+
+    - name: Check code coverage
+      run: npm run coverage
+      env:
+        COVERAGE_THRESHOLD: 80 # Set your desired coverage threshold
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=your_project_key
+          -Dsonar.organization=your_organization
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'your-docker-image'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: test
+
+    - name: Run OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'your-project-name'
+        format: 'ALL'
+        fail_on_cvss: 7
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: test-results
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage
+
+    - name: Fail if code coverage is below threshold
+      run: |
+        if [ "$(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc)" -eq 1 ]; then
+          echo "Code coverage is below the threshold of $COVERAGE_THRESHOLD%"
+          exit 1
+        fi
