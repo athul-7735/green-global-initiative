@@ -72,27 +72,35 @@ jobs:
         cd green-global-initiative-ui
         docker build -t frontend_ui:latest .  # Replace with your preferred image name and tag
 
-
+        - name: Set environment variables
+        run: |
+          echo "TRIVY_VERSION=0.60.0" >> $GITHUB_ENV
+          echo "CACHE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+  
     - name: Cache Trivy DB
       id: cache-trivy-db
       uses: actions/cache@v4
       with:
           path: ~/.cache/trivy
-          key: trivy-db-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: trivy-db-${{ runner.os }}-${{ runner.arch }}-${{ env.TRIVY_VERSION }}-${{ env.CACHE_DATE }}
           restore-keys: |
-            trivy-db-${{ runner.os }}-
+            trivy-db-${{ runner.os }}-${{ runner.arch }}-${{ env.TRIVY_VERSION }}-
   
-
+    - name: Set up Trivy
+      uses: aquasecurity/setup-trivy@v0.2.2
+      with:
+          trivy-version: '0.60.0'  # Explicit version instead of 'latest'
+  
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'frontend_ui:latest'  # Use the image name you just built
-        version: 'latest'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        timeout: --timeout 10m0s
-
+          image-ref: 'frontend_ui:latest'  # Use the image name you just built
+          version: '0.60.0'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          args: --timeout 30m
+  
   
 
     - name: Run Snyk security scan
