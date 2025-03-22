@@ -69,13 +69,13 @@ jobs:
     - name: Set up Trivy
       uses: aquasecurity/setup-trivy@v0.2.2
       with:
-        trivy-version: '0.60.0'  # Explicit version instead of 'latest'
+        trivy-version: '${{ env.TRIVY_VERSION }}'  # Explicit version instead of 'latest'
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: 'frontend_ui:latest'  # Use the image name you just built
-        version: '0.60.0'
+        version: '${{ env.TRIVY_VERSION }}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
