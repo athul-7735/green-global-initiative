@@ -36,7 +36,8 @@ jobs:
       run: npm run build --prefix green-global-initiative-ui
 
     - name: Run Tests in Headless Mode
-      run: npm test --prefix green-global-initiative-ui -- --browsers=ChromeHeadlessCI --watch=false
+      run: npm test --prefix green-global-initiative-ui -- --browsers=ChromeHeadless --watch=false
+  
 
     - name: Run integration tests
       run: npm run integration-test --prefix green-global-initiative-ui
