@@ -69,6 +69,7 @@ jobs:
 
     - name: Build Docker image
       run: |
+        cd green-global-initiative-ui
         docker build -t frontend_ui:latest .  # Replace with your preferred image name and tag
 
     - name: Run Trivy vulnerability scanner
