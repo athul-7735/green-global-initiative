@@ -10,36 +10,36 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Use the self-hosted runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Navigate to frontend directory
-      run: cd green-global-initiative-ui
+    - name: Debug directory structure
+      run: ls -la
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16' # Specify your Node.js version
+        node-version: '16'
 
     - name: Install dependencies
-      run: npm install
+      run: npm install --prefix green-global-initiative-ui
 
     - name: Build the project
-      run: npm run build
+      run: npm run build --prefix green-global-initiative-ui
 
     - name: Run unit tests
-      run: npm test
+      run: npm test --prefix green-global-initiative-ui
 
     - name: Run integration tests
-      run: npm run integration-test
+      run: npm run integration-test --prefix green-global-initiative-ui
 
     - name: Check code coverage
-      run: npm run coverage
+      run: npm run coverage --prefix green-global-initiative-ui
       env:
-        COVERAGE_THRESHOLD: 40 # Set your desired coverage threshold
+        COVERAGE_THRESHOLD: 40
 
     - name: SonarQube Scan
       uses: SonarSource/sonarcloud-github-action@master
@@ -75,16 +75,16 @@ jobs:
         fail_on_cvss: 7
 
     - name: Upload test results
-      uses: actions/upload-artifact@v4 # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: green-global-initiative-ui/test-results # Ensure this path matches your test results directory
+        path: green-global-initiative-ui/test-results
 
     - name: Upload coverage report
-      uses: actions/upload-artifact@v4 # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: green-global-initiative-ui/coverage # Ensure this path matches your coverage report directory
+        path: green-global-initiative-ui/coverage
 
     - name: Fail if code coverage is below threshold
       run: |
