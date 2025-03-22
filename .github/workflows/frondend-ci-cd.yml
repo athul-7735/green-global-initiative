@@ -16,6 +16,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Navigate to frontend directory
+      run: cd green-global-initiative-ui
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -75,13 +78,13 @@ jobs:
       uses: actions/upload-artifact@v4 # Updated to v4
       with:
         name: test-results
-        path: test-results # Ensure this path matches your test results directory
+        path: green-global-initiative-ui/test-results # Ensure this path matches your test results directory
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4 # Updated to v4
       with:
         name: coverage-report
-        path: coverage # Ensure this path matches your coverage report directory
+        path: green-global-initiative-ui/coverage # Ensure this path matches your coverage report directory
 
     - name: Fail if code coverage is below threshold
       run: |
