@@ -35,7 +35,7 @@ jobs:
           SONAR_REPORT_URL="https://sonarcloud.io/dashboard?id=${{ github.repository }}"
 
           # Comment message with SonarQube report URL
-          COMMENT_BODY="SonarQube analysis is complete! 🎉 Here is the analysis report: ${SONAR_REPORT_URL}"
+          COMMENT_BODY="SonarQube analysis is complete! Here is the analysis report: ${SONAR_REPORT_URL}"
 
           # Create a GitHub API comment on the pull request
           curl -X POST \
