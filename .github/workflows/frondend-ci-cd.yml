@@ -54,7 +54,7 @@ jobs:
 
     - name: Set environment variables
       run: |
-        echo "TRIVY_VERSION=0.60.0" >> $GITHUB_ENV
+        echo "TRIVY_VERSION=latest" >> $GITHUB_ENV
         echo "CACHE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
     - name: Cache Trivy DB
