@@ -72,6 +72,16 @@ jobs:
         cd green-global-initiative-ui
         docker build -t frontend_ui:latest .  # Replace with your preferred image name and tag
 
+
+    - name: Cache Trivy DB
+      id: cache-trivy-db
+      uses: actions/cache@v4
+      with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
@@ -79,6 +89,9 @@ jobs:
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
+        args: --timeout 10m0s
+
+  
 
     - name: Run Snyk security scan
       uses: snyk/actions/node@master
