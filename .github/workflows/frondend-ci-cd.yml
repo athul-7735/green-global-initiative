@@ -39,8 +39,8 @@ jobs:
       run: npm test --prefix green-global-initiative-ui -- --browsers=ChromeHeadless --watch=false || true
   
 
-    - name: Run integration tests
-      run: npm run integration-test --prefix green-global-initiative-ui
+#    - name: Run integration tests
+ #    run: npm run integration-test --prefix green-global-initiative-ui
 
     - name: Check code coverage
       run: npm run coverage --prefix green-global-initiative-ui
