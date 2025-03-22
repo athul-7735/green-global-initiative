@@ -22,7 +22,12 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Updated to Node.js 18.x
+        node-version: '18' # Use Node.js 18.x (required for Angular CLI)
+
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
 
     - name: Install dependencies
       run: npm install --prefix green-global-initiative-ui
@@ -39,7 +44,7 @@ jobs:
     - name: Check code coverage
       run: npm run coverage --prefix green-global-initiative-ui
       env:
-        COVERAGE_THRESHOLD: 40
+        COVERAGE_THRESHOLD: 40 # Set your desired coverage threshold
 
     - name: SonarQube Scan
       uses: SonarSource/sonarcloud-github-action@master
