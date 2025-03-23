@@ -13,17 +13,30 @@ jobs:
     runs-on: [self-hosted]
 
     steps:
+      # Step 1: Checkout repository with clean and persist-credentials options
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          clean: true
 
+      # Step 2: Fix repository permissions (ensure runner has access)
+      - name: Fix repository permissions
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
+          sudo chmod -R u+rwX /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
+
+      # Step 3: Print working directory (for debugging)
       - name: Print working directory
         run: pwd
 
+      # Step 4: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # Step 5: Cache Node.js modules
       - name: Cache Node.js modules
         id: npm-cache
         uses: actions/cache@v3
@@ -33,40 +46,49 @@ jobs:
           restore-keys: |
             npm-
 
+      # Step 6: Install dependencies
       - name: Install dependencies
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm install
 
+      # Step 7: Install Angular CLI locally
       - name: Install Angular CLI locally
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm install @angular/cli --save-dev
 
+      # Step 8: Build the project
       - name: Build the project
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
 
+      # Step 9: Run Tests in Headless Mode
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --reporters junit --outputFile=test-results/results.xml
 
+      # Step 10: List test-results directory (for debugging)
       - name: List test-results directory
         run: ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
 
+      # Step 11: List coverage directory (for debugging)
       - name: List coverage directory
         run: ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
 
+      # Step 12: Upload test results
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
 
+      # Step 13: Upload coverage report
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
 
+      # Step 14: Fail if code coverage is below threshold
       - name: Fail if code coverage is below threshold
         run: |
           COVERAGE=$(grep -oP '(?<=<coverage>)[0-9.]+' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/cobertura-coverage.xml)
