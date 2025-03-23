@@ -30,23 +30,23 @@ jobs:
         cache: 'npm'
 
     - name: List project files
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: ls -la
 
     - name: Install dependencies
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: npm install
 
     - name: Install Angular CLI locally
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: npm install @angular/cli --save-dev
 
     - name: Build the project
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: npm run build
 
     - name: Run Tests in Headless Mode
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: npm test -- --browsers=ChromeHeadless --watch=false || true
 
     - name: Set up Docker Buildx
@@ -59,11 +59,11 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
     - name: Trivy File Scan
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
 
     - name: Build Docker image
-      working-directory: ./green-global-initiative-ui
+      working-directory: ./green-global-initiative/green-global-initiative/green-global-initiative-ui
       run: docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .
 
     - name: Trivy Image Scan
@@ -83,13 +83,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: green-global-initiative-ui/test-results
+        path: green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: green-global-initiative-ui/coverage
+        path: green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
 
     - name: Fail if code coverage is below threshold
       run: |
