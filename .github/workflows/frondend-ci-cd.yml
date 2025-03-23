@@ -16,30 +16,37 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: List files in workspace
+      run: |
+        ls -R
+
+    - name: Print working directory
+      run: pwd
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Use Node.js 18.x (required for Angular CLI)
-        cache: 'npm'  # Cache npm dependencies for faster builds
+        node-version: '18'
+        cache: 'npm'
 
     - name: Install dependencies
       run: |
-        cd ./green-global-initiative-ui
+        cd green-global-initiative/green-global-initiative-ui
         npm install
 
     - name: Install Angular CLI locally
       run: |
-        cd ./green-global-initiative-ui
+        cd green-global-initiative/green-global-initiative-ui
         npm install @angular/cli --save-dev
 
     - name: Build the project
       run: |
-        cd ./green-global-initiative-ui
+        cd green-global-initiative/green-global-initiative-ui
         npm run build
 
     - name: Run Tests in Headless Mode
       run: |
-        cd ./green-global-initiative-ui
+        cd green-global-initiative/green-global-initiative-ui
         npm test -- --browsers=ChromeHeadless --watch=false || true
 
     - name: Set up Docker Buildx
@@ -53,13 +60,13 @@ jobs:
 
     - name: Trivy File Scan
       run: |
-        cd green-global-initiative-ui
+        cd green-global-initiative/green-global-initiative-ui
         trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
 
     - name: Build Docker image
       run: |
-        cd ./green-global-initiative-ui
-        docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .  # Replace with your preferred image name and tag
+        cd green-global-initiative/green-global-initiative-ui
+        docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .
 
     - name: Trivy Image Scan
       run: |
@@ -72,7 +79,7 @@ jobs:
     - name: Run OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
       with:
-        project: 'green-global-initiative'  # Replace with your actual project name
+        project: 'green-global-initiative'
         format: 'ALL'
         fail_on_cvss: 7
 
@@ -80,13 +87,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: ./green-global-initiative-ui/test-results
+        path: green-global-initiative/green-global-initiative-ui/test-results
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: ./green-global-initiative-ui/coverage
+        path: green-global-initiative/green-global-initiative-ui/coverage
 
     - name: Fail if code coverage is below threshold
       run: |
