@@ -1,26 +1,33 @@
 module.exports = function (config) {
   config.set({
-    // Specify the browsers to use (ChromeHeadless for headless testing)
-    browsers: ['ChromeHeadlessCI'], // ✅ Use custom launcher name
+    // ✅ Specify the browsers to use (ChromeHeadless for headless testing)
+    browsers: ['ChromeHeadlessCI'],
 
-    // Configure custom launchers for ChromeHeadless
+    // ✅ Configure custom launchers for ChromeHeadless
     customLaunchers: { 
-      ChromeHeadlessCI: { // ✅ Custom name to avoid conflicts
-        base: 'ChromeHeadless', // ✅ Base should be 'ChromeHeadless' instead of 'Chrome'
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
         flags: [
           '--no-sandbox', // Required for running in CI environments
-          '--disable-gpu', // Disable GPU acceleration (not needed for headless)
-          '--remote-debugging-port=9222', // Enable remote debugging
+          '--disable-gpu', 
+          '--remote-debugging-port=9222',
         ],
       },
     },
 
-    // Reporters configuration
-    reporters: ['progress', 'kjhtml', 'coverage'],
+    // ✅ Add JUnit and Coverage reporters
+    reporters: ['progress', 'kjhtml', 'coverage', 'junit'],
 
-    // Coverage reporter configuration
+    // ✅ JUnit reporter configuration (Test Results)
+    junitReporter: {
+      outputDir: 'test-results', // ✅ Store results in test-results/
+      outputFile: 'results.xml',
+      useBrowserName: false, // Prevents filename conflicts
+    },
+
+    // ✅ Coverage reporter configuration (Code Coverage)
     coverageReporter: {
-      type: 'html',
+      type: 'lcov', // ✅ Required for CI/CD
       dir: 'coverage/',
       subdir: '.',
       check: {
@@ -32,7 +39,5 @@ module.exports = function (config) {
         },
       },
     },
-
-    // Other configurations (if any)
   });
 };
