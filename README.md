@@ -196,3 +196,9 @@ The feature passes all acceptance criteria and integration tests.
 Documentation is updated.
 No critical bugs are present.
 All Features are deployed and functional.
+
+# Folder structure.
+Folder structure can be found here:
+https://atlantictu.sharepoint.com/:t:/r/sites/Student-DevOps_Group2/Shared%20Documents/General/Documents/directory_structure.txt?csf=1&web=1&e=Yj964i
+
+
