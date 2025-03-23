@@ -12,16 +12,30 @@ jobs:
   build:
     runs-on: [self-hosted]
     permissions:
-        contents: write
+      contents: write
 
     steps:
+      
+
+      # Step to check if folder exists and remove it
+      - name: Remove folder if it exists
+        run: |
+          if [ -d "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports" ]; then
+            sudo rm -rf /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports
+            echo "Folder deleted."
+          else
+            echo "Folder does not exist. Skipping deletion."
+          fi
+        shell: bash
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-         token: ${{ secrets.G_TOKEN }}
+          token: ${{ secrets.G_TOKEN }}
 
       - name: Print working directory
         run: pwd
+
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -36,6 +50,7 @@ jobs:
           key: npm-${{ hashFiles('green-global-initiative/green-global-initiative/green-global-initiative-ui/package-lock.json') }}
           restore-keys: |
             npm-
+
       - name: Install dependencies
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm install
@@ -54,7 +69,7 @@ jobs:
 
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: npm test -- --browsers=ChromeHeadless --watch=false --code-coverage || true
+        run: npm test 
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -74,6 +89,7 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+
       - name: Trivy Image Scan
         run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
 
