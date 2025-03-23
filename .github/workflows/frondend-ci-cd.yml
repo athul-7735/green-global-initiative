@@ -34,8 +34,6 @@ jobs:
         with:
           token: ${{ secrets.G_TOKEN }}
 
-      - name: Print working directory
-        run: pwd
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -46,8 +44,8 @@ jobs:
         id: npm-cache
         uses: actions/cache@v3
         with:
-          path: ./green-global-initiative/green-global-initiative/green-global-initiative-ui/node_modules
-          key: npm-${{ hashFiles('green-global-initiative/green-global-initiative/green-global-initiative-ui/package-lock.json') }}
+          path: ./green-global-initiative-ui/node_modules
+          key: npm-${{ hashFiles('green-global-initiative-ui/package-lock.json') }}
           restore-keys: |
             npm-
 
@@ -63,10 +61,6 @@ jobs:
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
 
-      - name: Create test-results directory
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: mkdir -p test-results
-
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
@@ -74,6 +68,7 @@ jobs:
 
       - name: Extract Coverage Percentage
         id: coverage
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
           # Run tests and capture the output
           TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
