@@ -77,7 +77,7 @@ jobs:
         run: |
           if [ -f "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info" ]; then
             echo "lcov.info file found."
-            COVERAGE=$(grep -Eo 'lines\.*: [0-9.]+%' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info | awk '{print $2}' | sed 's/%//')
+            COVERAGE=$(grep -Eo 'lines\.*: [0-9.]+%' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info | grep -oP '\d+\.\d+')
             echo "Extracted coverage: $COVERAGE%"
             echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
           else
