@@ -1,35 +1,45 @@
 module.exports = function (config) {
   config.set({
-    // ✅ Specify the browsers to use (ChromeHeadless for headless testing)
+    basePath: '',
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    plugins: [
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-jasmine-html-reporter'),
+      require('karma-coverage'),
+      require('karma-junit-reporter'), // Add this line
+      require('@angular-devkit/build-angular/plugins/karma')
+    ],
+    client: {
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
     browsers: ['ChromeHeadlessCI'],
-
-    // ✅ Configure custom launchers for ChromeHeadless
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
         flags: [
-          '--no-sandbox', // Required for running in CI environments
+          '--no-sandbox',
           '--disable-gpu',
           '--remote-debugging-port=9222',
         ],
       },
     },
-
-    // ✅ Add JUnit and Coverage reporters
     reporters: ['progress', 'kjhtml', 'coverage', 'junit'],
 
-    // ✅ JUnit reporter configuration (Test Results)
     junitReporter: {
-      outputDir: 'test-results', // ✅ Store results in test-results/
+      outputDir: 'test-results',
       outputFile: 'results.xml',
-      useBrowserName: false, // Prevents filename conflicts
+      suite: '',
+      useBrowserName: true, 
     },
-
-    // ✅ Coverage reporter configuration (Code Coverage)
     coverageReporter: {
-      type: 'lcov', // ✅ Required for CI/CD
-      dir: 'coverage/',
+      type: 'lcov', 
+      dir: require('path').join(__dirname, './coverage'),
       subdir: '.',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ],
       check: {
         global: {
           statements: 60,
@@ -39,15 +49,13 @@ module.exports = function (config) {
         },
       },
     },
-
-    // ✅ Serve static assets (images, etc.)
     files: [
       { pattern: 'src/assets/**/*', watched: false, included: false, served: true, nocache: false },
     ],
-
-    // ✅ Proxy requests to /assets/ to the correct location
     proxies: {
       '/assets/': '/base/src/assets/',
     },
+    singleRun: true, // Run tests once and exit (required for CI/CD)
+    restartOnFileChange: false,
   });
 };
