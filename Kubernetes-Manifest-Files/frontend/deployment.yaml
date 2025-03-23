@@ -22,6 +22,6 @@ spec:
           image: vinay2806/frontend:2.0
           env:
             - name: ANGULAR_APP_BACKEND_URL
-              value: "http://api.nausicaaglobalgreen.live/api/" # This is the backend URL
+              value: "https://api.nausicaaglobalgreen.live/api/" # This is the backend URL
           ports:
             - containerPort: 4200
