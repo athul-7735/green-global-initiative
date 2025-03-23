@@ -4,12 +4,12 @@ module.exports = function (config) {
     browsers: ['ChromeHeadlessCI'],
 
     // ✅ Configure custom launchers for ChromeHeadless
-    customLaunchers: { 
+    customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
         flags: [
           '--no-sandbox', // Required for running in CI environments
-          '--disable-gpu', 
+          '--disable-gpu',
           '--remote-debugging-port=9222',
         ],
       },
@@ -30,14 +30,24 @@ module.exports = function (config) {
       type: 'lcov', // ✅ Required for CI/CD
       dir: 'coverage/',
       subdir: '.',
-    //  check: {
-     //   global: {
-      //    statements: 60,
-      //    branches: 39,
-      //    functions: 55,
-      //    lines: 57,
-       // },
-      //},
+      check: {
+        global: {
+          statements: 60,
+          branches: 39,
+          functions: 55,
+          lines: 57,
+        },
+      },
+    },
+
+    // ✅ Serve static assets (images, etc.)
+    files: [
+      { pattern: 'src/assets/**/*', watched: false, included: false, served: true, nocache: false },
+    ],
+
+    // ✅ Proxy requests to /assets/ to the correct location
+    proxies: {
+      '/assets/': '/base/src/assets/',
     },
   });
 };
