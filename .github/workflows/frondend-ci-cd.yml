@@ -24,22 +24,22 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd green-global-initiative-ui
+        cd ./green-global-initiative-ui
         npm install
 
     - name: Install Angular CLI locally
       run: |
-        cd green-global-initiative-ui
+        cd ./green-global-initiative-ui
         npm install @angular/cli --save-dev
 
     - name: Build the project
       run: |
-        cd green-global-initiative-ui
+        cd ./green-global-initiative-ui
         npm run build
 
     - name: Run Tests in Headless Mode
       run: |
-        cd green-global-initiative-ui
+        cd ./green-global-initiative-ui
         npm test -- --browsers=ChromeHeadless --watch=false || true
 
     - name: Set up Docker Buildx
@@ -58,7 +58,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        cd green-global-initiative-ui
+        cd ./green-global-initiative-ui
         docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .  # Replace with your preferred image name and tag
 
     - name: Trivy Image Scan
@@ -80,13 +80,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: green-global-initiative-ui/test-results
+        path: ./green-global-initiative-ui/test-results
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: green-global-initiative-ui/coverage
+        path: ./green-global-initiative-ui/coverage
 
     - name: Fail if code coverage is below threshold
       run: |
