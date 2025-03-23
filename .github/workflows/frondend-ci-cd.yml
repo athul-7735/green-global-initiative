@@ -24,7 +24,7 @@ jobs:
       run: pwd
 
     - name: Navigate to green-global-initiative-ui directory
-      run: cd actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+      run: cd green-global-initiative/green-global-initiative/green-global-initiative-ui
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
