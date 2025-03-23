@@ -10,27 +10,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-host]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Debug directory structure
-      run: ls -la
-
+    
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'  # Use Node.js 18.x (required for Angular CLI)
-
-    - name: Install Chrome
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
-
-    - name: Install dependencies
-      run: npm install --prefix green-global-initiative-ui
 
     - name: Build the project
       run: npm run build --prefix green-global-initiative-ui
@@ -47,48 +37,25 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+
+    - name: Trivy File Scan
+      run: |
+          trivy fs ./green-global-initiative/green-global-initiative-ui --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
+
     - name: Build Docker image
       run: |
         cd green-global-initiative-ui
-        docker build -t frontend_ui:latest .  # Replace with your preferred image name and tag
+        docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .  # Replace with your preferred image name and tag
 
-    # 🔹 Trivy Updates Begin Here 🔹
-    - name: Set environment variables
+    - name: Trivy Image Scan
       run: |
-        echo "TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | jq -r .tag_name || echo '0.55.0')" >> $GITHUB_ENV
-        echo "CACHE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          trivy image ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} --severity HIGH,CRITICAL > trivyimage-backend.txt
+   
+   
+    - name: Push Docker image
+      run: |
+            docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
 
-    - name: Cache Trivy DB
-      id: cache-trivy-db
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/trivy
-        key: trivy-db-${{ runner.os }}-${{ runner.arch }}-${{ env.TRIVY_VERSION }}-${{ env.CACHE_DATE }}
-        restore-keys: |
-          trivy-db-${{ runner.os }}-${{ runner.arch }}-${{ env.TRIVY_VERSION }}-
-
-    - name: Set up Trivy
-      uses: aquasecurity/setup-trivy@v0.2.2
-      with:
-        trivy-version: '${{ env.TRIVY_VERSION }}'
-
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: 'frontend_ui:latest'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        severity: 'CRITICAL,HIGH'
-        timeout: '30m'
-    # 🔹 Trivy Updates End Here 🔹
-
-    - name: Run Snyk security scan
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        command: test
 
     - name: Run OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
