@@ -64,8 +64,10 @@ jobs:
 
       - name: Build Docker image
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run:  docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} . 
-
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+          
       - name: Trivy Image Scan
         run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-backend.txt
 
