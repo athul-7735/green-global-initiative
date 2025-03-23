@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --reporters junit --junit-report-path=test-results/results.xml
+        run: npm test -- --browsers=ChromeHeadless --watch=false --code-coverage
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -71,7 +71,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
       - name: Trivy Image Scan
-        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-backend.txt
+        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
