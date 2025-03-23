@@ -1,0 +1,178 @@
+name: Build, Test, Scan, and Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on push to main branch (modify as necessary)
+
+jobs:
+  build:
+    runs-on: [self-hosted]
+    permissions:
+      contents: write
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up AWS credentials
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Set up Java JDK  Maven
+      - name: Set up Java JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: "21" # Adjust as necessary
+          distribution: "temurin"
+
+      # Step 4: Set up Maven
+      - name: Set up Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: "21"
+          maven-version: "3.8.7" # Adjust as necessary
+          distribution: "temurin" # Same distribution as for Java
+
+      # Step 5: Cache Maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/green-global-initiative-api/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 6: Build and test with Maven (from your code directory)
+      - name: Build and test with Maven
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true
+        working-directory: ./green-global-initiative-api
+
+      # Step 7: SonarQube scan (optional step for code quality)
+      # - name: SonarQube Scan
+      #   uses: sonarsource/sonarcloud-github-action@v1
+      #   with:
+      #     sonar-token: ${{ secrets.SONARQUBE_TOKEN }}
+      #   env:
+      #     SONARQUBE_HOST_URL: https://sonarcloud.io
+      #     SONARQUBE_PROJECT_KEY: three-tier-backend
+      #     SONARQUBE_PROJECT_NAME: three-tier-backend
+      #   working-directory: green-global-initiative/green-global-initiative-api
+
+      # # Step 8: OWASP Dependency-Check Scan
+      # - name: OWASP Dependency-Check Scan
+      #   run: |
+      #     dependency-check --scan ./green-global-initiative/green-global-initiative-api --out ./green-global-initiative/green-global-initiative-api/dependency-check-report.xml
+      #     dependency-check-publisher -f ./green-global-initiative/green-global-initiative-api/dependency-check-report.xml
+
+      # Step 9: Trivy file scan (for backend)
+      - name: Trivy File Scan
+        run: |
+          trivy fs ./green-global-initiative-api --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
+
+      # Step 10: Docker Image Build for Backend
+      - name: Docker Build Backend Image
+        run: |
+          docker system prune -f
+          docker container prune -f
+          docker build -t ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} ./green-global-initiative-api
+
+      # Step 11: Push Docker Image to Docker Hub
+      - name: Push Docker Image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          docker tag ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}
+          docker push ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}
+
+      # Step 12: Trivy Docker Image Scan
+      - name: Trivy Image Scan
+        run: |
+          trivy image ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --severity HIGH,CRITICAL > trivyimage-backend.txt
+
+      # Step: 13: Verify Repository Access
+      - name: Verify Repository Access
+        run: |
+          git config --global user.email "L00187534@atu.ie"
+          git config --global user.name "vinay187534"
+          git ls-remote https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }}
+
+      # Step 14: Update Deployment Image in YAML
+      - name: Update Deployment Image in YAML
+        run: |
+          IMAGE_TAG=${GITHUB_SHA}
+          sed -i "s|image: .*$|image: ${DOCKER_HUB_USERNAME}/backend:${IMAGE_TAG}|" ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git config user.email "L00187534@atu.ie"
+          git config user.name "vinay187534"
+          git add ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git commit -m "Update backend image tag to ${IMAGE_TAG}"
+          git push https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
+      # Step 15: Rollout deployment with the new image
+      - name: Rollout deployment with new image
+        run: |
+          kubectl rollout restart deployment backend -n three-tier  # Replace <namespace> with your actual namespace
+          kubectl rollout status deployment backend -n <namespace>
+
+  # Job 2: Deploy to Kubernetes (EKS)
+  # deploy:
+  #   needs: build # Ensure that the deploy job runs only after the build job completes
+  #   runs-on: [self-hosted]
+  #   env:
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #     AWS_REGION: ${{ secrets.AWS_REGION }}
+  #     DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #     DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  #   steps:
+  #     # Step 1: Checkout the repository
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     # Step 2: Set up AWS credentials
+  #     - name: Set up AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     # Step 3: Set up kubectl for EKS
+  #     - name: Set up kubectl
+  #       run: |
+  #         aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+
+  #     # Step 4: Set up eksctl
+  #     - name: Set up eksctl
+  #       uses: eksctl/eksctl-action@v1
+
+  #     # Step 5: Deploy Kubernetes Manifests to EKS
+  #     - name: Deploy Kubernetes Manifests to EKS
+  #       working-directory: ./Kubernetes-Manifest-Files
+  #       run: |
+  #         kubectl create namespace three-tier || echo "Namespace already exists"
+  #         kubectl apply -f ./Database/dockersecret.yaml
+  #         kubectl apply -f ./Database/secret.yaml
+  #         kubectl apply -f ./Database/configmap.yaml
+  #         kubectl apply -f ./Database/sql-configmap.yaml
+  #         kubectl apply -f ./Database/pv.yaml
+  #         kubectl apply -f ./Database/pvc.yaml
+  #         kubectl apply -f ./Database/deployment.yaml
+  #         kubectl apply -f ./Database/service.yaml
+  #         kubectl apply -f ./Backend/deployment.yaml
+  #         kubectl apply -f ./Backend/service.yaml
+  #         kubectl apply -f ./frontend/deployment.yaml
+  #         kubectl apply -f ./frontend/service.yaml
+  #         kubectl apply -f ./Frontend-ingress/frontend-ingress.yaml
+  #         kubectl apply -f ./Backend-ingress/backend-ingress.yaml
