@@ -75,14 +75,18 @@ jobs:
       - name: Extract Coverage Percentage
         id: coverage
         run: |
-          if [ -f "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info" ]; then
-            echo "lcov.info file found."
-            COVERAGE=$(grep -Eo 'lines\.*: [0-9.]+%' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info | grep -oP '\d+\.\d+')
+          # Run tests and capture the output
+          TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
+          
+          # Extract the Lines coverage percentage from the output
+          COVERAGE=$(echo "$TEST_OUTPUT" | grep -Eo 'Lines\s*:\s*[0-9.]+%' | awk '{print $2}' | sed 's/%//')
+          
+          if [ -z "$COVERAGE" ]; then
+            echo "Error: Could not extract coverage percentage."
+            exit 1
+          else
             echo "Extracted coverage: $COVERAGE%"
             echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-          else
-            echo "Error: lcov.info file not found."
-            exit 1
           fi
 
       - name: Fail if code coverage is below threshold
