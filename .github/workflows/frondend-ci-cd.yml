@@ -108,6 +108,7 @@ jobs:
         uses: snyk/actions/node@master
         with:
           args: --severity-threshold=high
+          working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
