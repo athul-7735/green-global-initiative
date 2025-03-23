@@ -3,47 +3,43 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/ro
 import { AuthService } from '../../authentication/services/auth.service';
 import { authGuard } from './auth.guard';
 import { provideRouter } from '@angular/router';
+import { Injector, runInInjectionContext } from '@angular/core';
 
 describe('authGuard', () => {
   let authService: jasmine.SpyObj<AuthService>;
   let router: jasmine.SpyObj<Router>;
-
+  let injector: Injector;
+  
   beforeEach(() => {
+    // Create Spy Objects for dependencies
     authService = jasmine.createSpyObj('AuthService', ['getUser']);
     router = jasmine.createSpyObj('Router', ['navigate']);
 
+    // Configure TestBed with dependencies
     TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router },
-        provideRouter([]), // Providing a dummy router for testing
-      ],
+        { provide: Router, useValue: router }
+      ]
     });
+    injector = TestBed.inject(Injector);
   });
 
-  function mockRoute(): ActivatedRouteSnapshot {
-    return {} as ActivatedRouteSnapshot;
-  }
+  it('should allow access if user is authenticated', () => {
+    authService.getUser.and.returnValue(`{"username":"testuser","password":"testpassword"}`);
 
-  function mockState(): RouterStateSnapshot {
-    return { url: '/test' } as RouterStateSnapshot;
-  }
+    const result = runInInjectionContext(injector, () => authGuard(null as any, null as any));
 
-  it('should allow the user to access the route if authenticated', () => {
-    authService.getUser.and.returnValue('mockUser'); // Mock user string
-
-    const result = authGuard(mockRoute(), mockState());
-
-    expect(result).toBeTrue(); // Should return true if user is authenticated
-    expect(router.navigate).not.toHaveBeenCalled(); // No redirect expected
+    expect(result).toBeTrue();
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('should redirect to /login if the user is not authenticated', () => {
-    authService.getUser.and.returnValue(null); // Simulating unauthenticated user
+  it('should redirect to login if user is not authenticated', () => {
+    authService.getUser.and.returnValue(null);
 
-    const result = authGuard(mockRoute(), mockState());
+    const result = runInInjectionContext(injector, () => authGuard(null as any, null as any));
 
-    expect(result).toBeFalse(); // Should return false for unauthenticated user
-    expect(router.navigate).toHaveBeenCalledWith(['/login']); // Expecting redirect
+    expect(result).toBeFalse();
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });
