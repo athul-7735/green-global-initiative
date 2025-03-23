@@ -13,42 +13,17 @@ jobs:
     runs-on: [self-hosted]
 
     steps:
-      # Step 1: Clean up repository directory (if necessary)
-      - name: Clean up repository directory
-        run: |
-          sudo rm -rf /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
-
-      # Step 2: Checkout repository with clean and persist-credentials options
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          clean: true
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
 
-      # Step 3: Verify repository checkout
-      - name: Verify repository checkout
-        run: |
-          ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
-          ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/.git
-
-      # Step 4: Fix repository permissions (ensure runner has access)
-      - name: Fix repository permissions
-        run: |
-          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
-          sudo chmod -R u+rwX /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative
-
-      # Step 5: Print working directory (for debugging)
       - name: Print working directory
         run: pwd
 
-      # Step 6: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Step 7: Cache Node.js modules
       - name: Cache Node.js modules
         id: npm-cache
         uses: actions/cache@v3
@@ -57,55 +32,68 @@ jobs:
           key: npm-${{ hashFiles('green-global-initiative/green-global-initiative/green-global-initiative-ui/package-lock.json') }}
           restore-keys: |
             npm-
-
-      # Step 8: Install dependencies
       - name: Install dependencies
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm install
 
-      # Step 9: Install Angular CLI locally
       - name: Install Angular CLI locally
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm install @angular/cli --save-dev
 
-      # Step 10: Build the project
       - name: Build the project
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
 
-      # Step 11: Run Tests in Headless Mode
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --reporters junit --outputFile=test-results/results.xml
 
-      # Step 12: List test-results directory (for debugging)
-      - name: List test-results directory
-        run: ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # Step 13: List coverage directory (for debugging)
-      - name: List coverage directory
-        run: ls -la /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      # Step 14: Upload test results
+      - name: Trivy File Scan
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
+
+      - name: Build Docker image
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+      - name: Trivy Image Scan
+        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-backend.txt
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'green-global-initiative'
+          format: 'ALL'
+          fail_on_cvss: 7
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
+          path: green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
 
-      # Step 15: Upload coverage report
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+          path: green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
 
-      # Step 16: Fail if code coverage is below threshold
       - name: Fail if code coverage is below threshold
         run: |
-          COVERAGE=$(grep -oP '(?<=<coverage>)[0-9.]+' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/cobertura-coverage.xml)
-          COVERAGE_THRESHOLD=80 # Set your desired threshold here
-          if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
+          if [ "$(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc)" -eq 1 ]; then
             echo "Code coverage is below the threshold of $COVERAGE_THRESHOLD%"
             exit 1
           fi
