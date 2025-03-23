@@ -63,7 +63,10 @@ jobs:
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
 
-    
+      - name: Create test-results directory
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: mkdir -p test-results
+
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
@@ -72,12 +75,23 @@ jobs:
       - name: Extract Coverage Percentage
         id: coverage
         run: |
-          COVERAGE=$(grep -Eo 'lines\.*: [0-9.]+%' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info | awk '{print $2}' | sed 's/%//')
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-          echo "Extracted coverage: $COVERAGE%"
+          if [ -f "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info" ]; then
+            echo "lcov.info file found."
+            COVERAGE=$(grep -Eo 'lines\.*: [0-9.]+%' /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/lcov.info | awk '{print $2}' | sed 's/%//')
+            echo "Extracted coverage: $COVERAGE%"
+            echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+          else
+            echo "Error: lcov.info file not found."
+            exit 1
+          fi
 
       - name: Fail if code coverage is below threshold
         run: |
+          if [ -z "$COVERAGE" ]; then
+            echo "Error: COVERAGE variable is not set."
+            exit 1
+          fi
+
           if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
             echo "Code coverage is below the threshold of $COVERAGE_THRESHOLD%"
             exit 1
