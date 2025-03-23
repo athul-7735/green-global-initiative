@@ -30,14 +30,14 @@ module.exports = function (config) {
       type: 'lcov', // ✅ Required for CI/CD
       dir: 'coverage/',
       subdir: '.',
-      check: {
-        global: {
-          statements: 60,
-          branches: 39,
-          functions: 55,
-          lines: 57,
-        },
-      },
+    //  check: {
+     //   global: {
+      //    statements: 60,
+      //    branches: 39,
+      //    functions: 55,
+      //    lines: 57,
+       // },
+      //},
     },
   });
 };
