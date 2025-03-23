@@ -61,10 +61,14 @@ jobs:
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
 
-      - name: Run Tests in Headless Mode
+      - - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
           npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true
+
+      - name: Debug Test Output
+        run: |
+          echo "$TEST_OUTPUT"
 
       - name: Extract Coverage Percentage
         id: coverage
@@ -74,7 +78,7 @@ jobs:
           TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
           
           # Extract the Lines coverage percentage from the output
-          COVERAGE=$(echo "$TEST_OUTPUT" | grep -Eo 'Lines\s*:\s*[0-9.]+%' | awk '{print $2}' | sed 's/%//')
+          COVERAGE=$(echo "$TEST_OUTPUT" | grep -Eo 'Lines\s*:\s*[0-9.]+%' | awk '{print $3}' | sed 's/%//')
           
           if [ -z "$COVERAGE" ]; then
             echo "Error: Could not extract coverage percentage."
