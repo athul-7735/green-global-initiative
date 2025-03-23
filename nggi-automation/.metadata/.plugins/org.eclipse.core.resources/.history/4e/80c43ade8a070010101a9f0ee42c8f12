@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.nggi.automationtesting</groupId>
+  <artifactId>nggi-automation</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+	<dependencies>
+   	 <!-- Selenium Dependency -->
+    	<dependency>
+    	    <groupId>org.seleniumhq.selenium</groupId>
+        	<artifactId>selenium-java</artifactId>
+        	<version>4.12.0</version>
+    	</dependency>
+    
+    <!-- TestNG Dependency -->
+    	<dependency>
+        	<groupId>org.testng</groupId>
+        	<artifactId>testng</artifactId>
+        	<version>7.9.0</version>
+        	<scope>test</scope>
+    	</dependency>
+    	
+    <!-- slf4j Dependency -->	
+    	<dependency>
+    		<groupId>org.slf4j</groupId>
+   			 <artifactId>slf4j-api</artifactId>
+    		<version>1.7.5</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-log4j12</artifactId>
+    		<version>1.7.5</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.5.0</version> <!-- Replace with the latest version -->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>E:\DEVOPS\Project Management\Automation Testing\nggi-automation\JavaDoc</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>
