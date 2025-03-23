@@ -31,22 +31,22 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd green-global-initiative-ui  # Correct path to the project
+        working-directory: ./green-global-initiative-ui # Correct path to the project
         npm install
 
     - name: Install Angular CLI locally
       run: |
-        cd green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         npm install @angular/cli --save-dev
 
     - name: Build the project
       run: |
-        cd green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         npm run build
 
     - name: Run Tests in Headless Mode
       run: |
-        cd green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         npm test -- --browsers=ChromeHeadless --watch=false || true
 
     - name: Set up Docker Buildx
@@ -60,12 +60,12 @@ jobs:
 
     - name: Trivy File Scan
       run: |
-        cd green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
 
     - name: Build Docker image
       run: |
-        cd green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         docker build -t ${DOCKER_HUB_USERNAME}/frontend:${GITHUB_SHA} .
 
     - name: Trivy Image Scan
