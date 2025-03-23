@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+          path: green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage/green-global-initiative-ui
 
       - name: Fail if code coverage is below threshold
         run: |
