@@ -3,6 +3,7 @@ package com.atu.green_global_initiative_api.config;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -13,9 +14,16 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Import(DevCorsConfig.class)
 class DevCorsConfigTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Test
+    void testDevCorsConfigInitialization() {
+        DevCorsConfig config = new DevCorsConfig();
+        assertNotNull(config);
+    }
 
     @Test
     void testCorsConfigurationForAllOrigins() throws Exception {

@@ -17,7 +17,7 @@ import java.util.List;
  *
  * <p>Example usage:</p>
  * <pre>
- * List<UserDetails> usersByEmail = userDetailsRepo.findAllByEmail("user@example.com");
+ * {@code List<UserDetails> usersByEmail = userDetailsRepo.findAllByEmail("user@example.com");}
  * </pre>
  *
  * @author Name Here
