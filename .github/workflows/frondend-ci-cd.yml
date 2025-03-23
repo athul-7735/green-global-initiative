@@ -15,7 +15,7 @@ jobs:
       contents: write
 
     env:
-      COVERAGE_THRESHOLD: 50  # Set your desired coverage threshold here
+      COVERAGE_THRESHOLD: 75  # Set your desired coverage threshold here
 
     steps:
       # Step to check if folder exists and remove it
