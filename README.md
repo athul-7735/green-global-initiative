@@ -39,6 +39,9 @@ Our product will be delivered using an Agile methodology that embraces the DevOp
 Week 1-2, **Vinay Kumar Podila**. 
 Week 3-4, **Sherine Anbaiyan**. 
 Week 5-6, **Athul Sukumaran**. 
+Week 7-8, **Manish Potlacheruvu**
+Week 9-10, **Siddhartha Vijay Kumar**
+Week 10-11, **John Kirubaharan Ravichandran**
 
 Rotating scrum master so that everyone gets to experience the role once.
 
@@ -46,6 +49,10 @@ Rotating scrum master so that everyone gets to experience the role once.
 Week 1-2, **Manish Potlacheruvu**. 
 Week 3-4, **John Kirubaharan Ravichandran**. 
 Week 5-6, **Siddhartha Vijay Kumar**.
+Week 7-8, **Sherine Anbaiyan**.
+Week 9-10, **Vinay Kumar Podila**. 
+Week 10-11, **Athul Sukumaran**.
+
 Rotating product owner so that everyone gets to experience the role once.
 
 # Team Members
@@ -63,11 +70,15 @@ Thursday 23rd March at midnight
 Clean and simple design User access levels (client, administrator) Includes at least one self developed api and one webservice To be run over
 
 # Frameworks
-Database Database persistence technology Define the buisness Requirements Named queries and database triggers for security Regex for cleansing and validation of data before sending to the database.
+Backend - Javaspringboot
+Design - Figma
+Frontend - Angular
 
 # Useful Links
 - Project Slack: https://app.slack.com/client/T0419S2HV9B/C08355CCTBP
 - GitHub: https://teams.microsoft.com/l/team/19%3AnInKKeJ_HYes5SOzK3UYKViHZf-lMMxLZWQw5vMSXmk1%40thread.tacv2/conversations?groupId=2a12326e-32d1-4525-874a-786ef4724eca&tenantId=47855545-00bb-4800-a65f-e79104ec0fc4
+- Jira: https://atudevops2024.atlassian.net/jira/software/projects/NGGI/boards/2/timeline
+- Confluence: https://atudevops2024.atlassian.net/wiki/spaces/NA/pages/edit-v2/16646267
   
 # More Information
 For more information visit our other sections.
@@ -92,6 +103,7 @@ Update the below to add what the group is using
 
 - SonarQube: uses static analysis to find bugs in the code.
 - OWASP: uses dynamic analysis to find bugs in the code.
+- SNYK: uses static analysis tool for identifying vulnerabilities and bugs in the code
 
 # Testing:
 
@@ -101,7 +113,7 @@ Update the below to add what the group is using
 
 # Environments:
 
-- staging and production: TBD
+- staging and production
 - tight configuration management for consistency and reproducibility: TBD
 - automated creation and deployments: TBD
 - integrated and automated pipeline (commit -> test -> deploy): TBD
@@ -109,7 +121,7 @@ Update the below to add what the group is using
 # Github version control:
 
 - branches used: main, develep, feature
-- version/release management <<>>
+- version/release management
 
 # Agile project management methods/principles (jira)
 
@@ -132,7 +144,7 @@ Update the below to add what the group is using
 # Meetings
 
 ##
-	Stand-ups will occur on Every <<day/time>> during class and <<day/time>> using Automated bot. Two per week.
+	Stand-ups will occur on Every Monday and Wednesday from 9.30am to 11.30am during class and Monday to wednesday from 3pm to 4pm using Automated bot. Two per week.
 	The order that people give their updates will be << >>.
 	Updates will be in the form: What I've done, Impediments, What I plan to do.
 	Sprint planning will occur at <<date/time>> every week.
@@ -156,7 +168,7 @@ Update the below to add what the group is using
 ##
 	Slack is the preferred method of communication.
 	If a demonstration is required use Loom, record the session and upload to the Slack channel.
-	No Slack communications between <<time and time>>.
+	No Microsoft Teams communications between 11pm to 10am.
 	Raise a problem as soon as you see it.
 	Respect each other and understand differences in knowledge.
 	All team documents are to be created using Markdown language and shared on GitHub.
@@ -186,7 +198,7 @@ Update the below to add what the group is using
 # Estimating Story Points
 The teams team's velocity is calculated by 1 story point equals to 8 hours.
 
-The teams current story point velocity is "N/A".
+The teams current story point velocity is 23.
 
 # Definition of Ready/Done
 Code is written and commits are pushed.
