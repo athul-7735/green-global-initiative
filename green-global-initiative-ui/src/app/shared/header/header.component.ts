@@ -4,6 +4,9 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../authentication/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Header component that displays the application title.
+ */
 @Component({
   selector: 'app-header',
   imports: [RouterModule, CommonModule],
