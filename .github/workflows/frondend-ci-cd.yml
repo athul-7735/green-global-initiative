@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
@@ -18,25 +18,6 @@ jobs:
       COVERAGE_THRESHOLD: 75  # Set your desired coverage threshold here
 
     steps:
-      # Step to check if folder exists and remove it
-      - name: Remove folder if it exists
-        run: |
-          if [ -d "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports" ]; then
-            sudo rm -rf /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports
-            echo "Folder deleted."
-          else
-            echo "Folder does not exist. Skipping deletion."
-          fi
-        shell: bash
-
-
-
-      # Create reports directory if it doesn't exist
-      - name: Create reports directory
-        run: |
-          mkdir -p /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports
-        shell: bash
-
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -55,28 +36,27 @@ jobs:
           key: npm-${{ hashFiles('green-global-initiative-ui/package-lock.json') }}
           restore-keys: |
             npm-
+
       - name: Install dependencies
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm install
 
       - name: Install Angular CLI locally
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm install @angular/cli --save-dev
 
       - name: Build the project
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm run build
 
       - name: Run Tests in Headless Mode
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true
-      - name: Debug Test Output
-        run: |
-          echo "$TEST_OUTPUT"
+
       - name: Extract Coverage Percentage
         id: coverage
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           # Run tests and capture the output
           TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
@@ -91,6 +71,7 @@ jobs:
             echo "Extracted coverage: $COVERAGE%"
             echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
           fi
+
       - name: Fail if code coverage is below threshold
         run: |
           if [ -z "$COVERAGE" ]; then
@@ -103,9 +84,10 @@ jobs:
           else
             echo "Code coverage is $COVERAGE%, which meets the threshold of $COVERAGE_THRESHOLD%"
           fi
+
       # Snyk Integration
       - name: Run Snyk to check for vulnerabilities
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           npm install -g snyk
           snyk test --severity-threshold=high
@@ -121,15 +103,24 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: Install Trivy
+        run: |
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
       - name: Trivy File Scan
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
+        working-directory: ./green-global-initiative-ui
+        run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-frontend.txt
 
       - name: Build Docker image
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
+
       - name: Trivy Image Scan
         run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
 
@@ -141,14 +132,14 @@ jobs:
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'green-global-initiative'
-          scan-path: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui'
+          scan-path: './green-global-initiative-ui'
           format: 'ALL'
-          output: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports'
+          output: './reports'
           fail_on_cvss: 7
 
       # Documentation
       - name: Generate Compodoc documentation
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           npx compodoc -p tsconfig.app.json -d documentation
         continue-on-error: true
@@ -158,22 +149,30 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
+          path: ./green-global-initiative-ui/test-results
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+          path: ./green-global-initiative-ui/coverage
 
       - name: Upload OWASP Dependency Check reports
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-reports
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports/*
+          path: ./reports/*
 
       - name: Upload Compodoc documentation
         uses: actions/upload-artifact@v4
         with:
-            name: compodoc-documentation
-            path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/documentation/*
+          name: compodoc-documentation
+          path: ./green-global-initiative-ui/documentation/*
+
+      - name: Upload Trivy scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-scan-results
+          path: |
+            ./green-global-initiative-ui/trivyfs-frontend.txt
+            ./trivyimage-frontend.txt
