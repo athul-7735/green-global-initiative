@@ -19,7 +19,7 @@ spec:
         - name: docker-registry-secret # Pull secret for private registry
       containers:
         - name: backend
-          image: vinay2806/backend:1.0
+          image: siddydevops/backend:ee05db2b67ee8ca86da09f1d3c756d74491b70a4
           resources:
             requests:
               memory: "256Mi"
