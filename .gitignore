@@ -33,3 +33,5 @@ green-global-initiative-api/.idea/
 .vscode
 
 green-global-initiative-api/backend_javadoc/**
+
+green-global-initiative-ui/test-results
