@@ -28,7 +28,7 @@ module.exports = function (config) {
 
     junitReporter: {
       outputDir: 'test-results',
-      outputFile: 'results.xml',
+      outputFile: 'results.html',
       suite: '',
       useBrowserName: true, 
     },
