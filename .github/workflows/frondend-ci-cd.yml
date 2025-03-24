@@ -15,11 +15,10 @@ jobs:
       contents: write
 
     env:
-      COVERAGE_THRESHOLD: 75
-      DOCKER_CLEANUP: true
+      COVERAGE_THRESHOLD: 75  # Set your desired coverage threshold here
 
     steps:
-      # Cleanup previous runs
+      # Step to check if folder exists and remove it
       - name: Remove folder if it exists
         run: |
           if [ -d "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports" ]; then
@@ -30,10 +29,15 @@ jobs:
           fi
         shell: bash
 
+      - name: Clean Docker environment
+        run: |
+          docker system prune -a -f --volumes
+          df -h
+
+      # Create reports directory if it doesn't exist
       - name: Create reports directory
         run: |
           mkdir -p /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports
-          mkdir -p /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/documentation
         shell: bash
 
       - name: Checkout repository
@@ -47,18 +51,20 @@ jobs:
           node-version: '18'
 
       - name: Cache Node.js modules
+        id: npm-cache
         uses: actions/cache@v3
         with:
           path: ./green-global-initiative-ui/node_modules
           key: npm-${{ hashFiles('green-global-initiative-ui/package-lock.json') }}
           restore-keys: |
             npm-
-
       - name: Install dependencies
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: |
-          npm install
-          npm install --save-dev @compodoc/compodoc @angular/cli
+        run: npm install
+
+      - name: Install Angular CLI locally
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: npm install @angular/cli --save-dev
 
       - name: Build the project
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
@@ -68,14 +74,26 @@ jobs:
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
           npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true
-
+      - name: Debug Test Output
+        run: |
+          echo "$TEST_OUTPUT"
       - name: Extract Coverage Percentage
+        id: coverage
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
-          COVERAGE=$(node -pe "require('./coverage/coverage-summary.json').total.lines.pct")
-          echo "Coverage: $COVERAGE%"
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-
+          # Run tests and capture the output
+          TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
+          
+          # Extract the Lines coverage percentage from the output
+          COVERAGE=$(echo "$TEST_OUTPUT" | grep -Eo 'Lines\s*:\s*[0-9.]+%' | awk '{print $3}' | sed 's/%//')
+          
+          if [ -z "$COVERAGE" ]; then
+            echo "Error: Could not extract coverage percentage."
+            exit 1
+          else
+            echo "Extracted coverage: $COVERAGE%"
+            echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+          fi
       - name: Fail if code coverage is below threshold
         run: |
           if [ -z "$COVERAGE" ]; then
@@ -85,22 +103,17 @@ jobs:
           if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
             echo "Code coverage is below the threshold of $COVERAGE_THRESHOLD%"
             exit 1
+          else
+            echo "Code coverage is $COVERAGE%, which meets the threshold of $COVERAGE_THRESHOLD%"
           fi
-
-      # Security scans
-      - name: Run Snyk scan
+      # Snyk Integration
+      - name: Run Snyk to check for vulnerabilities
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: |
           npm install -g snyk
           snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Clean Docker environment
-        if: env.DOCKER_CLEANUP == 'true'
-        run: |
-          docker system prune -a -f --volumes
-          df -h
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -120,36 +133,23 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
-
-      - name: Trivy Image Scan (with retry)
-        run: |
-          if ! trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt; then
-            echo "First scan failed, cleaning and retrying..."
-            docker system prune -a -f --volumes
-            trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt || true
-          fi
+      - name: Trivy Image Scan
+        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
 
-      # OWASP Dependency Check (corrected syntax)
+      # OWASP Dependency Check with report generation
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'green-global-initiative'
-          path: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui'
+          scan-path: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui'
           format: 'ALL'
-          out: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports'
-          args: '--failOnCVSS 7'
+          output: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports'
+          fail_on_cvss: 7
 
-      # Documentation
-      - name: Generate Compodoc documentation
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: |
-          npx compodoc -p tsconfig.app.json -d documentation
-        continue-on-error: true
-
-      # Upload artifacts
+      # Upload all reports
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
@@ -162,14 +162,8 @@ jobs:
           name: coverage-report
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
 
-      - name: Upload OWASP reports
+      - name: Upload OWASP Dependency Check reports
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-reports
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports/*
-
-      - name: Upload Compodoc documentation
-        uses: actions/upload-artifact@v4
-        with:
-          name: compodoc-documentation
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/documentation/*
