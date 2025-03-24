@@ -57,7 +57,7 @@ jobs:
 
       # step 4: Build and test with Maven
       - name: Build and test with Maven
-        run: mvn clean install -DskipTests
+        run: mvn clean install
         working-directory: green-global-initiative-api
 
       # step 5: Snyk Security Scan
