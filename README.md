@@ -201,4 +201,6 @@ All Features are deployed and functional.
 Folder structure can be found here:
 https://atlantictu.sharepoint.com/:t:/r/sites/Student-DevOps_Group2/Shared%20Documents/General/Documents/directory_structure.txt?csf=1&web=1&e=Yj964i
 
+folder restructuring for api and ui code is aborted due to conflicts over development and testing phase of application.
+
 
