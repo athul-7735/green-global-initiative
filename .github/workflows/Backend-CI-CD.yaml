@@ -1,0 +1,197 @@
+name: Build, Test, Scan, and Deploy to EKS
+
+on:
+  push:
+    branches:
+      # - main
+      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
+  pull_request:
+    branches:
+      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # step 1: Install java JDK and maven
+      - name: Set up Java JDK & Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: maven
+
+      # step 2 cache maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/green-global-initiative-api/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # step 3: Generate Maven Wrapper
+      - name: Generate Maven Wrapper
+        run: mvn -N wrapper:wrapper
+        working-directory: green-global-initiative-api
+
+      # Ensure mvnw is executable
+      - name: Ensure mvnw is executable
+        run: chmod +x green-global-initiative-api/mvnw
+
+      - name: List files in the directory
+        run: ls -la green-global-initiative-api
+
+      # step 4: Build and test with Maven
+      - name: Build and test with Maven
+        run: mvn clean install -DskipTests -Dmaven.javadoc.skip=true
+        working-directory: green-global-initiative-api
+
+      # step 5: Snyk Security Scan
+      - name: Run Snyk Security Scan
+        run: |
+          npm install -g snyk
+          snyk test --severity-threshold=critical
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        working-directory: green-global-initiative-api
+
+      # step 6: Install OWASP Dependency-Check for vulnerabilities
+      - name: Install OWASP Dependency-Check
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.0/dependency-check-6.5.0-release.zip
+          unzip dependency-check-6.5.0-release.zip
+          sudo mv dependency-check /usr/local/bin/
+          sudo chmod +x /usr/local/bin/dependency-check
+          /usr/local/bin/dependency-check/bin/dependency-check.sh --version  # Verify installation
+
+      # step 7: Run OWASP Dependency-Check for vulnerabilities
+      - name: Run OWASP Dependency-Check for vulnerabilities
+        run: |
+          /usr/local/bin/dependency-check/bin/dependency-check.sh --project "green-global-initiative" --scan green-global-initiative-api/src --format "HTML" --out green-global-initiative-api/dependency-check-report.html
+
+      # step 8: Upload Dependency Check Report as Artifact
+      - name: Upload Dependency Check Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: green-global-initiative-api/dependency-check-report.html
+
+      # # Step : Install OWASP ZAP (Dynamic Application Security Testing)
+      # - name: Install OWASP ZAP
+      #   run: |
+      #     wget https://github.com/zaproxy/zaproxy/releases/download/v2.12.0/ZAP_2.12.0_unix.tar.gz
+      #     tar -xvf ZAP_2.12.0_unix.tar.gz
+      #     sudo mv ZAP_2.12.0 /opt/zap
+
+      # - name: Run OWASP ZAP Scan
+      #   run: |
+      #     /opt/zap/zap.sh -cmd -quickurl http://localhost:8080 -quickout green-global-initiative-api/zap-report.html
+      #   working-directory: green-global-initiative-api
+
+      # step 9: install trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.35.0/trivy_0.35.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.35.0_Linux-64bit.deb
+
+      - name: Ensure Trivy Results Directory Exists
+        run: mkdir -p green-global-initiative-api/trivy_results
+        shell: bash
+
+      # Step 9: Trivy file scan (for backend)
+      - name: Trivy File Scan
+        run: |
+          trivy fs green-global-initiative-api --severity HIGH,CRITICAL --ignore-unfixed > green-global-initiative-api/trivy_results/trivyfs-backend.txt
+
+      # Upload Trivy File Scan Results as Artifacts
+      - name: Upload Trivy File Scan Results as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivyfs-backend-report
+          path: green-global-initiative-api/trivy_results/trivyfs-backend.txt
+
+      # step 10: Image Build,scan and Push to Docker Hub
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Docker Build Backend Image
+        run: |
+          docker build -t ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} ./green-global-initiative-api
+
+      - name: Trivy Image Scan
+        run: |
+          trivy image ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --severity HIGH,CRITICAL --security-checks vuln --timeout 10m > green-global-initiative-api/trivy_results/trivyimage-backend.txt
+
+      # Upload Trivy Image Scan Results as Artifacts
+      - name: Upload Trivy Image Scan Results as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivyimage-backend-report
+          path: green-global-initiative-api/trivy_results/trivyimage-backend.txt
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          docker push ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}
+
+      # step 11: Update Deployment Image and push to GitHub
+      - name: Update Deployment Image in YAML
+        run: |
+          IMAGE_TAG=${GITHUB_SHA}
+          sed -i "s|image: .*$|image: ${DOCKER_HUB_USERNAME}/backend:${IMAGE_TAG}|" ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git config --global user.email "L00187534@atu.ie"
+          git config --global user.name "vinay187534"
+          git add ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git commit -m "Update backend image tag to ${IMAGE_TAG}"
+          git push https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
+      # step 12: Conditional Rollout Deployment
+      - name: Rollout Deployment
+        if: success() # Run this only if all previous steps were successful
+        run: |
+          kubectl set image deployment/backend-deployment backend=${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --namespace=three-tier
+          kubectl rollout status deployment/backend-deployment --namespace=three-tier
+
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Set up kubectl for EKS
+  #       run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+
+  #     - name: Deploy Kubernetes Manifests to EKS
+  #       working-directory: Kubernetes-Manifest-Files
+  #       run: |
+  #         kubectl create namespace three-tier || echo "Namespace already exists"
+  #         kubectl apply -f ./Database/
+  #         kubectl apply -f ./Backend/
+  #         kubectl apply -f ./frontend/
+  #         kubectl apply -f ./Frontend-ingress/frontend-ingress.yaml
+  #         kubectl apply -f ./Backend-ingress/backend-ingress.yaml
