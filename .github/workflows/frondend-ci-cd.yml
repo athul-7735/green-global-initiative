@@ -29,10 +29,7 @@ jobs:
           fi
         shell: bash
 
-      - name: Clean Docker environment
-        run: |
-          docker system prune -a -f --volumes
-          df -h
+
 
       # Create reports directory if it doesn't exist
       - name: Create reports directory
