@@ -20,7 +20,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     steps:
@@ -148,7 +148,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: |
-          echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
           docker push ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}
 
       # step 11: Update Deployment Image and push to GitHub
@@ -156,8 +156,8 @@ jobs:
         run: |
           IMAGE_TAG=${GITHUB_SHA}
           sed -i "s|image: .*$|image: ${DOCKER_HUB_USERNAME}/backend:${IMAGE_TAG}|" ./Kubernetes-Manifest-Files/Backend/deployment.yaml
-          git config --global user.email "L00187534@atu.ie"
-          git config --global user.name "vinay187534"
+          git config --global user.email "L00187735@atu.ie"
+          git config --global user.name "athul7735@atu"
           git add ./Kubernetes-Manifest-Files/Backend/deployment.yaml
           git commit -m "Update backend image tag to ${IMAGE_TAG}"
           git push https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:main
