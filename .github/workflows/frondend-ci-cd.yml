@@ -34,7 +34,6 @@ jobs:
         with:
           token: ${{ secrets.G_TOKEN }}
 
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -60,7 +59,6 @@ jobs:
       - name: Build the project
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
         run: npm run build
-
 
       - name: Run Tests in Headless Mode
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
@@ -137,13 +135,17 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
 
+      # OWASP Dependency Check with report generation
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'green-global-initiative'
+          scan-path: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui'
           format: 'ALL'
+          output: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/dependency-check-reports'
           fail_on_cvss: 7
 
+      # Upload all reports
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
@@ -155,3 +157,9 @@ jobs:
         with:
           name: coverage-report
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+
+      - name: Upload OWASP Dependency Check reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports
+          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/dependency-check-reports
