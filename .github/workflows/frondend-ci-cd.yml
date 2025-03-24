@@ -146,6 +146,13 @@ jobs:
           output: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports'
           fail_on_cvss: 7
 
+      # Documentation
+      - name: Generate Compodoc documentation
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: |
+          npx compodoc -p tsconfig.app.json -d documentation
+        continue-on-error: true
+
       # Upload all reports
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -164,3 +171,9 @@ jobs:
         with:
           name: dependency-check-reports
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports/*
+
+      - name: Upload Compodoc documentation
+        uses: actions/upload-artifact@v4
+        with:
+            name: compodoc-documentation
+            path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/documentation/*
