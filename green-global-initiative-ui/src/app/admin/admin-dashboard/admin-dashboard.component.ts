@@ -108,14 +108,14 @@ export class AdminDashboardComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 
   onApplicationSelection(row:any) {
     console.log('Selected Application:', row);
