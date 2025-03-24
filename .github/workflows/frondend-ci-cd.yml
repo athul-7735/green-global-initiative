@@ -15,7 +15,8 @@ jobs:
       contents: write
 
     env:
-      COVERAGE_THRESHOLD: 75  # Set your desired coverage threshold here
+      COVERAGE_THRESHOLD: 75
+      DOCKER_CLEANUP: true  # Flag to control Docker cleanup
 
     steps:
       # Step to check if folder exists and remove it
@@ -56,7 +57,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: npm install
+        run: |
+          npm install
+          npm install --save-dev @compodoc/compodoc
 
       - name: Install Angular CLI locally
         working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
@@ -116,6 +119,13 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      # Docker Cleanup before operations
+      - name: Clean Docker environment
+        if: env.DOCKER_CLEANUP == 'true'
+        run: |
+          docker system prune -a -f --volumes
+          df -h
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -135,8 +145,13 @@ jobs:
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
 
-      - name: Trivy Image Scan
-        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
+      - name: Trivy Image Scan (with retry)
+        run: |
+          if ! trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt; then
+            echo "First scan failed, cleaning and retrying..."
+            docker system prune -a -f --volumes
+            trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt || true
+          fi
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
@@ -150,6 +165,13 @@ jobs:
           format: 'ALL'
           output: '/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports'
           fail_on_cvss: 7
+
+      # Compodoc Documentation Generation
+      - name: Generate Compodoc documentation
+        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        run: |
+          npm run compodoc -- -p tsconfig.app.json -d documentation
+        continue-on-error: true
 
       # Upload all reports
       - name: Upload test results
@@ -169,3 +191,9 @@ jobs:
         with:
           name: dependency-check-reports
           path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports/*
+
+      - name: Upload Compodoc documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: compodoc-documentation
+          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/documentation/*
