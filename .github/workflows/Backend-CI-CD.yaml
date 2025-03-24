@@ -162,26 +162,7 @@ jobs:
           git commit -m "Update backend image tag to ${IMAGE_TAG}"
           git push https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME}
 
-      # step 12: Check Kubernetes Cluster Status before Rollout Deployment
-      - name: Check Kubernetes Cluster Status
-        id: check-cluster
-        run: |
-          kubectl cluster-info > /dev/null 2>&1 
-          if [ $? -ne 0 ]; then
-            echo "Kubernetes cluster is not reachable."
-            exit 1
-          else
-            echo "Kubernetes cluster is reachable."
-          fi
-
-      # step 13: Conditional Rollout Deployment
-      - name: Rollout Deployment
-        if: success() # Run this only if all previous steps were successful
-        run: |
-          kubectl set image deployment/backend-deployment backend=${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --namespace=three-tier
-          kubectl rollout status deployment/backend-deployment --namespace=three-tier
-
-  # deploy:
+  # deploy-on-EKS:
   #   needs: build
   #   runs-on: ubuntu-latest
   #   steps:
@@ -198,12 +179,33 @@ jobs:
   #     - name: Set up kubectl for EKS
   #       run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
 
+  #     # Check if the image is being updated or if it's the first time deployment
+  #     - name: Check if the image has been updated
+  #       id: check-image
+  #       run: |
+  #         # Compare image tags or any other mechanism to track updates
+  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment backend-deployment -o=jsonpath='{.spec.template.spec.containers[0].image}')
+  #         echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
+  #         echo "Current image: ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}"
+  #         if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}" ]; then
+  #           echo "image-updated=true" >> $GITHUB_ENV
+  #         else
+  #           echo "image-updated=false" >> $GITHUB_ENV
+
+  #     # Step to deploy Kubernetes manifests to EKS only if it's the first time or the image has been updated
   #     - name: Deploy Kubernetes Manifests to EKS
-  #       working-directory: Kubernetes-Manifest-Files
+  #       if: ${{ env.image-updated == 'false' }}
   #       run: |
   #         kubectl create namespace three-tier || echo "Namespace already exists"
-  #         kubectl apply -f ./Database/
-  #         kubectl apply -f ./Backend/
-  #         kubectl apply -f ./frontend/
-  #         kubectl apply -f ./Frontend-ingress/frontend-ingress.yaml
-  #         kubectl apply -f ./Backend-ingress/backend-ingress.yaml
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Database/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/frontend/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Frontend-ingress/frontend-ingress.yaml
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend-ingress/backend-ingress.yaml
+
+  #     # Rollout Deployment only if the image is updated (skip the manifest deployment if image has been updated)
+  #     - name: Rollout Deployment (only if image has changed)
+  #       if: ${{ env.image-updated == 'true' }}
+  #       run: |
+  #         kubectl set image deployment/backend-deployment backend=${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --namespace=three-tier
+  #         kubectl rollout status deployment/backend-deployment --namespace=three-tier
