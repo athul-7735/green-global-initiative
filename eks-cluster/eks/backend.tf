@@ -7,12 +7,12 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "dev-tf-bucket-5342"
-    region         = "us-east-1"
-    key            = "eks/terraform.tfstate"
+    bucket = "dev-tf-bucket-7735"
+    region = "us-east-1"
+    key    = "eks/terraform.tfstate"
   }
 }
 
 provider "aws" {
-  region  = var.aws-region
+  region = var.aws-region
 }

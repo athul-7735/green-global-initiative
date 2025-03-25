@@ -1,12 +1,12 @@
 name: Backend CI/CD Pipeline
 
-on:
-  push:
-    branches:
-      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
-  pull_request:
-    branches:
-      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
+# on:
+#   push:
+#     branches:
+#       - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
+#   pull_request:
+#     branches:
+#       - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
 
 jobs:
   build:
