@@ -87,7 +87,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules.
       - name: Terraform Init
         working-directory: eks-cluster/eks
         run: terraform init
