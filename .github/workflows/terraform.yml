@@ -16,6 +16,9 @@ on:
           - destroy
         required: true
         default: "apply"
+  push:
+    branches:
+      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
 
 env:
   AWS_REGION: us-east-1
