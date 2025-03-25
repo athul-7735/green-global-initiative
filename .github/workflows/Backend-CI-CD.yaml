@@ -184,7 +184,7 @@ jobs:
   #       id: check-image
   #       run: |
   #         # Compare image tags or any other mechanism to track updates
-  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment backend-deployment -o=jsonpath='{.spec.template.spec.containers[0].image}')
+  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment backend -n three-tier -o=jsonpath='{.spec.template.spec.containers[0].image}')
   #         echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
   #         echo "Current image: ${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}"
   #         if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA}" ]; then
@@ -196,16 +196,13 @@ jobs:
   #     - name: Deploy Kubernetes Manifests to EKS
   #       if: ${{ env.image-updated == 'false' }}
   #       run: |
-  #         kubectl create namespace three-tier || echo "Namespace already exists"
   #         kubectl apply -f ./Kubernetes-Manifest-Files/Database/
   #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend/
-  #         kubectl apply -f ./Kubernetes-Manifest-Files/frontend/
-  #         kubectl apply -f ./Kubernetes-Manifest-Files/Frontend-ingress/frontend-ingress.yaml
   #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend-ingress/backend-ingress.yaml
 
   #     # Rollout Deployment only if the image is updated (skip the manifest deployment if image has been updated)
   #     - name: Rollout Deployment (only if image has changed)
   #       if: ${{ env.image-updated == 'true' }}
   #       run: |
-  #         kubectl set image deployment/backend-deployment backend=${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --namespace=three-tier
-  #         kubectl rollout status deployment/backend-deployment --namespace=three-tier
+  #         kubectl set image deployment/backend backend=${DOCKER_HUB_USERNAME}/backend:${GITHUB_SHA} --namespace=three-tier
+  #         kubectl rollout status deployment/backend --namespace=three-tier
