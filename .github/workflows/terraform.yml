@@ -1,4 +1,4 @@
-name: "Terraform"
+name: "EKS-Cluster-Setup"
 
 on:
   workflow_dispatch:
@@ -16,10 +16,9 @@ on:
           - destroy
         required: true
         default: "apply"
-  push:  # Automatic trigger on push to branch
+  push: # Automatic trigger on push to branch
     branches:
-      - NGGI-105-bug-fixing-and-unit-testing
-      - NGGI-113-domain-name-integration-ingress-controller-in-manifest-file
+      - NGGI-109-ci-yaml-file-integration-with-all-the-tools-backend
 
 env:
   AWS_REGION: us-east-1
