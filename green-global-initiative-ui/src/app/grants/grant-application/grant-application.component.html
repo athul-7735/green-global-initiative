@@ -35,6 +35,14 @@
                 <small>Enter a valid budget amount</small> 
             </div>
 
+            <div class="special-award-container">
+                <label class="custom-checkbox">
+                    Apply for Special Award
+                    <input id="specialaward" type="checkbox" formControlName="specialAward" />
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+
             <label for="projectDescription">Project Description</label>
             <textarea id="projectDescription" formControlName="projectDescription" required></textarea>
             <div *ngIf="grantForm.get('projectDescription')?.invalid && grantForm.get('projectDescription')?.touched">
@@ -46,4 +54,3 @@
         </form>
     </div>
 </div>
-

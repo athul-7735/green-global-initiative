@@ -1,6 +1,7 @@
 package com.atu.green_global_initiative_api.config;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,6 +10,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI()
+                .addServersItem(new Server().url("/api"))
                 .info(new Info()
                         .title("Nausicaa Green Initiative API")
                         .description("API documentation for Nausicaa Global Green Initiative")
