@@ -42,6 +42,7 @@ Week 5-6, **Athul Sukumaran**.
 week 6-7, **Manish Potlacheruvu**.
 week 8-9, **Siddhartha Vijay Kumar**.
 Week 9-10, **John Kirubaharan Ravichandran**. 
+Week 11-12, **John Kirubaharan Ravichandran**. 
 
 
 Rotating scrum master so that everyone gets to experience the role once.
@@ -53,6 +54,7 @@ Week 5-6, **Siddhartha Vijay Kumar**.
 week 6-7, **Sherine Anbaiyan**. 
 week 8-9, **Vinay Kumar Podila**.
 Week 9-10, **Athul Sukumaran**.
+Week 11-12, **Manish Potlacheruvu**
 Rotating product owner so that everyone gets to experience the role once.
 
 # Team Members
@@ -64,20 +66,20 @@ Rotating product owner so that everyone gets to experience the role once.
 6. Siddhartha Vijay Kumar
 
 # Project Deadline
-Thursday 23rd March at midnight
+Thursday 28rd March at midnight
 
 # Project Specification
 Clean and simple design User access levels (client, administrator) Includes at least one self developed api and one webservice To be run over
 
 # Frameworks
-Backend - Javaspringboot   
+Backend - Java Spring Boot   
 Design - Figma
 Frontend - Angular
 
 # Useful Links
-- Project Slack: https://app.slack.com/client/T0419S2HV9B/C08355CCTBP
-- GitHub: https://teams.microsoft.com/l/team/19%3AnInKKeJ_HYes5SOzK3UYKViHZf-lMMxLZWQw5vMSXmk1%40thread.tacv2/conversations?groupId=2a12326e-32d1-4525-874a-786ef4724eca&tenantId=47855545-00bb-4800-a65f-e79104ec0fc4
-- Jira: https://atudevops2024.atlassian.net/jira/your-work
+- GitHub: https://github.com/athul-7735/green-global-initiative
+- Microsoft Teams: https://teams.microsoft.com/l/team/19%3AnInKKeJ_HYes5SOzK3UYKViHZf-lMMxLZWQw5vMSXmk1%40thread.tacv2/conversations?groupId=2a12326e-32d1-4525-874a-786ef4724eca&tenantId=47855545-00bb-4800-a65f-e79104ec0fc4
+- Jira: https://atudevops2024.atlassian.net/Jira/your-work
 - Confluence: https://atudevops2024.atlassian.net/wiki/spaces/NA/overview?homepageId=16646267
  
 # More Information
@@ -94,7 +96,7 @@ Update the below to add what the group is using
 	- code Frameworks used: Angular, Java Spring Boot
 	- programming using the IDE: VS Code, IntelliJ, Eclipse
 	- code coverage tool used: Sonar Cube
-	- Secure code: Snyk, OWASP
+	- Secure code: SNYK, OWASP
 	- performance testing tool to be used: Selenium
 - Documentation / code commenting: GitHub Pages
 - Datastore for persistence: MySQL
@@ -104,6 +106,7 @@ Update the below to add what the group is using
 - SonarQube: uses static analysis to find bugs in the code.
 - OWASP: uses dynamic analysis to find bugs in the code.
 - SNYK: uses static analysis tool for identifying vulnerabilities and bugs in the code
+- Trivy: Comprehensive security scanner for vulnerability assessment of container images and infrastructure
 
 # Testing:
 
@@ -113,13 +116,15 @@ Update the below to add what the group is using
 
 # Environments:
 
-- staging and production
+- staging and production : localhost
+- automated creation and deployment: GitHub actions
+- integrated and automated pipeline (commit --> test --> deploy): 
 
 
-# Github version control:
+# GitHub version control:
 
 - branches used: main, develop, feature, testing
-- version/release management: Github and Teams channel
+- version/release management: GitHub and Teams channel
 
 # Agile project management methods/principles (Jira)
 
@@ -142,7 +147,7 @@ Update the below to add what the group is using
 # Meetings
 
 ##
-	Stand-ups will occur on Every Monday to Wednesday from 9.30am to 11.30am during class and Monday to wedneeday from 3pm to 4pm using Automated bot. Two per week.
+	Stand-ups will occur on Every Monday to Wednesday from 9.30am to 11.30am during class and Monday to Wednesday from 3pm to 4pm using Microsoft Teams. Two per week.
 	The order that people give their updates will be from High to low priorities.
 	Updates will be in the form: What I've done, Impediments, What I plan to do.
 	Sprint planning will occur on Monday every week.
@@ -150,7 +155,7 @@ Update the below to add what the group is using
 	Sprint Retro will be held at the end of our sprint on Wednesday, once the sprint is completed. (timebox retro for 15 minutes, to be organised by the scrum master).
 	The order that people present their sprint retro updates will be based on The Team 1 list in the Assign_BSc_DevOps_2022.pdf file 
 	on blackboard of those present at the meeting.
-	Points raised in the sprint retro will be noted and posted on the slack channel by the Scrum Master. The Scrum Master is rotated 
+	Points raised in the sprint retro will be noted and posted on the Microsoft Teams channel by the Scrum Master. The Scrum Master is rotated 
 	per team member every week.
 	Backlog refinement will happen on every Monday during our sprint.
 	Task estimation will be done using "Poker Planning". 
@@ -164,9 +169,9 @@ Update the below to add what the group is using
 # Communication
 
 ##
-	Slack is the preferred method of communication.
-	If a demonstration is required use Loom, record the session and upload to the Slack channel.
-	No Slack communications between 11pm to 8am.
+	Microsoft Teams is the preferred method of communication.
+	If a demonstration is required use Loom, record the session and upload to the Microsoft Teams channel.
+	No Microsoft Teams communications between 11pm to 8am.
 	Raise a problem as soon as you see it.
 	Respect each other and understand differences in knowledge.
 	All team documents are to be created using Markdown language and shared on GitHub.
@@ -191,12 +196,12 @@ Update the below to add what the group is using
 	Sprints will start with Sprint Planning meeting
 	The Scrum Master role rotates each week 
 	Each member of the team will work approximately 30 hours per week, unless they are on vacation.
-	Our branching strategy will start with develop branch
+	Our branching strategy will start with Main branch
 
 # Estimating Story Points
 The teams team's velocity is calculated by 1 story point equals to 8 hours.
 
-The teams current story point velocity is "23".
+The teams current story point velocity is "21".
 
 # Definition of Ready/Done
 Code is written and commits are pushed.
