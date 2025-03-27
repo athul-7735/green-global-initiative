@@ -38,7 +38,11 @@ Our product will be delivered using an Agile methodology that embraces the DevOp
 # Scrum Master
 Week 1-2, **Vinay Kumar Podila**. 
 Week 3-4, **Sherine Anbaiyan**. 
-Week 5-6, **Athul Sukumaran**. 
+Week 5-6, **Athul Sukumaran**.
+week 6-7, **Manish Potlacheruvu**.
+week 8-9, **Siddhartha Vijay Kumar**.
+Week 9-10, **John Kirubaharan Ravichandran**. 
+
 
 Rotating scrum master so that everyone gets to experience the role once.
 
@@ -46,6 +50,9 @@ Rotating scrum master so that everyone gets to experience the role once.
 Week 1-2, **Manish Potlacheruvu**. 
 Week 3-4, **John Kirubaharan Ravichandran**. 
 Week 5-6, **Siddhartha Vijay Kumar**.
+week 6-7, **Sherine Anbaiyan**. 
+week 8-9, **Vinay Kumar Podila**.
+Week 9-10, **Athul Sukumaran**.
 Rotating product owner so that everyone gets to experience the role once.
 
 # Team Members
@@ -63,12 +70,16 @@ Thursday 23rd March at midnight
 Clean and simple design User access levels (client, administrator) Includes at least one self developed api and one webservice To be run over
 
 # Frameworks
-Database Database persistence technology Define the buisness Requirements Named queries and database triggers for security Regex for cleansing and validation of data before sending to the database.
+Backend - Javaspringboot   
+Design - Figma
+Frontend - Angular
 
 # Useful Links
 - Project Slack: https://app.slack.com/client/T0419S2HV9B/C08355CCTBP
 - GitHub: https://teams.microsoft.com/l/team/19%3AnInKKeJ_HYes5SOzK3UYKViHZf-lMMxLZWQw5vMSXmk1%40thread.tacv2/conversations?groupId=2a12326e-32d1-4525-874a-786ef4724eca&tenantId=47855545-00bb-4800-a65f-e79104ec0fc4
-  
+- Jira: https://atudevops2024.atlassian.net/jira/your-work
+- Confluence: https://atudevops2024.atlassian.net/wiki/spaces/NA/overview?homepageId=16646267
+ 
 # More Information
 For more information visit our other sections.
 
@@ -86,32 +97,31 @@ Update the below to add what the group is using
 	- Secure code: Snyk, OWASP
 	- performance testing tool to be used: Selenium
 - Documentation / code commenting: GitHub Pages
-- Datastore for persistance: MySQL
+- Datastore for persistence: MySQL
 
 # Security:
 
 - SonarQube: uses static analysis to find bugs in the code.
 - OWASP: uses dynamic analysis to find bugs in the code.
+- SNYK: uses static analysis tool for identifying vulnerabilities and bugs in the code
 
 # Testing:
 
 - Unit testing: Jasmine, JUnit
-- integretation testing: Postman, Sprint Test
+- integration testing: Postman, Sprint Test
 - UA: Clients
 
 # Environments:
 
-- staging and production: TBD
-- tight configuration management for consistency and reproducibility: TBD
-- automated creation and deployments: TBD
-- integrated and automated pipeline (commit -> test -> deploy): TBD
+- staging and production
+
 
 # Github version control:
 
-- branches used: main, develep, feature
-- version/release management <<>>
+- branches used: main, develop, feature, testing
+- version/release management: Github and Teams channel
 
-# Agile project management methods/principles (jira)
+# Agile project management methods/principles (Jira)
 
 # Social Contract
 
@@ -124,26 +134,26 @@ Update the below to add what the group is using
 	Do not speak over someone when they are expressing a point, everyone has an equal voice.
 	No blame culture.
 	Do not be afraid to ask for help, we are all learning.
-	No invisble work.
+	No invisible work.
 	Ask questions to make sure you understand the task given to you.
 	Try have some fun, team work makes the dream work.
-	Use Agile methodoligies in the project at all times.
+	Use Agile methodologies in the project at all times.
 
 # Meetings
 
 ##
-	Stand-ups will occur on Every <<day/time>> during class and <<day/time>> using Automated bot. Two per week.
-	The order that people give their updates will be << >>.
+	Stand-ups will occur on Every Monday to Wednesday from 9.30am to 11.30am during class and Monday to wedneeday from 3pm to 4pm using Automated bot. Two per week.
+	The order that people give their updates will be from High to low priorities.
 	Updates will be in the form: What I've done, Impediments, What I plan to do.
-	Sprint planning will occur at <<date/time>> every week.
-	Please add and update items within <<issue management tool>> a prior to the sprint planning session.
-	Sprint retro will at the end of our sprint on <<Date/Time>> (timebox retro for 15 minutes, to be organised by the scrum master).
+	Sprint planning will occur on Monday every week.
+	Please add and update items within JIRA a prior to the sprint planning session.
+	Sprint Retro will be held at the end of our sprint on Wednesday, once the sprint is completed. (timebox retro for 15 minutes, to be organised by the scrum master).
 	The order that people present their sprint retro updates will be based on The Team 1 list in the Assign_BSc_DevOps_2022.pdf file 
 	on blackboard of those present at the meeting.
 	Points raised in the sprint retro will be noted and posted on the slack channel by the Scrum Master. The Scrum Master is rotated 
 	per team member every week.
-	Backlog refinement will happen on <<date/time>> during our sprint.
-	Task estimation will be done using << >>. 
+	Backlog refinement will happen on every Monday during our sprint.
+	Task estimation will be done using "Poker Planning". 
 	Come prepared to meetings.
 	Be on time for Stand Ups and meetings.
 	Mobile phones on silent.
@@ -156,7 +166,7 @@ Update the below to add what the group is using
 ##
 	Slack is the preferred method of communication.
 	If a demonstration is required use Loom, record the session and upload to the Slack channel.
-	No Slack communications between <<time and time>>.
+	No Slack communications between 11pm to 8am.
 	Raise a problem as soon as you see it.
 	Respect each other and understand differences in knowledge.
 	All team documents are to be created using Markdown language and shared on GitHub.
@@ -178,15 +188,15 @@ Update the below to add what the group is using
 	Don't be afraid to ask for help.
 	Don't be afraid to give constructive criticism, as long as it is constructive.
 	Solve roadblocks within the team. If the impediment can’t be solved within the team then give it to the Scrum Master.
-	Sprints will start <<>>
+	Sprints will start with Sprint Planning meeting
 	The Scrum Master role rotates each week 
-	Each member of the team will work approximately <<hours>> hours per week, unless they are on vacation.
-	Our branching stategy will start with <<>>
+	Each member of the team will work approximately 30 hours per week, unless they are on vacation.
+	Our branching strategy will start with develop branch
 
 # Estimating Story Points
 The teams team's velocity is calculated by 1 story point equals to 8 hours.
 
-The teams current story point velocity is "N/A".
+The teams current story point velocity is "23".
 
 # Definition of Ready/Done
 Code is written and commits are pushed.
