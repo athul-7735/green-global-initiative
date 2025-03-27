@@ -86,7 +86,7 @@ VALUES(2, 'Pejite Innovation', '5000', 'For climate change Initiatives', 'NA');
 
 INSERT INTO nausicaa_global_green_db.user_details
 (first_name, user_id, last_name, email, password, last_login, is_admin)
-VALUES('Athul', 1, 'S', 'athul@gmail.com', 'xxxxxx', NULL, 1);
+VALUES('Athul', 1, 'S', 'athul@gmail.com', '3zCaAhu45v2Z9gImNSv9pGDut7Ch2Q+NFbM4xbxLNM0=', NULL, 1);
 INSERT INTO nausicaa_global_green_db.user_details
 (first_name, user_id, last_name, email, password, last_login, is_admin)
 VALUES('helena', 2, 'g', 'helenag@gmail.com', '3zCaAhu45v2Z9gImNSv9pGDut7Ch2Q+NFbM4xbxLNM0=', '2025-01-29T00:26:37.240Z', 0);
