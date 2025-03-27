@@ -142,7 +142,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Docker Build Backend Image
+      - name: Docker Build frontend Image
         run: |
           docker build -t ${DOCKER_HUB_USERNAME}/frontend:${{ ENV.IMAGE_TAG }} ./green-global-initiative-ui
 
@@ -211,69 +211,69 @@ jobs:
           git commit -m "Update frontend image tag to ${{ ENV.IMAGE_TAG }}"
           git push --force https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME}
 
-  # deploy-on-EKS:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  deploy-on-EKS:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-  #     - name: Get Public IP of GitHub Runner
-  #       run: echo "RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+      - name: Get Public IP of GitHub Runner
+        run: echo "RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
 
-  #     - name: Set up AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ${{ secrets.AWS_REGION }}
-  #         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  #         IMAGE_TAG: ${{ needs.build.outputs.IMAGE_TAG }}
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          IMAGE_TAG: ${{ needs.build.outputs.IMAGE_TAG }}
 
-  #     - name: Set up kubectl for EKS
-  #       run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+      - name: Set up kubectl for EKS
+        run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
 
-  #     # Check if the image is updated or if it's the first deployment
-  #     - name: Check if deployment exists
-  #       id: check-deployment
-  #       run: |
-  #         if kubectl get deployment frontend -n three-tier > /dev/null 2>&1; then
-  #           echo "deployment-exists=true" >> $GITHUB_ENV
-  #         else
-  #           echo "No existing deployment found. Proceeding with deployment."
-  #           echo "deployment-exists=false" >> $GITHUB_ENV
-  #         fi
+      # Check if the image is updated or if it's the first deployment
+      - name: Check if deployment exists
+        id: check-deployment
+        run: |
+          if kubectl get deployment frontend -n three-tier > /dev/null 2>&1; then
+            echo "deployment-exists=true" >> $GITHUB_ENV
+          else
+            echo "No existing deployment found. Proceeding with deployment."
+            echo "deployment-exists=false" >> $GITHUB_ENV
+          fi
 
-  #     # Check if the image has changed (only if deployment exists)
-  #     - name: Check if the image has been updated
-  #       id: check-image
-  #       if: env.deployment-exists == 'true'
-  #       run: |
-  #         # Get the currently deployed image
-  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment frontend -n three-tier -o=jsonpath='{.spec.template.spec.containers[0].image}')
-  #         echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
-  #         echo "Current image: ${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}"
-  #         # Compare images and set flag
-  #         if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}" ]; then
-  #           echo "image-updated=true" >> $GITHUB_ENV
-  #         else
-  #           echo "image-updated=false" >> $GITHUB_ENV
-  #         fi
+      # Check if the image has changed (only if deployment exists)
+      - name: Check if the image has been updated
+        id: check-image
+        if: env.deployment-exists == 'true'
+        run: |
+          # Get the currently deployed image
+          LAST_DEPLOYED_IMAGE=$(kubectl get deployment frontend -n three-tier -o=jsonpath='{.spec.template.spec.containers[0].image}')
+          echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
+          echo "Current image: ${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}"
+          # Compare images and set flag
+          if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}" ]; then
+            echo "image-updated=true" >> $GITHUB_ENV
+          else
+            echo "image-updated=false" >> $GITHUB_ENV
+          fi
 
-  #     # Deploy Kubernetes manifests (only if first deployment)
-  #     - name: Deploy Kubernetes Manifests to EKS
-  #       if: env.deployment-exists == 'false'
-  #       run: |
-  #         echo "First-time deployment: Applying Kubernetes manifests..."
-  #         kubectl apply -f ./Kubernetes-Manifest-Files/Database/
-  #         kubectl apply -f ./Kubernetes-Manifest-Files/frontend/
-  #         kubectl apply -f ./Kubernetes-Manifest-Files/Frontend-ingress/frontend-ingress.yaml
+      # Deploy Kubernetes manifests (only if first deployment)
+      - name: Deploy Kubernetes Manifests to EKS
+        if: env.deployment-exists == 'false'
+        run: |
+          echo "First-time deployment: Applying Kubernetes manifests..."
+          kubectl apply -f ./Kubernetes-Manifest-Files/Database/
+          kubectl apply -f ./Kubernetes-Manifest-Files/frontend/
+          kubectl apply -f ./Kubernetes-Manifest-Files/Frontend-ingress/frontend-ingress.yaml
 
-  #     # Update the deployment with a new image (only if image is updated)
-  #     - name: Rollout Deployment (only if image has changed)
-  #       if: env.deployment-exists == 'true' && env.image-updated == 'true'
-  #       run: |
-  #         echo "Updating image for existing deployment..."
-  #         kubectl set image deployment/frontend frontend=${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }} --namespace=three-tier
-  #         # Wait for the update to complete
-  #         kubectl rollout status deployment/frontend --namespace=three-tier 
+      # Update the deployment with a new image (only if image is updated)
+      - name: Rollout Deployment (only if image has changed)
+        if: env.deployment-exists == 'true' && env.image-updated == 'true'
+        run: |
+          echo "Updating image for existing deployment..."
+          kubectl set image deployment/frontend frontend=${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }} --namespace=three-tier
+          # Wait for the update to complete
+          kubectl rollout status deployment/frontend --namespace=three-tier 
