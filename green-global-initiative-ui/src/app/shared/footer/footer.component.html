@@ -21,7 +21,7 @@
                 <h3>{{item.name}}</h3>
                 <div class="footer-links-container">
                     <div *ngFor="let link of item.links" class="footer-links">
-                        <a href="">{{link}}</a>
+                            <a [routerLink]="link.link">{{ link.name }}</a>
                     </div>
                 </div>                
             </div>

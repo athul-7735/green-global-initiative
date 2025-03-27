@@ -24,10 +24,10 @@ export class ContactUsComponent implements OnInit {
     private toastr: ToastrService
   ) { 
     this.contactUsForm = this.fb.group({
-      name: ['', [Validators.required]],  // ✅ No issue with Validators after the fix
-      email: ['', [Validators.required, Validators.email]], // ✅ Added email validation
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], // ✅ Ensures 10-digit phone number
-      message: ['', [Validators.required, Validators.minLength(10)]] // ✅ Ensures message has at least 10 characters
+      name: ['', [Validators.required]],  
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], 
+      message: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
 

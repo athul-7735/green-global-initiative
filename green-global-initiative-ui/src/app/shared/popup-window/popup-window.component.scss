@@ -1,0 +1,44 @@
+.custom-dialog-container {
+    background: linear-gradient(135deg, #cccfcb, #dbe6da);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dialog-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+  }
+  
+  .dialog-content {
+    font-size: 16px;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
+  
+  .close-btn {
+    background: #ffffff;
+    color: #bcf7aa;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .close-btn:hover {
+    background: #cdf6cf;
+    color: #fff;
+  }
+  
