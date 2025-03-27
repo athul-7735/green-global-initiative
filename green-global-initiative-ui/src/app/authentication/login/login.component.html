@@ -1,0 +1,36 @@
+<div class="login-container">
+    <diV class="login">
+        <img src="assets/images/logo.png" alt="logo" width="130" height="90" loading="lazy">
+        <h2>Sign in</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" type="email" formControlName="email" class="form-control" />
+              <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+                <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
+                <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format.</small>
+              </div>
+            </div>
+        
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input id="password" type="password" formControlName="password" class="form-control" />
+              <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+                <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                  Password must be at least 6 characters long.
+                </small>
+              </div>
+            </div>
+        
+            <button type="submit" class="btn btn-primary submit-button" [disabled]="loginForm.invalid">Login</button>
+
+            <div *ngIf="errorMessage" class="error-message">
+              <p>{{ errorMessage }}</p>
+            </div>
+          </form>
+        <div class="signup-link">
+            Don't have an acount? Sign up  <a routerLink="/login/signup"><u>here</u></a>
+        </div>
+    </diV>
+</div>

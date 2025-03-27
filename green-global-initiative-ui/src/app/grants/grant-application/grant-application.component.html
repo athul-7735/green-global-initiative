@@ -1,0 +1,49 @@
+<div class="page-wrapper">
+    <div class="heading">Application Form</div>
+    <div class="application-form">
+        <form [formGroup]="grantForm" (ngSubmit)="onSubmit()" class="form-elements">
+            <label for="applicantName">Full Name</label>
+            <input id="applicantName" formControlName="applicantName" required [disabled]="true"/>
+            <div *ngIf="grantForm.get('applicantName')?.invalid && grantForm.get('applicantName')?.touched">
+                <small>Name is required (Min 3 characters)</small>
+            </div>
+        
+            <label for="email">Email Address</label>
+            <input id="email" type="email" formControlName="email" required [disabled]="true" />
+            <div *ngIf="grantForm.get('email')?.invalid && grantForm.get('email')?.touched">
+                <small>Enter a valid email</small>
+            </div>
+        
+            <label for="organizationName">Organization Name</label>
+            <input id="organizationName" formControlName="organizationName" required />
+            <div *ngIf="grantForm.get('organizationName')?.invalid && grantForm.get('organizationName')?.touched">
+                <small>Organization Name is required</small>
+            </div>
+
+            <label for="grantName">Grant Name</label>
+            <select id="grantName" formControlName="grantName" required>
+                <option value="" disabled>Select a Grant</option>
+                <option *ngFor="let grant of grantOptions" [value]="grant.grantId">{{ grant.grantName }}</option>
+            </select>
+            <div *ngIf="grantForm.get('grantName')?.invalid && grantForm.get('grantName')?.touched">
+               <small>Please select a grant</small> 
+            </div>
+
+            <label for="budget">Budget (€)</label>
+            <input id="budget" type="number" formControlName="budget" required />
+            <div *ngIf="grantForm.get('budget')?.invalid && grantForm.get('budget')?.touched">
+                <small>Enter a valid budget amount</small> 
+            </div>
+
+            <label for="projectDescription">Project Description</label>
+            <textarea id="projectDescription" formControlName="projectDescription" required></textarea>
+            <div *ngIf="grantForm.get('projectDescription')?.invalid && grantForm.get('projectDescription')?.touched">
+                <small *ngIf="grantForm.get('projectDescription')?.errors?.['required']">Description is required.</small>
+                <small *ngIf="grantForm.get('projectDescription')?.errors?.['minlength']"> Description must be at least 20 characters</small>
+            </div>
+            
+            <button type="submit" [disabled]="grantForm.invalid">Submit Application</button>
+        </form>
+    </div>
+</div>
+

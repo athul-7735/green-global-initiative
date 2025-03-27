@@ -1,0 +1,35 @@
+<div class="footer">
+    <div class="container">
+        <div class="logo-container">
+            <img src="assets/images/logo.png" alt="logo" width="200" height="150" loading="lazy">
+            <p>{{logoText}}</p>
+        </div>
+        <div class="icon-container">
+            <nav *ngFor="let icon of socialIcons" class="icons-nav">
+                <button class="icon-button">
+                    <img
+                      class="icon"
+                      src={{icon.src}}
+                    />
+                  </button>
+            </nav>
+        </div>
+    </div>
+    <div class="footer-sections-container">
+        <div  *ngFor="let item of sections" >
+            <div class="footer-sections">
+                <h3>{{item.name}}</h3>
+                <div class="footer-links-container">
+                    <div *ngFor="let link of item.links" class="footer-links">
+                        <a href="">{{link}}</a>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="copyright-container">
+    <p>{{copyright}}</p>
+    <p>All Rights Reserved | <a>Terms and Conditions</a> | <a>Privacy Policy</a></p>
+</div>
+

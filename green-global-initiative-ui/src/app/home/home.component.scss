@@ -1,0 +1,112 @@
+.section1-container {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+
+    .left-side-container {
+        height: 500px;
+        display: flex;
+        background-color: #A0C267;
+        .left-side-content {
+            justify-content: center;
+            padding: 0px 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            h3 {
+                font-size:2.5rem;
+                font-weight: 600;
+                margin-bottom: 3px;
+                font-family: 'Roboto', sans-serif;
+            }
+        } 
+    }
+    
+    .right-side-container {
+        img {
+            width: 813px;
+            height: 500px;
+        }
+    }
+}
+
+.section2-container {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+
+    .left-side-container {
+        img {
+            width: 813px;
+            height: 500px;
+        }
+    }
+    
+    .right-side-container {
+        height: 500px;
+        display: flex;
+        background-color: #754444;
+        .right-side-content {
+            justify-content: center;
+            padding: 0px 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            h3 {
+                font-size:2rem;
+                font-weight: 600;
+                margin-bottom: 3px;
+                color: #ffffff;
+                font-family: 'Roboto', sans-serif;
+            }
+        }
+    }
+}
+
+.section3-container {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+
+    .left-side-container {
+        height: 500px;
+        display: flex;
+        background-color: #102735;
+        .left-side-content {
+            justify-content: center;
+            padding: 0px 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            h3 {
+                font-size:2.5rem;
+                font-weight: 600;
+                margin-bottom: 3px;
+                font-family: 'Roboto', sans-serif;
+                margin-bottom: 8px;
+                color: #ffffff;
+            }
+        } 
+    }
+    
+    .right-side-container {
+        img {
+            width: 813px;
+            height: 500px;
+        }
+    }
+}
+
+  
+button{
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: 0;
+    background-color: #333;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: three-tier
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret # This is the secret of the docker registry
+      containers:
+        - name: frontend
+          image: vinay2806/frontend:2.0
+          env:
+            - name: ANGULAR_APP_BACKEND_URL
+              value: "https://api.nausicaaglobalgreen.live/api/" # This is the backend URL
+          ports:
+            - containerPort: 4200

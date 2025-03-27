@@ -1,0 +1,44 @@
+name: SonarQube Analysis
+on:
+  workflow_dispatch:  # Allows manual triggering from the Actions tab
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      
+      # SonarQube Analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+      # Fetch the analysis report URL and create a comment in the PR
+      - name: Add SonarQube Report as PR Comment
+        if: github.event.pull_request # Only run for pull requests
+        run: |
+          # Get the pull request number
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          
+          # SonarQube report URL (Adjust this URL based on your SonarQube configuration)
+          SONAR_REPORT_URL="https://sonarcloud.io/dashboard?id=${{ github.repository }}"
+
+          # Comment message with SonarQube report URL
+          COMMENT_BODY="SonarQube analysis is complete! Here is the analysis report: ${SONAR_REPORT_URL}"
+
+          # Create a GitHub API comment on the pull request
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"body":"'"${COMMENT_BODY}"'"}' \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"

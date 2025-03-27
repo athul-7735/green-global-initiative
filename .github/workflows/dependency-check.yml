@@ -1,0 +1,59 @@
+name: Dependency Check
+ 
+on:
+  push:
+    branches:
+     # - NGGI-110-java-doc-integration-in-the-backend-code
+      - NGGI-90-integrate-owasp-dependency-check-bot
+  pull_request:
+    branches:
+     # - NGGI-110-java-doc-integration-in-the-backend-code
+      - NGGI-90-integrate-owasp-dependency-check-bot
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+ 
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Use the required version for your Angular project
+ 
+      # Step 3: Install OWASP Dependency-Check
+      - name: Install OWASP Dependency-Check
+        run: |
+          wget https://github.com/dependency-check/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+          unzip dependency-check-12.1.0-release.zip -d dependency-check
+          chmod +x dependency-check/dependency-check/bin/dependency-check.sh # Ensure the script is executable
+                   
+      # Step 4: Debug: Verify Extracted Files
+      - name: List Files
+        run: ls -R dependency-check
+ 
+      # Step 5: Install project dependencies
+      - name: Install Dependencies
+        run: npm install
+        working-directory: green-global-initiative-ui
+ 
+      # Step 6: Run OWASP Dependency-Check
+      - name: Run OWASP Dependency-Check
+        run: |
+          dependency-check/dependency-check/bin/dependency-check.sh \
+          --project "Green Global Initiative UI" \
+          --scan green-global-initiative-ui \
+          --format "HTML" \
+          --out dependency-check-report \
+          --nvdApiKey 30eb894e-9041-4918-a772-7952bee9f461
+ 
+      # Step 7: Upload the dependency check report as an artifact
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: dependency-check-report
+
