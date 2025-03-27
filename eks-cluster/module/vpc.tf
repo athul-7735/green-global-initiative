@@ -38,7 +38,6 @@ resource "aws_subnet" "public-subnet" {
     Name                                          = "${var.pub-sub-name}-${count.index + 1}"
     Env                                           = var.env
     "kubernetes.io/role/elb"                      = "1"
-    "kubernetes.io/role/alb-ingress"              = "1"
     "kubernetes.io/cluster/${local.cluster-name}" = "shared"
   }
 
