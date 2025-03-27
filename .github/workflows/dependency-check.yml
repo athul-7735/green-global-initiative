@@ -6,7 +6,9 @@ on:
      # - NGGI-110-java-doc-integration-in-the-backend-code
       - NGGI-90-integrate-owasp-dependency-check-bot
   pull_request:
- 
+    branches:
+     # - NGGI-110-java-doc-integration-in-the-backend-code
+      - NGGI-90-integrate-owasp-dependency-check-bot
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
