@@ -1,0 +1,233 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "green-global-initiative-api/**"
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    outputs:
+      IMAGE_TAG: ${{ steps.set_image_tag.outputs.IMAGE_TAG }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # step 1: Install java JDK and maven
+      - name: Set up Java JDK & Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: maven
+
+      # step 2: Cache maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/green-global-initiative-api/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # step 3: Generate Maven Wrapper
+      - name: Generate Maven Wrapper
+        run: mvn -N wrapper:wrapper
+        working-directory: green-global-initiative-api
+
+      # Ensure mvnw is executable
+      - name: Ensure mvnw is executable
+        run: chmod +x green-global-initiative-api/mvnw
+
+      - name: List files in the directory
+        run: ls -la green-global-initiative-api
+
+      # step 4: Build and test with Maven
+      - name: Build and test with Maven
+        run: mvn clean install -DskipTests
+        working-directory: green-global-initiative-api
+
+      # step 5: Snyk Security Scan
+      - name: Run Snyk Security Scan
+        run: |
+          npm install -g snyk
+          snyk test --severity-threshold=critical
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        working-directory: green-global-initiative-api
+
+      # step 6: Install OWASP Dependency-Check for vulnerabilities
+      - name: Install OWASP Dependency-Check
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.0/dependency-check-6.5.0-release.zip
+          unzip dependency-check-6.5.0-release.zip
+          sudo mv dependency-check /usr/local/bin/
+          sudo chmod +x /usr/local/bin/dependency-check
+          /usr/local/bin/dependency-check/bin/dependency-check.sh --version  # Verify installation
+
+      # step 7: Run OWASP Dependency-Check for vulnerabilities
+      - name: Run OWASP Dependency-Check for vulnerabilities
+        run: |
+          /usr/local/bin/dependency-check/bin/dependency-check.sh --project "green-global-initiative" --scan green-global-initiative-api/src --format "HTML" --out green-global-initiative-api/dependency-check-report.html
+
+      # step 8: Upload Dependency Check Report as Artifact
+      - name: Upload Dependency Check Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: green-global-initiative-api/dependency-check-report.html
+
+      # step 9: Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.35.0/trivy_0.35.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.35.0_Linux-64bit.deb
+
+      - name: Ensure Trivy Results Directory Exists
+        run: mkdir -p green-global-initiative-api/trivy_results
+        shell: bash
+
+      # Trivy file scan (for backend)
+      - name: Trivy File Scan
+        run: |
+          trivy fs green-global-initiative-api --severity HIGH,CRITICAL --ignore-unfixed > green-global-initiative-api/trivy_results/trivyfs-backend.txt
+
+      # Upload Trivy File Scan Results as Artifacts
+      - name: Upload Trivy File Scan Results as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivyfs-backend-report
+          path: green-global-initiative-api/trivy_results/trivyfs-backend.txt
+
+      # Set IMAGE_TAG to current timestamp
+      - name: Set IMAGE_TAG
+        id: set_image_tag
+        run: |
+          IMAGE_TAG=$(date +'%Y%m%d-%H%M%S')  # or use your custom logic here
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
+
+      # step 10: Image Build, scan, and Push to Docker Hub
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Docker Build Backend Image
+        run: |
+          docker build -t ${DOCKER_HUB_USERNAME}/backend:${{ ENV.IMAGE_TAG }} ./green-global-initiative-api
+
+      - name: Trivy Image Scan
+        run: |
+          trivy image ${DOCKER_HUB_USERNAME}/backend:${{ ENV.IMAGE_TAG }} --severity HIGH,CRITICAL --security-checks vuln --timeout 10m > green-global-initiative-api/trivy_results/trivyimage-backend.txt
+
+      # Upload Trivy Image Scan Results as Artifacts
+      - name: Upload Trivy Image Scan Results as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivyimage-backend-report
+          path: green-global-initiative-api/trivy_results/trivyimage-backend.txt
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          docker push ${DOCKER_HUB_USERNAME}/backend:${{ ENV.IMAGE_TAG }}
+
+      # Continue using IMAGE_TAG for other steps
+      - name: Upload IMAGE_TAG as artifact
+        run: echo "IMAGE_TAG=${{ ENV.IMAGE_TAG }}" >> $GITHUB_ENV
+
+      # step 11: Update Deployment Image and push to GitHub
+      - name: Update Deployment Image in YAML
+        run: |
+          sed -i "s|image: .*$|image: ${DOCKER_HUB_USERNAME}/backend:${{ ENV.IMAGE_TAG }}|" ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git config --global user.email "L00187534@atu.ie"
+          git config --global user.name "vinay187534"
+          git checkout ${GITHUB_REF_NAME}
+          git stash --include-untracked
+          git pull origin ${GITHUB_REF_NAME} --rebase
+          git stash pop || echo "No changes to apply"
+          git add ./Kubernetes-Manifest-Files/Backend/deployment.yaml
+          git commit -m "Update backend image tag to ${{ ENV.IMAGE_TAG }}"
+          git push --force https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME}
+
+  # deploy-on-EKS:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Get Public IP of GitHub Runner
+  #       run: echo "RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+
+  #     - name: Set up AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         IMAGE_TAG: ${{ needs.build.outputs.IMAGE_TAG }}
+
+  #     - name: Set up kubectl for EKS
+  #       run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+
+  #     # Check if the image is updated or if it's the first deployment
+  #     - name: Check if deployment exists
+  #       id: check-deployment
+  #       run: |
+  #         if kubectl get deployment backend -n three-tier > /dev/null 2>&1; then
+  #           echo "deployment-exists=true" >> $GITHUB_ENV
+  #         else
+  #           echo "No existing deployment found. Proceeding with deployment."
+  #           echo "deployment-exists=false" >> $GITHUB_ENV
+  #         fi
+
+  #     # Check if the image has changed (only if deployment exists)
+  #     - name: Check if the image has been updated
+  #       id: check-image
+  #       if: env.deployment-exists == 'true'
+  #       run: |
+  #         # Get the currently deployed image
+  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment backend -n three-tier -o=jsonpath='{.spec.template.spec.containers[0].image}')
+  #         echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
+  #         echo "Current image: ${DOCKER_HUB_USERNAME}/backend:${{ needs.build.outputs.IMAGE_TAG }}"
+  #         # Compare images and set flag
+  #         if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/backend:${{ needs.build.outputs.IMAGE_TAG }}" ]; then
+  #           echo "image-updated=true" >> $GITHUB_ENV
+  #         else
+  #           echo "image-updated=false" >> $GITHUB_ENV
+  #         fi
+
+  #     # Deploy Kubernetes manifests (only if first deployment)
+  #     - name: Deploy Kubernetes Manifests to EKS
+  #       if: env.deployment-exists == 'false'
+  #       run: |
+  #         echo "First-time deployment: Applying Kubernetes manifests..."
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Backend-ingress/backend-ingress.yaml
+
+  #     # Update the deployment with a new image (only if image is updated)
+  #     - name: Rollout Deployment (only if image has changed)
+  #       if: env.deployment-exists == 'true' && env.image-updated == 'true'
+  #       run: |
+  #         echo "Updating image for existing deployment..."
+  #         kubectl set image deployment/backend backend=${DOCKER_HUB_USERNAME}/backend:${{ needs.build.outputs.IMAGE_TAG }} --namespace=three-tier
+  #         # Wait for the update to complete
+  #         kubectl rollout status deployment/backend --namespace=three-tier
