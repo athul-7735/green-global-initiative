@@ -3,42 +3,38 @@ name: Frontend CI/CD Pipeline
 on:
   push:
     branches:
-      - NGGI-112-ci-yaml-file-integration-with-all-the-tools-frontend-ui
-  pull_request:
-    branches:
-      - NGGI-112-ci-yaml-file-integration-with-all-the-tools-frontend-ui
+      - main
+    paths:
+      - "green-global-initiative-ui/**"
+
+env:
+  COVERAGE_THRESHOLD: 75 # Set your desired coverage threshold here
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
 jobs:
   build:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
-    env:
-      COVERAGE_THRESHOLD: 75  # Set your desired coverage threshold here
+    outputs:
+      IMAGE_TAG: ${{ steps.set_image_tag.outputs.IMAGE_TAG }}
 
     steps:
-      # Step to check if folder exists and remove it
-      - name: Remove folder if it exists
-        run: |
-          if [ -d "/home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports" ]; then
-            sudo rm -rf /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/reports
-            echo "Folder deleted."
-          else
-            echo "Folder does not exist. Skipping deletion."
-          fi
-        shell: bash
-
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.G_TOKEN }}
 
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Cache Node.js modules
         id: npm-cache
@@ -50,37 +46,32 @@ jobs:
             npm-
 
       - name: Install dependencies
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm install
 
       - name: Install Angular CLI locally
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm install @angular/cli --save-dev
 
       - name: Build the project
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: npm run build
 
-
       - name: Run Tests in Headless Mode
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true
 
-      - name: Debug Test Output
-        run: |
-          echo "$TEST_OUTPUT"
-
       - name: Extract Coverage Percentage
         id: coverage
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           # Run tests and capture the output
           TEST_OUTPUT=$(npm test -- --browsers=ChromeHeadless --watch=false --code-coverage --karma-config=karma.conf.js --reporters junit || true)
-          
+
           # Extract the Lines coverage percentage from the output
           COVERAGE=$(echo "$TEST_OUTPUT" | grep -Eo 'Lines\s*:\s*[0-9.]+%' | awk '{print $3}' | sed 's/%//')
-          
+
           if [ -z "$COVERAGE" ]; then
             echo "Error: Could not extract coverage percentage."
             exit 1
@@ -95,7 +86,6 @@ jobs:
             echo "Error: COVERAGE variable is not set."
             exit 1
           fi
-
           if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
             echo "Code coverage is below the threshold of $COVERAGE_THRESHOLD%"
             exit 1
@@ -105,53 +95,185 @@ jobs:
 
       # Snyk Integration
       - name: Run Snyk to check for vulnerabilities
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
+        working-directory: ./green-global-initiative-ui
         run: |
           npm install -g snyk
           snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: Trivy File Scan
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-backend.txt
-
-      - name: Build Docker image
-        working-directory: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui
-        run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} .
-          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
-
-      - name: Trivy Image Scan
-        run: trivy image ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
-
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend:latest
-
+      # OWASP Dependency Check with report generation
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: 'green-global-initiative'
-          format: 'ALL'
+          project: "green-global-initiative"
+          scan-path: "./green-global-initiative-ui"
+          format: "ALL"
+          output: "./reports"
           fail_on_cvss: 7
 
+      # Fix file permissions for reports directory
+      - name: Fix file permissions for reports directory
+        run: |
+          sudo chown -R $USER:$USER ./reports
+          sudo chmod -R 777 ./reports  # Gives full permissions (rwx) for all users
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Trivy File Scan
+        working-directory: ./green-global-initiative-ui
+        run: trivy fs . --severity HIGH,CRITICAL --ignore-unfixed > trivyfs-frontend.txt
+
+      # Set IMAGE_TAG to current timestamp
+      - name: Set IMAGE_TAG
+        id: set_image_tag
+        run: |
+          IMAGE_TAG=$(date +'%Y%m%d-%H%M%S')  # or use your custom logic here
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
+
+      # step 10: Image Build, scan, and Push to Docker Hub
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker Build Backend Image
+        run: |
+          docker build -t ${DOCKER_HUB_USERNAME}/frontend:${{ ENV.IMAGE_TAG }} ./green-global-initiative-ui
+
+      - name: Trivy Image Scan
+        run: trivy image ${DOCKER_HUB_USERNAME}/frontend:${{ ENV.IMAGE_TAG }} --severity HIGH,CRITICAL > trivyimage-frontend.txt
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          docker push ${DOCKER_HUB_USERNAME}/frontend:${{ ENV.IMAGE_TAG }}
+
+      # Documentation
+      - name: Generate Compodoc documentation
+        working-directory: ./green-global-initiative-ui
+        run: |
+          npx compodoc -p tsconfig.app.json -d documentation
+        continue-on-error: true
+
+      # Upload all reports
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/test-results
+          path: ./green-global-initiative-ui/test-results
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: /home/ubuntu/actions-runner/frontend/green-global-initiative/green-global-initiative/green-global-initiative-ui/coverage
+          path: ./green-global-initiative-ui/coverage
+
+      - name: Upload OWASP Dependency Check reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports
+          path: ./reports/*
+
+      - name: Upload Compodoc documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: compodoc-documentation
+          path: ./green-global-initiative-ui/documentation/*
+
+      - name: Upload Trivy scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-scan-results
+          path: |
+            ./green-global-initiative-ui/trivyfs-frontend.txt
+            ./trivyimage-frontend.txt
+
+      # Continue using IMAGE_TAG for other steps
+      - name: Upload IMAGE_TAG as artifact
+        run: echo "IMAGE_TAG=${{ ENV.IMAGE_TAG }}" >> $GITHUB_ENV
+
+      - name: Update Deployment Image in YAML
+        run: |
+          sed -i "s|image: .*$|image: ${DOCKER_HUB_USERNAME}/frontend:${{ ENV.IMAGE_TAG }}|" ./Kubernetes-Manifest-Files/frontend/deployment.yaml
+          git config --global user.email "L00187735@atu.ie"
+          git config --global user.name "athul7735@atu"
+          git checkout ${GITHUB_REF_NAME}
+          git stash --include-untracked
+          git pull origin ${GITHUB_REF_NAME} --rebase
+          git stash pop || echo "No changes to apply"
+          git add ./Kubernetes-Manifest-Files/frontend/deployment.yaml
+          git commit -m "Update frontend image tag to ${{ ENV.IMAGE_TAG }}"
+          git push --force https://${{ secrets.G_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME}
+
+  # deploy-on-EKS:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Get Public IP of GitHub Runner
+  #       run: echo "RUNNER_IP=$(curl -s ifconfig.me)" >> $GITHUB_ENV
+
+  #     - name: Set up AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         IMAGE_TAG: ${{ needs.build.outputs.IMAGE_TAG }}
+
+  #     - name: Set up kubectl for EKS
+  #       run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+
+  #     # Check if the image is updated or if it's the first deployment
+  #     - name: Check if deployment exists
+  #       id: check-deployment
+  #       run: |
+  #         if kubectl get deployment frontend -n three-tier > /dev/null 2>&1; then
+  #           echo "deployment-exists=true" >> $GITHUB_ENV
+  #         else
+  #           echo "No existing deployment found. Proceeding with deployment."
+  #           echo "deployment-exists=false" >> $GITHUB_ENV
+  #         fi
+
+  #     # Check if the image has changed (only if deployment exists)
+  #     - name: Check if the image has been updated
+  #       id: check-image
+  #       if: env.deployment-exists == 'true'
+  #       run: |
+  #         # Get the currently deployed image
+  #         LAST_DEPLOYED_IMAGE=$(kubectl get deployment frontend -n three-tier -o=jsonpath='{.spec.template.spec.containers[0].image}')
+  #         echo "Last deployed image: $LAST_DEPLOYED_IMAGE"
+  #         echo "Current image: ${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}"
+  #         # Compare images and set flag
+  #         if [ "$LAST_DEPLOYED_IMAGE" != "${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }}" ]; then
+  #           echo "image-updated=true" >> $GITHUB_ENV
+  #         else
+  #           echo "image-updated=false" >> $GITHUB_ENV
+  #         fi
+
+  #     # Deploy Kubernetes manifests (only if first deployment)
+  #     - name: Deploy Kubernetes Manifests to EKS
+  #       if: env.deployment-exists == 'false'
+  #       run: |
+  #         echo "First-time deployment: Applying Kubernetes manifests..."
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Database/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/frontend/
+  #         kubectl apply -f ./Kubernetes-Manifest-Files/Frontend-ingress/frontend-ingress.yaml
+
+  #     # Update the deployment with a new image (only if image is updated)
+  #     - name: Rollout Deployment (only if image has changed)
+  #       if: env.deployment-exists == 'true' && env.image-updated == 'true'
+  #       run: |
+  #         echo "Updating image for existing deployment..."
+  #         kubectl set image deployment/frontend frontend=${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }} --namespace=three-tier
+  #         # Wait for the update to complete
+  #         kubectl rollout status deployment/frontend --namespace=three-tier 
