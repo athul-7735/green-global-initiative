@@ -276,4 +276,4 @@ jobs:
   #         echo "Updating image for existing deployment..."
   #         kubectl set image deployment/frontend frontend=${DOCKER_HUB_USERNAME}/frontend:${{ needs.build.outputs.IMAGE_TAG }} --namespace=three-tier
   #         # Wait for the update to complete
-  #         kubectl rollout status deployment/frontend --namespace=three-tier
+  #         kubectl rollout status deployment/frontend --namespace=three-tier 
