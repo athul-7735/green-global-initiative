@@ -4,10 +4,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { GrantsService } from '../services/grants.service';
 import { AuthService } from '../../authentication/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { PopupWindowComponent } from '../../shared/popup-window/popup-window.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-grant-application',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, MatDialogModule],
   templateUrl: './grant-application.component.html',
   styleUrl: './grant-application.component.scss'
 })
@@ -16,15 +18,20 @@ export class GrantApplicationComponent implements OnInit{
   activeUser !: { firstName: string, id: number, isAdmin: boolean, lastName: string, email: string };
   grantForm: FormGroup;
   grantOptions:any[] = [];
+  showPopup:boolean = false;
+  popupTitle:string = '';
+  popupMessage:string = '';
 
-  constructor(private fb: FormBuilder, private grantsService: GrantsService, private authService: AuthService, private toastr: ToastrService) {
+  constructor(private fb: FormBuilder, private grantsService: GrantsService, 
+    private authService: AuthService, private toastr: ToastrService, private dialog: MatDialog) {
     this.grantForm = this.fb.group({
       applicantName: [{value:'', disabled: true}, [Validators.required, Validators.minLength(3)]],
       email: [{value:'', disabled: true}, [Validators.required, Validators.email]],
       organizationName: ['', Validators.required],
       grantName: ['', [Validators.required]],
       budget: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      projectDescription: ['', [Validators.required, Validators.minLength(20)]]
+      projectDescription: ['', [Validators.required, Validators.minLength(20)]],
+      specialAward: [false],
     });
     this.grantsService.getGrants('').subscribe(x=>
       {
@@ -54,9 +61,7 @@ export class GrantApplicationComponent implements OnInit{
       let requestBody = this.getRequestBody(this.grantForm.value);
       this.grantsService.postGrantApplications('',requestBody).subscribe((res)=>{
         console.log(res);
-        this.toastr.success(`The application is succesfully submitted`, 'Success',  {
-          progressBar: true, closeButton: true 
-        });
+        this.openPopup(res.applicationId);
       }, (err)=>{
         console.log(err);
         this.toastr.error(`The application is submission failed`, 'Error',  {
@@ -64,6 +69,7 @@ export class GrantApplicationComponent implements OnInit{
         });
       });
       this.grantForm.reset();
+      this.ngOnInit();
     } else {
       alert(`Please fill the required fields correctly`);
     }
@@ -78,7 +84,16 @@ export class GrantApplicationComponent implements OnInit{
       applicationStatus: 'In Progress',
       approvalDate: null,
       requestedAmount: grantApplicationForm.budget,
-      projectDescription: grantApplicationForm.projectDescription
+      projectDescription: grantApplicationForm.projectDescription,
+      // specialAward: grantApplicationForm.specialAward
     };
   }
+
+  openPopup(applicationId: number){
+    this.dialog.open(PopupWindowComponent, {
+      width: '400px',
+      data: { title: 'Application Submitted!', message: 'Your application has been submitted successfully, Reference number is: ' + applicationId }
+    });
+  }
+
 }
