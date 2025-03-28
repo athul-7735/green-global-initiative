@@ -32,7 +32,7 @@ public class AutoTestCase2 {
 
     @Test(priority = 1)
     public void verifyRedirectionToApplicationPage() {
-        driver.get("http://localhost:4200/");
+        driver.get("https://www.nausicaaglobalgreen.live");
         String pageTitle = driver.getTitle();
         System.out.println("Page Title: " + pageTitle);
 

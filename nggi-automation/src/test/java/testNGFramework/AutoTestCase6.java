@@ -26,7 +26,7 @@ public class AutoTestCase6 {
         driver = new EdgeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.get("http://localhost:4200/");
+        driver.get("https://www.nausicaaglobalgreen.live");
     }
 
     @Test(priority = 1)

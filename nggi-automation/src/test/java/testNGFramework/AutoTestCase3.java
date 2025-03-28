@@ -31,7 +31,7 @@ public class AutoTestCase3 {
 
     @Test(priority = 1)
     public void verifyRedirectionToApplicationPage() {
-        driver.get("http://localhost:4200/");
+        driver.get("https://www.nausicaaglobalgreen.live");
         String pageTitle = driver.getTitle();
         Assert.assertTrue(pageTitle.contains("GreenGlobalInitiative"), "Page title does not match");
         System.out.println("Step 1 Passed: Redirected to NGGI Application Page.");
