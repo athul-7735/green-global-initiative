@@ -1,6 +1,9 @@
 name: Run Selenium Tests on Staging Deployment
 
 on:
+ push:
+    branches:
+      - testing
   workflow_dispatch: # Trigger the workflow manually
 
 jobs:
