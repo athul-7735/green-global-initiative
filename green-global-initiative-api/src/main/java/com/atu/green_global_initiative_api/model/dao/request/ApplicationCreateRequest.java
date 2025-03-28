@@ -33,6 +33,9 @@ public class ApplicationCreateRequest {
     /** Description of the project for which the grant is being requested */
     public String projectDescription;
 
+    /** The special award for the grant */
+    public boolean specialAward;
+
     /**
      * Gets the application ID.
      *
@@ -176,4 +179,13 @@ public class ApplicationCreateRequest {
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
     }
+
+    public boolean getSpecialAward() {
+        return specialAward;
+    }
+
+    public void setSpecialAward(boolean specialAward) {
+        this.specialAward = specialAward;
+    }
+
 }

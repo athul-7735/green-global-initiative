@@ -46,6 +46,8 @@ public class ApplicationDetails {
     @Column(name="admin_comments", nullable = true)
     private String adminComments;
 
+    @Column(name="special_award", nullable = false)
+    private boolean specialAward;
 
     public String getRequestedAmount() {
         return requestedAmount;
@@ -206,5 +208,13 @@ public class ApplicationDetails {
      */
     public void setAdminComments(String adminComments) {
         this.adminComments = adminComments;
+    }
+
+    public boolean getSpecialAward() {
+        return specialAward;
+    }
+
+    public void setSpecialAward(boolean specialAward) {
+        this.specialAward = specialAward;
     }
 }
