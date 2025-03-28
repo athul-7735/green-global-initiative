@@ -48,7 +48,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<outputDirectory>E:\DEVOPS\Project Management\Automation Testing\nggi-automation\JavaDoc</outputDirectory>
+					<outputDirectory>nggi-automation\JavaDoc</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
