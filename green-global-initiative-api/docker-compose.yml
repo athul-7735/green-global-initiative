@@ -30,7 +30,7 @@ services:
     restart: always
     depends_on:
       mysql_db:
-        condition: service_healthy
+        condition: service_healthy # Wait for MySQL to be healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/nausicaa_global_green_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_PROFILE: development  # Set the profile at runtime
