@@ -8,7 +8,6 @@ import org.openqa.selenium.edge.EdgeDriver;
 
 /**
  * This class represents the Test Case 1 in Quality Plus in JIRA.
- * @author Sherine A
  * @author John K
  */
 

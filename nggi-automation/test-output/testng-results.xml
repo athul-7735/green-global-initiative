@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="51" passed="50" failed="1" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-03-27T15:13:59 GMT" name="Test Suite" finished-at="2025-03-27T15:15:29 GMT" duration-ms="89090">
+    <groups>
+    </groups>
+    <test started-at="2025-03-27T15:13:59 GMT" name="Sequential Test Execution" finished-at="2025-03-27T15:15:29 GMT" duration-ms="89090">
+      <class name="testNGFramework.AutoTestCase6">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:12 GMT" name="setUp" finished-at="2025-03-27T15:15:14 GMT" duration-ms="1467" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="verifyRedirectionToApplicationPage()[pri:1, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:14 GMT" name="verifyRedirectionToApplicationPage" finished-at="2025-03-27T15:15:14 GMT" duration-ms="31" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToApplicationPage -->
+        <test-method signature="verifySignInButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:14 GMT" name="verifySignInButtonPresence" finished-at="2025-03-27T15:15:14 GMT" duration-ms="76" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:14 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:15:15 GMT" depends-on-methods="testNGFramework.AutoTestCase6.verifySignInButtonPresence" duration-ms="743" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifyInputLoginDetails()[pri:4, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:15 GMT" name="verifyInputLoginDetails" finished-at="2025-03-27T15:15:15 GMT" depends-on-methods="testNGFramework.AutoTestCase6.verifyNavigationToLoginPage" duration-ms="503" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyInputLoginDetails -->
+        <test-method signature="verifySignInFunctionality()[pri:5, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:15 GMT" name="verifySignInFunctionality" finished-at="2025-03-27T15:15:15 GMT" depends-on-methods="testNGFramework.AutoTestCase6.verifyInputLoginDetails" duration-ms="105" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInFunctionality -->
+        <test-method signature="verifySuccessfulLoginMessage()[pri:6, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:15 GMT" name="verifySuccessfulLoginMessage" finished-at="2025-03-27T15:15:20 GMT" depends-on-methods="testNGFramework.AutoTestCase6.verifySignInFunctionality" duration-ms="5051" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySuccessfulLoginMessage -->
+        <test-method signature="verifyAdminDashboard()[pri:7, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:20 GMT" name="verifyAdminDashboard" finished-at="2025-03-27T15:15:20 GMT" depends-on-methods="testNGFramework.AutoTestCase6.verifySuccessfulLoginMessage" duration-ms="30" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyAdminDashboard -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase6@102cec62]" started-at="2025-03-27T15:15:20 GMT" name="tearDown" finished-at="2025-03-27T15:15:21 GMT" duration-ms="407" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase6 -->
+      <class name="testNGFramework.AutoTestCase4">
+        <test-method is-config="true" signature="setup()[pri:0, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:39 GMT" name="setup" finished-at="2025-03-27T15:14:40 GMT" duration-ms="1404" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="verifyRedirectionToNGGIApplication()[pri:1, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:40 GMT" name="verifyRedirectionToNGGIApplication" finished-at="2025-03-27T15:14:40 GMT" duration-ms="42" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToNGGIApplication -->
+        <test-method signature="verifySignInSignUpButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:40 GMT" name="verifySignInSignUpButtonPresence" finished-at="2025-03-27T15:14:40 GMT" duration-ms="83" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInSignUpButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:40 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:14:41 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifySignInSignUpButtonPresence" duration-ms="702" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifyLoginFunctionality()[pri:4, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:41 GMT" name="verifyLoginFunctionality" finished-at="2025-03-27T15:14:42 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifyNavigationToLoginPage" duration-ms="677" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyLoginFunctionality -->
+        <test-method signature="verifySuccessfulLoginNavigation()[pri:5, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:42 GMT" name="verifySuccessfulLoginNavigation" finished-at="2025-03-27T15:14:47 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifyLoginFunctionality" duration-ms="5118" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySuccessfulLoginNavigation -->
+        <test-method signature="verifyHeaderSectionButtons()[pri:6, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:47 GMT" name="verifyHeaderSectionButtons" finished-at="2025-03-27T15:14:47 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifySuccessfulLoginNavigation" duration-ms="182" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyHeaderSectionButtons -->
+        <test-method signature="verifyGrantFormNavigation()[pri:7, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:47 GMT" name="verifyGrantFormNavigation" finished-at="2025-03-27T15:14:47 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifyHeaderSectionButtons" duration-ms="295" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGrantFormNavigation -->
+        <test-method signature="verifyGrantApplicationFormFields()[pri:8, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:47 GMT" name="verifyGrantApplicationFormFields" finished-at="2025-03-27T15:14:52 GMT" depends-on-methods="testNGFramework.AutoTestCase4.verifyGrantFormNavigation" duration-ms="5121" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGrantApplicationFormFields -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase4@3eb91815]" started-at="2025-03-27T15:14:52 GMT" name="tearDown" finished-at="2025-03-27T15:14:53 GMT" duration-ms="370" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase4 -->
+      <class name="testNGFramework.AutoTestCase5">
+        <test-method is-config="true" signature="setup()[pri:0, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:53 GMT" name="setup" finished-at="2025-03-27T15:14:54 GMT" duration-ms="1012" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="verifyRedirectionToNGGIApplication()[pri:1, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:54 GMT" name="verifyRedirectionToNGGIApplication" finished-at="2025-03-27T15:14:54 GMT" duration-ms="465" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToNGGIApplication -->
+        <test-method signature="verifySignInSignUpButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:54 GMT" name="verifySignInSignUpButtonPresence" finished-at="2025-03-27T15:14:54 GMT" duration-ms="65" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInSignUpButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:54 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:14:55 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifySignInSignUpButtonPresence" duration-ms="803" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifyLoginFunctionality()[pri:4, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:55 GMT" name="verifyLoginFunctionality" finished-at="2025-03-27T15:14:56 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifyNavigationToLoginPage" duration-ms="590" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyLoginFunctionality -->
+        <test-method signature="verifySuccessfulLoginNavigation()[pri:5, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:14:56 GMT" name="verifySuccessfulLoginNavigation" finished-at="2025-03-27T15:15:01 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifyLoginFunctionality" duration-ms="5102" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySuccessfulLoginNavigation -->
+        <test-method signature="verifyHeaderSectionButtons()[pri:6, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:15:01 GMT" name="verifyHeaderSectionButtons" finished-at="2025-03-27T15:15:01 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifySuccessfulLoginNavigation" duration-ms="165" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyHeaderSectionButtons -->
+        <test-method signature="verifyGrantFormNavigation()[pri:7, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:15:01 GMT" name="verifyGrantFormNavigation" finished-at="2025-03-27T15:15:01 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifyHeaderSectionButtons" duration-ms="378" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGrantFormNavigation -->
+        <test-method signature="verifyGrantApplicationFormFields()[pri:8, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:15:01 GMT" name="verifyGrantApplicationFormFields" finished-at="2025-03-27T15:15:06 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifyGrantFormNavigation" duration-ms="5130" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGrantApplicationFormFields -->
+        <test-method signature="verifyGrantApplicationSubmission()[pri:9, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:15:06 GMT" name="verifyGrantApplicationSubmission" finished-at="2025-03-27T15:15:12 GMT" depends-on-methods="testNGFramework.AutoTestCase5.verifyGrantApplicationFormFields" duration-ms="5702" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyGrantApplicationSubmission -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase5@56dc1551]" started-at="2025-03-27T15:15:12 GMT" name="tearDown" finished-at="2025-03-27T15:15:12 GMT" duration-ms="363" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase5 -->
+      <class name="testNGFramework.AutoTestCase9">
+        <test-method is-config="true" signature="setup()[pri:0, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:21 GMT" name="setup" finished-at="2025-03-27T15:15:22 GMT" duration-ms="929" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="verifyRedirectionToNGGIApplicationPage()[pri:1, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:22 GMT" name="verifyRedirectionToNGGIApplicationPage" finished-at="2025-03-27T15:15:22 GMT" duration-ms="516" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToNGGIApplicationPage -->
+        <test-method signature="verifyAboutUsButtonAndClick()[pri:2, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:22 GMT" name="verifyAboutUsButtonAndClick" finished-at="2025-03-27T15:15:23 GMT" duration-ms="661" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyAboutUsButtonAndClick -->
+        <test-method signature="verifyNavigationToAboutUsPage()[pri:3, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:23 GMT" name="verifyNavigationToAboutUsPage" finished-at="2025-03-27T15:15:23 GMT" duration-ms="50" status="FAIL">
+          <exception class="java.lang.AssertionError">
+            <message>
+              <![CDATA[Step 3 Failed: The user is Not Navigated to the "About Us" Page post click on the "About Us" Button. expected [true] but found [false]]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.AssertionError: Step 3 Failed: The user is Not Navigated to the "About Us" Page post click on the "About Us" Button. expected [true] but found [false]
+at org.testng.Assert.fail(Assert.java:111)
+at org.testng.Assert.failNotEquals(Assert.java:1578)
+at org.testng.Assert.assertTrue(Assert.java:57)
+at testNGFramework.AutoTestCase9.verifyNavigationToAboutUsPage(AutoTestCase9.java:55)
+at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:228)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:961)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:201)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+at org.testng.TestRunner.privateRun(TestRunner.java:819)
+at org.testng.TestRunner.run(TestRunner.java:619)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1228)
+at org.testng.TestNG.runSuites(TestNG.java:1134)
+at org.testng.TestNG.run(TestNG.java:1101)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:293)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.AssertionError -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToAboutUsPage -->
+        <test-method signature="validateAboutUsPageSections()[pri:4, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:23 GMT" name="validateAboutUsPageSections" finished-at="2025-03-27T15:15:28 GMT" duration-ms="5124" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- validateAboutUsPageSections -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase9@74f6c5d8]" started-at="2025-03-27T15:15:28 GMT" name="tearDown" finished-at="2025-03-27T15:15:29 GMT" duration-ms="360" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase9 -->
+      <class name="testNGFramework.AutoTestCase2">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:05 GMT" name="setUp" finished-at="2025-03-27T15:14:06 GMT" duration-ms="998" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="verifyRedirectionToApplicationPage()[pri:1, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:06 GMT" name="verifyRedirectionToApplicationPage" finished-at="2025-03-27T15:14:07 GMT" duration-ms="458" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToApplicationPage -->
+        <test-method signature="verifySignInSignUpButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:07 GMT" name="verifySignInSignUpButtonPresence" finished-at="2025-03-27T15:14:07 GMT" duration-ms="95" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInSignUpButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:07 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:14:08 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifySignInSignUpButtonPresence" duration-ms="799" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifySignUpButtonPresence()[pri:4, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:08 GMT" name="verifySignUpButtonPresence" finished-at="2025-03-27T15:14:08 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifyNavigationToLoginPage" duration-ms="31" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignUpButtonPresence -->
+        <test-method signature="verifyNavigationToCreateAccountPage()[pri:5, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:08 GMT" name="verifyNavigationToCreateAccountPage" finished-at="2025-03-27T15:14:08 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifySignUpButtonPresence" duration-ms="390" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToCreateAccountPage -->
+        <test-method signature="verifyFieldsOnCreateAccountPage()[pri:6, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:08 GMT" name="verifyFieldsOnCreateAccountPage" finished-at="2025-03-27T15:14:08 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifyNavigationToCreateAccountPage" duration-ms="171" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyFieldsOnCreateAccountPage -->
+        <test-method signature="verifyUserRegistration()[pri:7, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:08 GMT" name="verifyUserRegistration" finished-at="2025-03-27T15:14:24 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifyFieldsOnCreateAccountPage" duration-ms="15621" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyUserRegistration -->
+        <test-method signature="verifyRedirectionToLoginPage()[pri:8, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:24 GMT" name="verifyRedirectionToLoginPage" finished-at="2025-03-27T15:14:24 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifyUserRegistration" duration-ms="63" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToLoginPage -->
+        <test-method signature="verifyLoginToApplication()[pri:9, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:24 GMT" name="verifyLoginToApplication" finished-at="2025-03-27T15:14:29 GMT" depends-on-methods="testNGFramework.AutoTestCase2.verifyRedirectionToLoginPage" duration-ms="5336" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyLoginToApplication -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase2@3b5fad2d]" started-at="2025-03-27T15:14:29 GMT" name="tearDown" finished-at="2025-03-27T15:14:30 GMT" duration-ms="378" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase2 -->
+      <class name="testNGFramework.AutoTestCase3">
+        <test-method is-config="true" signature="setup()[pri:0, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:30 GMT" name="setup" finished-at="2025-03-27T15:14:31 GMT" duration-ms="950" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="verifyRedirectionToApplicationPage()[pri:1, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:31 GMT" name="verifyRedirectionToApplicationPage" finished-at="2025-03-27T15:14:31 GMT" duration-ms="534" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToApplicationPage -->
+        <test-method signature="verifySignInSignUpButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:31 GMT" name="verifySignInSignUpButtonPresence" finished-at="2025-03-27T15:14:31 GMT" duration-ms="69" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInSignUpButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:31 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:14:32 GMT" duration-ms="777" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifyLoginToApplication()[pri:4, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:32 GMT" name="verifyLoginToApplication" finished-at="2025-03-27T15:14:38 GMT" duration-ms="5657" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyLoginToApplication -->
+        <test-method signature="verifyHeaderSection()[pri:5, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:38 GMT" name="verifyHeaderSection" finished-at="2025-03-27T15:14:38 GMT" duration-ms="179" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyHeaderSection -->
+        <test-method signature="verifyViewAllGrantsButton()[pri:6, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:38 GMT" name="verifyViewAllGrantsButton" finished-at="2025-03-27T15:14:38 GMT" duration-ms="32" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyViewAllGrantsButton -->
+        <test-method signature="verifyNavigationToAllGrantsDetailsPage()[pri:7, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:38 GMT" name="verifyNavigationToAllGrantsDetailsPage" finished-at="2025-03-27T15:14:38 GMT" duration-ms="245" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToAllGrantsDetailsPage -->
+        <test-method signature="verifyAllGrantsDetailsPageContent()[pri:8, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:38 GMT" name="verifyAllGrantsDetailsPageContent" finished-at="2025-03-27T15:14:38 GMT" duration-ms="87" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyAllGrantsDetailsPageContent -->
+        <test-method is-config="true" signature="teardown()[pri:0, instance:testNGFramework.AutoTestCase3@5e17553a]" started-at="2025-03-27T15:14:38 GMT" name="teardown" finished-at="2025-03-27T15:14:39 GMT" duration-ms="375" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+      </class> <!-- testNGFramework.AutoTestCase3 -->
+      <class name="testNGFramework.AutoTestCase1">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:13:59 GMT" name="setUp" finished-at="2025-03-27T15:14:03 GMT" duration-ms="3191" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="verifyRedirectionToApplicationPage()[pri:1, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:03 GMT" name="verifyRedirectionToApplicationPage" finished-at="2025-03-27T15:14:03 GMT" duration-ms="472" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyRedirectionToApplicationPage -->
+        <test-method signature="verifySignInSignUpButtonPresence()[pri:2, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:03 GMT" name="verifySignInSignUpButtonPresence" finished-at="2025-03-27T15:14:03 GMT" duration-ms="102" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignInSignUpButtonPresence -->
+        <test-method signature="verifyNavigationToLoginPage()[pri:3, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:03 GMT" name="verifyNavigationToLoginPage" finished-at="2025-03-27T15:14:04 GMT" depends-on-methods="testNGFramework.AutoTestCase1.verifySignInSignUpButtonPresence" duration-ms="1008" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToLoginPage -->
+        <test-method signature="verifySignUpButtonPresence()[pri:4, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:04 GMT" name="verifySignUpButtonPresence" finished-at="2025-03-27T15:14:04 GMT" depends-on-methods="testNGFramework.AutoTestCase1.verifyNavigationToLoginPage" duration-ms="34" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifySignUpButtonPresence -->
+        <test-method signature="verifyNavigationToCreateAccountPage()[pri:5, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:04 GMT" name="verifyNavigationToCreateAccountPage" finished-at="2025-03-27T15:14:05 GMT" depends-on-methods="testNGFramework.AutoTestCase1.verifySignUpButtonPresence" duration-ms="477" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyNavigationToCreateAccountPage -->
+        <test-method signature="verifyFieldsOnCreateAccountPage()[pri:6, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:05 GMT" name="verifyFieldsOnCreateAccountPage" finished-at="2025-03-27T15:14:05 GMT" depends-on-methods="testNGFramework.AutoTestCase1.verifyNavigationToCreateAccountPage" duration-ms="173" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyFieldsOnCreateAccountPage -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:testNGFramework.AutoTestCase1@2f666ebb]" started-at="2025-03-27T15:14:05 GMT" name="tearDown" finished-at="2025-03-27T15:14:05 GMT" duration-ms="325" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- testNGFramework.AutoTestCase1 -->
+    </test> <!-- Sequential Test Execution -->
+  </suite> <!-- Test Suite -->
+</testng-results>
