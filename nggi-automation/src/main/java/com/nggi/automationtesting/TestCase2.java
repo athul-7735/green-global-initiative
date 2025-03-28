@@ -7,6 +7,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 
+/**
+ * This class represents the Test Case 2 in Quality Plus in JIRA.
+ * @author John K
+ */
+
 public class TestCase2 {
 		/**
 	     * This method initializes the Edge driver, navigates to NGGI Application, Navigates to Create an Account Page And Register a New User in the NGGI System..

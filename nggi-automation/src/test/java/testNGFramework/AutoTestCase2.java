@@ -12,6 +12,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+/**
+ * This class represents Test Case 2 in Quality Plus in JIRA, using TestNG framework.
+ * It navigates to the NGGI Application and Verifies that users can successfully register with valid credentials
+ * @author John K
+ */
+
 public class AutoTestCase2 {
 
     private WebDriver driver;
@@ -26,7 +32,7 @@ public class AutoTestCase2 {
 
     @Test(priority = 1)
     public void verifyRedirectionToApplicationPage() {
-        driver.get("http://localhost:4200/");
+        driver.get("https://www.nausicaaglobalgreen.live");
         String pageTitle = driver.getTitle();
         System.out.println("Page Title: " + pageTitle);
 
@@ -117,7 +123,14 @@ public class AutoTestCase2 {
 
         WebElement signInSubmitButton = driver.findElement(By.xpath("//button[@type='submit']"));
         signInSubmitButton.click();
-
+        
+        // Adding a hard wait of 5 seconds
+        try {
+            Thread.sleep(5000);  // 5000 milliseconds = 5 seconds
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
         WebElement signInMessage = driver.findElement(By.id("toast-container"));
         Assert.assertTrue(signInMessage.isDisplayed(), "Login success message not displayed.");
 

@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Test Suite" parallel="false">
+    <test name="Sequential Test Execution">
+        <classes>
+            <class name="testNGFramework.AutoTestCase1" />
+            <class name="testNGFramework.AutoTestCase2" />
+            <class name="testNGFramework.AutoTestCase3" />
+            <class name="testNGFramework.AutoTestCase4" />
+            <class name="testNGFramework.AutoTestCase5" />
+            <class name="testNGFramework.AutoTestCase6" />
+            <class name="testNGFramework.AutoTestCase9" />
+        </classes>
+    </test>
+</suite>

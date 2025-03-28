@@ -2,11 +2,13 @@
 <section name="Workbench">
 	<item key="org.eclipse.egit.ui.internal.clone.GitSelectWizardPageWizardSel" value="0"/>
 	<list key="RepositorySelectionPage.UsedUris">
+		<item value="https://github.com/athul-7735/green-global-initiative"/>
+		<item value="file://E:\DEVOPS\AUTOMATION CLONE REPO\green-global-initiative\nggi-automation"/>
 		<item value="https://github.com/athul-7735/green-global-initiative.git"/>
 	</list>
 	<list key="EGit.KnownHosts">
-		<item value="bitbucket.org"/>
 		<item value="git.eclipse.org"/>
+		<item value="bitbucket.org"/>
 		<item value="github.com"/>
 	</list>
 	<section name="GitImportWizard">

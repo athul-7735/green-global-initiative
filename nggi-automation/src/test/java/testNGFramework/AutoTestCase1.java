@@ -11,6 +11,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+/**
+ * This class represents Test Case 1 in Quality Plus in JIRA, using TestNG framework.
+ * It navigates to the NGGI Application and Verifies that the user can Navigate to Account Creation Page
+ * @author John K
+ */
+
 public class AutoTestCase1 {
 
     private WebDriver driver;
@@ -25,7 +31,7 @@ public class AutoTestCase1 {
 
     @Test(priority = 1)
     public void verifyRedirectionToApplicationPage() {
-        driver.get("http://localhost:4200/");
+        driver.get("https://www.nausicaaglobalgreen.live");
         String pageTitle = driver.getTitle();
         System.out.println("Page Title: " + pageTitle);
         Assert.assertTrue(pageTitle.contains("GreenGlobalInitiative"),
