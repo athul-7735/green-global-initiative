@@ -46,11 +46,3 @@ jobs:
       with:
         name: selenium-test-results
         path: target/surefire-reports/*
-
-    - name: Notify on Failure (Optional)
-      if: failure()
-      uses: slackapi/slack-github-action@v1.23
-      with:
-        channel-id: ${{ secrets.SLACK_CHANNEL }}
-        slack-message: "Selenium TestNG tests failed in the staging environment. Please check the surefire reports."
-        status: failure
