@@ -32,6 +32,9 @@ public class ApplicationDetailsDto {
     /** Comments made by the admin regarding the application */
     private String adminComments;
 
+    /** special Award for grants application */
+    private boolean specialAward;
+
     /**
      * Gets the application ID.
      *
@@ -192,5 +195,13 @@ public class ApplicationDetailsDto {
      */
     public void setAdminComments(String adminComments) {
         this.adminComments = adminComments;
+    }
+
+    public boolean isSpecialAward() {
+        return specialAward;
+    }
+
+    public void setSpecialAward(boolean specialAward) {
+        this.specialAward = specialAward;
     }
 }

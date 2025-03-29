@@ -85,7 +85,7 @@ export class GrantApplicationComponent implements OnInit{
       approvalDate: null,
       requestedAmount: grantApplicationForm.budget,
       projectDescription: grantApplicationForm.projectDescription,
-      // specialAward: grantApplicationForm.specialAward
+      specialAward: grantApplicationForm.specialAward
     };
   }
 
