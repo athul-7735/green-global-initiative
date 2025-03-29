@@ -76,9 +76,9 @@ jobs:
         # Get-ChildItem -Path "nggi-automation\target\surefire-reports" -Recurse
    #     Get-ChildItem -Path "nggi-automation/test-output" -Recurse
 
-   # - name: Archive Test Results
-   #   if: always()
-   #   uses: actions/upload-artifact@v4
-   #   with:
-   #     name: selenium-test-results
-   #     path: nggi-automation/target/surefire-reports/*
+    - name: Archive Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: selenium-test-results
+        path: nggi-automation/target/surefire-reports/*
