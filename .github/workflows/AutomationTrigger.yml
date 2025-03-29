@@ -1,10 +1,10 @@
-name: Run Selenium Tests o
+name: Run Selenium Tests on Push
 
 on:
- push:
+  push:
     branches:
       - Testing
- workflow_dispatch: # Trigger the workflow manually
+  workflow_dispatch: # Trigger the workflow manually
 
 jobs:
   run-selenium-tests:
@@ -24,28 +24,33 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml') }}
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-m2-
 
     - name: Install Maven Dependencies
-      run: mvn clean install
+      run: mvn clean install -f nggi-automation/pom.xml
 
     - name: Install Microsoft Edge Browser
       run: |
-        choco install microsoft-edge --version 134.0.3124.93
+        choco install microsoft-edge --version 134.0.3124.93 -y
 
     - name: Install Edge WebDriver
       run: |
-        choco install microsoft-edge-webdriver --version 134.0.3124.93
+        choco install microsoft-edge-webdriver --version 134.0.3124.93 -y
+
+    - name: Verify WebDriver Installation
+      run: |
+        echo "WebDriver location:"
+        dir "C:\SeleniumWebDrivers\EdgeDriver\"
 
     - name: Run Selenium Tests with TestNG
       run: |
-        mvn test -Dsurefire.suiteXmlFiles=testng.xml
+        mvn test -f nggi-automation/pom.xml -Dsurefire.suiteXmlFiles=nggi-automation/testng.xml
 
     - name: Archive Test Results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: selenium-test-results
-        path: target/surefire-reports/*
+        path: nggi-automation/target/surefire-reports/*
