@@ -54,6 +54,7 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
         applicationDetails.setApprovalDate(applicationCreateRequest.getApprovalDate());
         applicationDetails.setRequestedAmount(applicationCreateRequest.getRequestedAmount());
         applicationDetails.setProjectDescription(applicationCreateRequest.getProjectDescription());
+        applicationDetails.setSpecialAward(applicationCreateRequest.getSpecialAward());
         List<UserDetails> userDetailsList = userDetailsRepo.findAllById(applicationCreateRequest.getUserId());
         if(!userDetailsList.isEmpty()){
             applicationDetails.setUserDetails(userDetailsList.getFirst()); // set the user details
@@ -110,6 +111,7 @@ public class GrantsApplicationServiceImpl implements GrantsApplicationService {
             applicationDetailsDto.setProjectDescription(applicationDetails.getProjectDescription());
             applicationDetailsDto.setAdminComments(applicationDetails.getAdminComments());
             applicationDetailsDto.setRequestedAmount(applicationDetails.getRequestedAmount());
+            applicationDetailsDto.setSpecialAward(applicationDetails.getSpecialAward());
             Grants grants = new Grants();
             grants.setGrantId(applicationDetails.getGrants().getGrantId());
             grants.setGrantName(applicationDetails.getGrants().getGrantName());

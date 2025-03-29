@@ -44,8 +44,6 @@ CREATE TABLE `user_details` (
   UNIQUE KEY `user_details_unique` (`email`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
- 
-
 
 -- nausicaa_global_green_db.application_details definition
 
@@ -59,12 +57,13 @@ CREATE TABLE `application_details` (
   `requested_amount` varchar(255) NOT NULL,
   `project_description` varchar(255) NOT NULL,
   `admin_comments` varchar(255) DEFAULT NULL,
+  `special_award` tinyint(1) NOT NULL,
   PRIMARY KEY (`application_id`),
   KEY `application_details_user_details_FK` (`user_id`),
   KEY `application_details_grants_FK` (`grant_id`),
   CONSTRAINT `application_details_grants_FK` FOREIGN KEY (`grant_id`) REFERENCES `grants` (`grant_id`),
   CONSTRAINT `application_details_user_details_FK` FOREIGN KEY (`user_id`) REFERENCES `user_details` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- nausicaa_global_green_db.contact_us definition
 
