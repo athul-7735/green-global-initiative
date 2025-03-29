@@ -65,8 +65,6 @@ jobs:
         # java -cp "nggi-automation/target/classes;nggi-automation/target/test-classes;nggi-automation/target/dependency/*" org.testng.TestNG nggi-automation/testng.xml
         java -cp "nggi-automation/target/classes;nggi-automation/target/test-classes;nggi-automation/target/dependency/*;~/.m2/repository/org/testng/testng/7.9.0/*" org.testng.TestNG nggi-automation/testng.xml
 
-
-
     - name: Verify Test Reports
       run: |
         Write-Output "Test report contents:"
