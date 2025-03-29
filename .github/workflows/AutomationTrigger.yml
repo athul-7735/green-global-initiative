@@ -33,11 +33,11 @@ jobs:
 
     - name: Install Microsoft Edge Browser
       run: |
-        choco install microsoft-edge --version 134.0.3124.93 -y
+        choco install microsoft-edge -y
 
     - name: Install Edge WebDriver
       run: |
-        choco install microsoft-edge-webdriver --version 134.0.3124.93 -y
+        choco install microsoft-edge-webdriver -y
 
     - name: Verify WebDriver Installation
       run: |
