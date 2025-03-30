@@ -49,10 +49,10 @@ export class AdminApprovalComponent implements OnInit {
   }
 
   onSubmit(action: String) {
-    if (this.adminComments == null || this.adminComments == '') {
-      this.nullComments = true;
-    }
-    else {
+    // if (this.adminComments == null || this.adminComments == '') {
+    //   this.nullComments = true;
+    // }
+    // else {
       let applicationStatus = action == 'approve' ? 'Approved' : 'Rejected';
       let requestBody = {
         applicationId: this.id,
@@ -74,6 +74,6 @@ export class AdminApprovalComponent implements OnInit {
         });
         console.log();
       });
-    }
+    // }
   }
 }
