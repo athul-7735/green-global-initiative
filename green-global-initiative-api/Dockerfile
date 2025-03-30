@@ -1,17 +1,17 @@
 # Stage 1: Build stage
 FROM maven:3.9.6-eclipse-temurin-21 as build
 
-# Set the working directory inside the container
+# Set the working directory inside the container as "/app"
 WORKDIR /app
 
-# Copy Maven project files
+# Copy Maven project files needed
 COPY pom.xml .
 COPY src ./src
 
 # Use an ARG for the build profile with 'development' as default
 ARG PROFILE=development
 
-# Build the project (use --no-transfer-progress to speed up)
+# Build the project (use --no-transfer-progress to speed up process)
 RUN mvn clean package -Dspring.profiles.active=${PROFILE} -DskipTests --no-transfer-progress
 
 # Stage 2: Runtime stage with a minimal JDK
