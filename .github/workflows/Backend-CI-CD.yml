@@ -186,7 +186,7 @@ jobs:
           IMAGE_TAG: ${{ needs.build.outputs.IMAGE_TAG }}
 
       - name: Set up kubectl for EKS
-        run: aws eks update-kubeconfig --name dev-eks-cluster --region ${{ secrets.AWS_REGION }}
+        run: aws eks update-kubeconfig --name prod-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       # Check if the image is updated or if it's the first deployment
       - name: Check if deployment exists
