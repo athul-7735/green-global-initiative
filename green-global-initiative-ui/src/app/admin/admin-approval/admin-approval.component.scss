@@ -1,8 +1,43 @@
 .admin-approval-section{
     padding: 5px 25px;
     .page-title {
+        display: inline-flex;
+        width: 100%;
+        max-height: 10vh;
         h1 {
             font-size: 24px;
+            width: 100%;
+        }
+        .button-row {
+            margin: 0px;
+            display: flex;
+            justify-content: flex-end;
+
+            ::ng-deep button {
+                width: 5vw;
+                height: 6vh;
+            }
+        }
+        .back {
+            background-color: #6c757d; /* Grey color */
+            color: white; /* White text */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        
+        .back:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+            transform: scale(1.05);
+        }
+        
+        .back:active {
+            background-color: #495057; /* Even darker grey when clicked */
+            transform: scale(1);
         }
     }
 
@@ -31,6 +66,8 @@
     }
 
     .notes{
+        display: flex;
+        flex-direction: column;
         padding-left: 5px;
         p{
             font-size: 15px;
@@ -70,14 +107,29 @@
             transform: scale(1.05);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
+
+        button:disabled {
+            background-color: #b5b5b5 !important; /* Muted gray */
+            color: #6c757d !important; /* Light gray text */
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
         
         .approve {
             background-color: rgb(18, 157, 2);
-            
         }
         .reject {
-            background-color: rgb(234, 0, 0);
-            
+            background-color: rgb(234, 0, 0);  
+        }
+
+        .approve.edit {
+            background-color: rgb(18, 157, 2);
+        }
+        .reject .edit{
+            background-color: rgb(234, 0, 0); 
         }
     }
 }

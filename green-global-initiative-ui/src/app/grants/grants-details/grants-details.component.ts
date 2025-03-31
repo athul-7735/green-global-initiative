@@ -18,12 +18,12 @@ export class GrantsDetailsComponent {
     },
     {
       heading: 'Pejite Innovation Grant',
-      fund: 'Funding: Up to €25,000',
+      fund: 'Funding: Up to €2,500',
       focus: 'Focus: Cutting-edge innovations and technologies that offer scalable solutions to climate change.'
     },
     {
       heading: 'Ohmu Biodiversity Grant',
-      fund: 'Funding: Up to €15,000',
+      fund: 'Funding: Up to €1,500',
       focus: 'Focus: Biodiversity preservation, habitat restoration, and projects to protect endangered species.'
     },
   ];
