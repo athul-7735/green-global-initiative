@@ -59,8 +59,8 @@ public class AutoTestCase6 {
 
     @Test(priority = 4, dependsOnMethods = "verifyNavigationToLoginPage")
     public void verifyInputLoginDetails() {
-        inputValues(By.id("email"), "Email", "Sherineanbaiyan18@gmail.com");
-        inputValues(By.id("password"), "Password", "Password@1234");
+        inputValues(By.id("email"), "Email", "helenag@gmail.com");
+        inputValues(By.id("password"), "Password", "xxxxxx");
         System.out.println("Step 4 Passed: Login details inputted successfully.");
     }
 
