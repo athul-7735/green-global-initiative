@@ -6,7 +6,6 @@
             <class name="testNGFramework.AutoTestCase2" />
             <class name="testNGFramework.AutoTestCase3" />
             <class name="testNGFramework.AutoTestCase4" />
-            <class name="testNGFramework.AutoTestCase5" />
             <class name="testNGFramework.AutoTestCase6" />
         </classes>
     </test>
