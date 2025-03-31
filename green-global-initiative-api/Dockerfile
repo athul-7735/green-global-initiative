@@ -4,7 +4,7 @@ FROM maven:3.9.6-eclipse-temurin-21 as build
 # Set the working directory inside the container as "/app"
 WORKDIR /app
 
-# Copy Maven project files needed
+# Copy Maven project files
 COPY pom.xml .
 COPY src ./src
 
