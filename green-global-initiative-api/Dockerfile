@@ -14,7 +14,7 @@ ARG PROFILE=development
 # Build the project (use --no-transfer-progress to speed up process)
 RUN mvn clean package -Dspring.profiles.active=${PROFILE} -DskipTests --no-transfer-progress
 
-# Stage 2: Runtime stage with a minimal JDK
+# Stage 2: Runtime stage with a minimal
 FROM eclipse-temurin:21-jre-alpine
 
 # Set working directory inside the container
