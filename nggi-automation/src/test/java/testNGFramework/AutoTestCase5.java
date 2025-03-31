@@ -27,7 +27,7 @@ public class AutoTestCase5 {
         driver = new EdgeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.get("https://www.nausicaaglobalgreen.live");
+        driver.get("http://localhost:4200/");
     }
 
     @Test(priority = 1)
@@ -168,12 +168,16 @@ public class AutoTestCase5 {
         WebElement submitButton = driver.findElement(By.xpath("//button[contains(.,'Submit Application')]"));
         submitButton.click();
 
-        WebElement toastMessage = driver.findElement(By.xpath("//div[@id='toast-container']/div/div[2]"));
+        //WebElement toastMessage = driver.findElement(By.xpath("//div[@id='toast-container']/div/div[2]"));
+        WebElement toastMessage = driver.findElement(By.xpath("//h2[contains(.,'Application Submitted!')]"));
+      
         Assert.assertTrue(toastMessage.isDisplayed(), "Step 10 Passed: Application submission successful.");
         String ApplicationSubmissionText = toastMessage.getText();
-        Assert.assertTrue(ApplicationSubmissionText.contains("The application is succesfully submitted"), "Step 10 Failed: Application successful message not displayed.");
+        Assert.assertTrue(ApplicationSubmissionText.contains("Application Submitted!"), "Step 10 Failed: Application successful message not displayed.");
         System.out.println("Step 10 Passed: Application submission is successful & Application successful message is displayed");
         Thread.sleep(5000);
+        WebElement SuccessMessage_Close_Button = driver.findElement(By.xpath("//button[contains(.,'Close')]"));
+        SuccessMessage_Close_Button.click();        
     }
 
     private int verifyElementPresence(By locator, String elementName) {
