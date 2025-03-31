@@ -91,5 +91,5 @@ INSERT INTO nausicaa_global_green_db.user_details
 VALUES('helena', 2, 'g', 'helenag@gmail.com', '3zCaAhu45v2Z9gImNSv9pGDut7Ch2Q+NFbM4xbxLNM0=', '2025-01-29T00:26:37.240Z', 0);
 
 INSERT INTO nausicaa_global_green_db.application_details
-(application_id, user_id, organization_name, grant_id, application_status, approval_date, requested_amount, project_description)
-VALUES(1, 2, 'ATU', 1, 'In Progress', '21/01/2024', '10000', '');
+(application_id, user_id, organization_name, grant_id, application_status, approval_date, requested_amount, project_description,special_award)
+VALUES(1, 1, 'ATU', 1, 'In Progress', '21/01/2024', '10000', 'This is a test application for grant 1', 0);
