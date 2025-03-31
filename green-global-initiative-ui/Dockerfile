@@ -1,7 +1,7 @@
-# Stage 1: Build Angular app
+# Stage 1: Build Angular application
 FROM node:18-alpine AS build
  
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
  
 # Copy package.json and package-lock.json
