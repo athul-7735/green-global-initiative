@@ -15,11 +15,15 @@
         }
 
         .card {
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
             border: 1px solid #e0e0e0;
             margin: 10px 30px; 
             padding: 0px 20px;
-            text-align: center;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         }
 
         .card:hover {

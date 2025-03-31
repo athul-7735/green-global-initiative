@@ -1,6 +1,9 @@
 <div class="admin-approval-section">
     <div class="page-title">
         <h1>Grant Application Review</h1>
+        <div class="button-row">
+            <button class="back" (click)="onBack()">Back</button>
+        </div>
     </div>
     <div class="form-details">
         <div class="form-title">
@@ -24,17 +27,22 @@
                 <p>Requested Amount: {{requested_Amount}}</p>
             </div>
             <div class="text-row">
+                <p>Special Grant Request: {{special_Award}}</p>
+            </div>
+            <div class="text-row">
                 <p>Application Status: {{applicationStatus}}</p>
             </div>
         </div>
     </div>
-    <div class="notes">
-        <p class="notes-title">Admin Notes</p>
-        <textarea [disabled]="!enableEditing" placeholder="Add feedback Notes">{{adminComments}}</textarea>
-        <p class="notes-message" *ngIf="nullComments">Comments should not be empty</p>
-    </div>
+    <form [formGroup]="grantReviewForm" class="form-elements">
+        <div class="notes">
+            <label class="notes-title" for="adminComments">Admin Notes</label>
+            <textarea id="adminComments" type="text" [disabled]="!enableEditing" placeholder="Add feedback Notes" formControlName="adminComments"></textarea>
+            <p class="notes-message" *ngIf="grantReviewForm.get('adminComments')?.touched && !grantReviewForm.get('adminComments')?.value">Comments should not be empty</p>
+        </div>
+    </form>
     <div class="button-row">
-        <button class="approve" (click)="onSubmit('approve')" [disabled]="!enableEditing">Approve</button>
-        <button class="reject" (click)="onSubmit('reject')" [disabled]="!enableEditing">Reject</button>
+        <button class="approve" [ngClass]="enableEditing? 'edit':''" (click)="onSubmit('approve')" [disabled]="!enableEditing">Approve</button>
+        <button class="reject" [ngClass]="enableEditing? 'edit':''" (click)="onSubmit('reject')" [disabled]="!enableEditing">Reject</button>
     </div> 
 </div>

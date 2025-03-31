@@ -20,6 +20,7 @@ export interface GrantData {
   email: string;
   grant: string;
   date: string;
+  status: string;
 }
 
 @Component({
@@ -43,22 +44,22 @@ export class AdminDashboardComponent implements OnInit {
     {
       heading:'Total Applications', 
       value: '0', 
-      bg_color: '#C4C4C4'
+      bg_color: '#5D6D7E'
     },
     {
       heading:'Approved Applications',
       value: '0',
-      bg_color: '#4B9C06'
+      bg_color: '#28B463'
     },
     {
       heading:'Rejected Applications', 
       value: '0', 
-      bg_color: '#B81111'
+      bg_color: '#C0392B'
     },
     {
       heading:'Pending Applications', 
       value: '0', 
-      bg_color: '#E0F617'
+      bg_color: '#F4A62A'
     },
   ];
 
@@ -86,6 +87,7 @@ export class AdminDashboardComponent implements OnInit {
           name: response[i].userDetailsDto.firstName + ' ' + response[i].userDetailsDto.lastName,
           email: response[i].userDetailsDto.email,
           grant: response[i].grants.grantName,
+          status: response[i].applicationStatus,
           date: response[i].approvalDate,
         });
       }
@@ -97,7 +99,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
   
-  displayedColumns: string[] = ['id', 'name', 'email', 'grant', 'date', 'action'];
+  displayedColumns: string[] = ['id', 'name', 'email', 'grant', 'date', 'status', 'action'];
   dataSource: MatTableDataSource<GrantData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

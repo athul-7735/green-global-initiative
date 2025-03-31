@@ -3,10 +3,11 @@ import { GrantsService } from '../../grants/services/grants.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-approval',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-approval.component.html',
   styleUrl: './admin-approval.component.scss'
 })
@@ -19,11 +20,15 @@ export class AdminApprovalComponent implements OnInit {
   selected_Grant: any;
   requested_Amount: any;
   applicationStatus: any;
-  adminComments: any;
   enableEditing: boolean = false;
-  nullComments: boolean = false;
+  grantReviewForm: FormGroup;
+  special_Award: any;
 
-  constructor(private grantsService: GrantsService, private router: ActivatedRoute, private toastr: ToastrService) { }
+  constructor(private fb:FormBuilder, private grantsService: GrantsService, private router: ActivatedRoute, private toastr: ToastrService, private route: Router) {
+    this.grantReviewForm = this.fb.group({
+          adminComments: ['', [Validators.required, Validators.minLength(5)]]
+        });
+   }
 
   ngOnInit() {
     this.router.params.subscribe(params => {
@@ -43,27 +48,34 @@ export class AdminApprovalComponent implements OnInit {
       this.selected_Grant = x[0].grants.grantName;
       this.requested_Amount = x[0].grants.amount;
       this.applicationStatus = x[0].applicationStatus;
-      this.adminComments = x[0].adminComments;
+      this.grantReviewForm.controls['adminComments'].setValue(x[0].adminComments);
       this.enableEditing = this.applicationStatus == 'In Progress' ? true : false;
+      this.special_Award = x[0].specialAward?"Yes" : "No";
+      if(!this.enableEditing){
+        this.grantReviewForm.disable();
+      }
     });
   }
 
+  onBack() {
+    this.route.navigate(['/admin/grant-applications']);
+  }
   onSubmit(action: String) {
-    // if (this.adminComments == null || this.adminComments == '') {
-    //   this.nullComments = true;
-    // }
-    // else {
+    if (this.grantReviewForm.controls['adminComments'].value == null || this.grantReviewForm.controls['adminComments'].value == '') {
+      
+    }
+    else {
       let applicationStatus = action == 'approve' ? 'Approved' : 'Rejected';
       let requestBody = {
         applicationId: this.id,
         organizationName: this.organization_Name,
         applicationStatus: applicationStatus,
-        adminComments: this.adminComments
+        adminComments: this.grantReviewForm.controls['adminComments'].value
       }
       this.grantsService.updateGrantApplications('', requestBody).subscribe(x => {
         console.log(x);
         this.applicationStatus = x.applicationStatus;
-        this.adminComments = x.adminComments;
+        this.grantReviewForm.controls['adminComments'].setValue(x.adminComments);
         this.enableEditing = false;
         this.toastr.success(`The application is ${action == 'approve' ? 'Approved' : 'Rejected'}`, 'Success', {
           progressBar: true, closeButton: true
@@ -74,6 +86,6 @@ export class AdminApprovalComponent implements OnInit {
         });
         console.log();
       });
-    // }
+    }
   }
 }
