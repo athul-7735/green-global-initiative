@@ -19,7 +19,7 @@ RUN npm run build -- --configuration=development
 # Stage 2: Development Stage with Node.js (only for development mode)
 FROM node:18-alpine AS development
  
-# Set working directory for the Angular app
+# Set working directory for the Angular
 WORKDIR /app
  
 # Install dependencies for the Angular app (just in case any are needed for development)
