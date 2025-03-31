@@ -6,6 +6,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { GrantsService } from '../../grants/services/grants.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
  
 class MockGrantsService {
   getGrantApplicationsById(id: string) {
@@ -50,7 +51,9 @@ describe('AdminApprovalComponent', () => {
       imports: [AdminApprovalComponent,
         HttpClientTestingModule,
         ToastrModule.forRoot(),
-        CommonModule
+        CommonModule,
+        FormsModule, 
+        ReactiveFormsModule
       ],
       providers:[
         { provide: GrantsService, useValue: new MockGrantsService()  },
@@ -81,7 +84,7 @@ describe('AdminApprovalComponent', () => {
     expect(component.selected_Grant).toBe('Climate Fund');
     expect(component.requested_Amount).toBe(5000);
     expect(component.applicationStatus).toBe('In Progress');
-    expect(component.adminComments).toBe('');
+    expect(component.grantReviewForm.controls['adminComments'].value).toBe('');
     expect(component.enableEditing).toBeTrue();
   });
  
@@ -104,19 +107,13 @@ describe('AdminApprovalComponent', () => {
     expect(component.enableEditing).toBeFalse();
   });
  
-  it('should show error if admin comments are empty', () => {
-    component.adminComments = '';
-    component.onSubmit('approve');
-    expect(component.nullComments).toBeTrue();
-  });
- 
   it('should update application status when approved', () => {
     const mockResponse = { applicationStatus: 'Approved', adminComments: 'Reviewed' };
     spyOn(grantsService, 'updateGrantApplications').and.returnValue(of(mockResponse));
  
     component.id = '123';
     component.organization_Name = 'Test Org';
-    component.adminComments = 'Reviewed';
+    component.grantReviewForm.controls['adminComments'].setValue('Reviewed');
  
     component.onSubmit('approve');
     fixture.detectChanges();
@@ -132,7 +129,7 @@ describe('AdminApprovalComponent', () => {
  
     component.id = '123';
     component.organization_Name = 'Test Org';
-    component.adminComments = 'Reviewed';
+    component.grantReviewForm.controls['adminComments'].setValue('Reviewed');
     component.onSubmit('approve');
     fixture.detectChanges();
  

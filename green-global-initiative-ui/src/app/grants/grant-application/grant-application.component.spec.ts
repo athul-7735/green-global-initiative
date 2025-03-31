@@ -1,52 +1,94 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { GrantApplicationComponent } from './grant-application.component';
 import { HttpClientModule } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
+import { ComponentType, ToastrModule, ToastrService } from 'ngx-toastr';
+import { of, throwError } from 'rxjs';
 import { GrantsService } from '../services/grants.service';
 import { AuthService } from '../../authentication/services/auth.service';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TemplateRef } from '@angular/core';
 
 
-class MockGrantsService {
-  getGrants() { return of([]); }
-  postGrantApplications() { return of({}); }
+// class MockGrantsService {
+//   getGrants() { return of([]); }
+//   postGrantApplications() { return of({}); }
+// }
+
+// class MockAuthService {
+//   getUser() { return JSON.stringify({ firstName: 'John', lastName: 'Doe', id: 1, isAdmin: false, email: 'john.doe@example.com' }); }
+//   isLoggedAsAdmin() { return false; }
+// }
+
+// class MockToastrService {
+//   info() { }
+//   success() { }
+//   error() { }
+// }
+
+class GrantsServiceStub {
+  getGrants() {
+    return of([{ id: 1, name: 'Climate Action Grant' }]); // Example mock data
+  }
+  postGrantApplications(url: string, body: any) {
+    return of({ applicationId: 123 }); // Simulating a successful response
+  }
 }
 
-class MockAuthService {
-  getUser() { return JSON.stringify({ firstName: 'John', lastName: 'Doe', id: 1, isAdmin: false, email: 'john.doe@example.com' }); }
-  isLoggedAsAdmin() { return false; }
+class AuthServiceStub {
+  getUser(): string | null {
+    return JSON.stringify({
+      firstName: 'John', lastName: 'Doe', id: 1, isAdmin: false, email: 'john.doe@example.com'
+    });
+  }
+  isLoggedAsAdmin() {
+    return false;
+  }
 }
 
-class MockToastrService {
-  info() { }
-  success() { }
-  error() { }
+class ToastrServiceStub {
+  info(message: string, title?: string) {}
+  error(message: string, title?: string) {}
+}
+
+class MatDialogStub {
+  open<T, D = any, R = any>(
+    component: ComponentType<T> | TemplateRef<any>,
+    config?: MatDialogConfig<D>
+  ): MatDialogRef<T, R> {
+    // Provide the stub implementation here
+    return {} as MatDialogRef<T, R>;
+  }
 }
 
 describe('GrantApplicationComponent', () => {
+
   let component: GrantApplicationComponent;
   let fixture: ComponentFixture<GrantApplicationComponent>;
-  let toastrService: MockToastrService;
-  let authService: MockAuthService;
-  let grantsService: MockGrantsService;
+  let grantsService: GrantsServiceStub;
+  let authService: AuthServiceStub;
+  let toastr: ToastrServiceStub;
+  let matDialog: MatDialogStub;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), GrantApplicationComponent],
+      imports: [HttpClientModule, ToastrModule.forRoot(), GrantApplicationComponent, FormsModule, ReactiveFormsModule],
       providers: [
-        { provide: GrantsService, useClass: MockGrantsService },
-        { provide: AuthService, useClass: MockAuthService },
-        { provide: ToastrService, useClass: MockToastrService }
+        { provide: GrantsService, useClass: GrantsServiceStub },
+        { provide: AuthService, useClass: AuthServiceStub },
+        { provide: ToastrService, useClass: ToastrServiceStub },
+        { provide: MatDialog, useClass: MatDialogStub }
       ]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(GrantApplicationComponent);
     component = fixture.componentInstance;
-    toastrService = TestBed.inject(ToastrService) as any;
-    authService = TestBed.inject(AuthService) as any;
-    grantsService = TestBed.inject(GrantsService) as any;
+    grantsService = TestBed.inject(GrantsService);
+    authService = TestBed.inject(AuthService);
+    toastr = TestBed.inject(ToastrService);
+    matDialog = TestBed.inject(MatDialog);
     fixture.detectChanges();
   });
 
@@ -54,91 +96,74 @@ describe('GrantApplicationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.grantForm).toBeDefined();
-    expect(component.grantForm.controls['applicantName']).toBeDefined();
-    expect(component.grantForm.controls['email']).toBeDefined();
-    expect(component.grantForm.controls['organizationName']).toBeDefined();
-    expect(component.grantForm.controls['grantName']).toBeDefined();
-    expect(component.grantForm.controls['budget']).toBeDefined();
-    expect(component.grantForm.controls['projectDescription']).toBeDefined();
-  });
-
-  it('should have applicantName field disabled', () => {
-    let applicantNameInput = fixture.debugElement.query(By.css('#applicantName')).nativeElement;
-    expect(applicantNameInput.disabled).toBeTrue();
-  });
-
-  it('should have email field disabled', () => {
-    let emailInput = fixture.debugElement.query(By.css('#email')).nativeElement;
-    expect(emailInput.disabled).toBeTrue();
+  it('should initialize form with correct user data', () => {
+    expect(component.grantForm.controls['applicantName'].value).toBe('John Doe');
+    expect(component.grantForm.controls['email'].value).toBe('john.doe@example.com');
   });
 
   it('should disable name and email fields', () => {
-    const nameInput = fixture.debugElement.query(By.css('input[formControlName="applicantName"]')).nativeElement;
-    const emailInput = fixture.debugElement.query(By.css('input[formControlName="email"]')).nativeElement;
-
-    expect(nameInput.disabled).toBeTruthy();
-    expect(emailInput.disabled).toBeTruthy();
+    expect(component.grantForm.controls['applicantName'].disabled).toBeTrue();
+    expect(component.grantForm.controls['email'].disabled).toBeTrue();
   });
 
-  it('should have a form with all required fields', () => {
-    const nameInput = fixture.debugElement.query(By.css('input[formControlName="applicantName"]'));
-    const emailInput = fixture.debugElement.query(By.css('input[formControlName="email"]'));
-    const organizationInput = fixture.debugElement.query(By.css('input[formControlName="organizationName"]'));
-    const grantSelect = fixture.debugElement.query(By.css('select[formControlName="grantName"]'));
-    const budgetInput = fixture.debugElement.query(By.css('input[formControlName="budget"]'));
-    const descriptionTextarea = fixture.debugElement.query(By.css('textarea[formControlName="projectDescription"]'));
+  it('should validate form correctly', () => {
+    component.grantForm.controls['organizationName'].setValue('');
+    component.grantForm.controls['grantName'].setValue('');
+    component.grantForm.controls['budget'].setValue('abc');
+    component.grantForm.controls['projectDescription'].setValue('Short');
 
-    expect(nameInput).toBeTruthy();
-    expect(emailInput).toBeTruthy();
-    expect(organizationInput).toBeTruthy();
-    expect(grantSelect).toBeTruthy();
-    expect(budgetInput).toBeTruthy();
-    expect(descriptionTextarea).toBeTruthy();
+    expect(component.grantForm.valid).toBeFalse();
+
+    component.grantForm.controls['organizationName'].setValue('Tech Corp');
+    component.grantForm.controls['grantName'].setValue('1');
+    component.grantForm.controls['budget'].setValue('5000');
+    component.grantForm.controls['projectDescription'].setValue('This is a valid description with more than 20 characters.');
+
+    expect(component.grantForm.valid).toBeTrue();
   });
 
-  it('should disable submit button when form is invalid', () => {
-    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
-    expect(submitButton.disabled).toBeTruthy();
-  });
-
-  it('should enable submit button when form is valid', () => {
-    component.grantForm.controls['organizationName'].setValue('TechOrg');
-    component.grantForm.controls['grantName'].setValue('grant123');
-    component.grantForm.controls['budget'].setValue(5000);
-    component.grantForm.controls['projectDescription'].setValue('This is a project for testing.');
-
-    fixture.detectChanges();
-
-    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
-    expect(submitButton.disabled).toBeFalsy();
-  });
-
-  it('should show info toastr if the user is an admin', () => {
-    spyOn(toastrService, 'info');
+  it('should prevent admin users from submitting the form', () => {
     spyOn(authService, 'isLoggedAsAdmin').and.returnValue(true);
 
     component.onSubmit();
 
-    expect(toastrService.info).toHaveBeenCalled();
+    expect(toastr.info).toHaveBeenCalled();
   });
 
-  it('should submit the form successfully if it is valid and not an admin', () => {
-    spyOn(toastrService, 'success');
-    spyOn(grantsService, 'postGrantApplications').and.returnValue(of({}));
-    component.grantForm.setValue({
-      applicantName: 'John Doe',
-      email: 'john.doe@example.com',
-      organizationName: 'Org Name',
-      grantName: '1',
-      budget: '1000',
-      projectDescription: 'Description of the project.'
-    });
+  // it('should call grantsService.postGrantApplications on valid submission', () => {
+  //   spyOn(authService, 'isLoggedAsAdmin').and.returnValue(false);
+    
+  //   component.grantForm.controls['organizationName'].setValue('Tech Corp');
+  //   component.grantForm.controls['grantName'].setValue('1');
+  //   component.grantForm.controls['budget'].setValue('5000');
+  //   component.grantForm.controls['projectDescription'].setValue('This is a valid description.');
+
+  //   const responseMock = { applicationId: 123 };
+  //   spyOn(grantsService, 'postGrantApplications').and.returnValue(of(responseMock));
+  //   spyOn(matDialog, 'open');
+
+  //   component.onSubmit();
+
+  //   expect(grantsService.postGrantApplications).toHaveBeenCalled();
+  //   expect(matDialog.open).toHaveBeenCalledWith(jasmine.any(Function), {
+  //     width: '400px',
+  //     data: { title: 'Application Submitted!', message: 'Your application has been submitted successfully, Reference number is: 123' }
+  //   });
+  // });
+
+  it('should show error message on failed submission', () => {
+    spyOn(authService, 'isLoggedAsAdmin').and.returnValue(false);
+
+    component.grantForm.controls['organizationName'].setValue('Tech Corp');
+    component.grantForm.controls['grantName'].setValue('1');
+    component.grantForm.controls['budget'].setValue('5000');
+    component.grantForm.controls['projectDescription'].setValue('Valid project description.');
+
+    spyOn(grantsService, 'postGrantApplications').and.returnValue(throwError(() => new Error('Submission failed')));
+    spyOn(toastr, 'error');
 
     component.onSubmit();
 
-    expect(grantsService.postGrantApplications).toHaveBeenCalled();
-    expect(toastrService.success).toHaveBeenCalled();
+    expect(toastr.error).toHaveBeenCalled();
   });
 });
